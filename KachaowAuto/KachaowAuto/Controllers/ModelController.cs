@@ -1,0 +1,115 @@
+﻿using KachaowAuto.Data;
+using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace KachaowAuto.Controllers
+{
+    public class ModelController : Controller
+    {
+        private readonly KachaowAutoDbContext context;
+        public ModelController(KachaowAutoDbContext _context)
+        {
+            context = _context;
+        }
+        // GET: ModelController
+        public async Task<IActionResult> Index()
+        {
+            var models = await context.Models
+                                    .Include(a => a.Brand)
+                                    .Include(a => a.EngineType)
+                                    .Include(a => a.BodyType)
+                                    .Include(a => a.Cars)
+                                    .ToListAsync();
+            return View(models);
+        }
+
+        // GET: ModelController/Create
+        public async Task<IActionResult> Create()
+        {
+            ViewBag.Brands = await context.Brands.ToListAsync();
+            ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
+            ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
+            ViewBag.Cars = await context.Cars.ToListAsync();
+            return View();
+        }
+
+        // POST: ModelController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Model model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Brands = await context.Brands.ToListAsync();
+                ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
+                ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
+                ViewBag.Cars = await context.Cars.ToListAsync();
+                return View(model);
+            }
+            await context.Models.AddAsync(model);
+            await context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        // GET: ModelController/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            ViewBag.Brands = await context.Brands.ToListAsync();
+            ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
+            ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
+            ViewBag.Cars = await context.Cars.ToListAsync();
+            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
+        }
+
+        // POST: ModelController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Model model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Brands = await context.Brands.ToListAsync();
+                ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
+                ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
+                ViewBag.Cars = await context.Cars.ToListAsync();
+                return View(model);
+
+            }
+            context.Models.Update(model);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: ModelController/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return View(model);
+        }
+
+        // POST: ModelController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
+
+            context.Models.Remove(model);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
