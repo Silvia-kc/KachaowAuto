@@ -1,4 +1,5 @@
 using KachaowAuto.Data;
+using KachaowAuto.Data.Infrastructure;
 using KachaowAuto.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,5 +47,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+    await IdentitySeeder.SeedAdminAsync(userManager, roleManager);
+}
 
 app.Run();

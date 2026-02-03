@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KachaowAuto.Common\KachaowAuto.Common.csproj" />
     <ProjectReference Include="..\KachaowAuto.Data\KachaowAuto.Data.csproj" />
   </ItemGroup>
 

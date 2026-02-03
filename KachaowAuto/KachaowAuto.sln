@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachaowAuto", "KachaowAuto\KachaowAuto.csproj", "{35599510-5524-4513-A4CD-600A1F20E84B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KachaowAuto", "KachaowAuto\KachaowAuto.csproj", "{35599510-5524-4513-A4CD-600A1F20E84B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachaowAuto.Data", "KachaowAuto.Data\KachaowAuto.Data.csproj", "{0FD6C0DF-7B8E-4112-BB99-6FDF18438544}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KachaowAuto.Data", "KachaowAuto.Data\KachaowAuto.Data.csproj", "{0FD6C0DF-7B8E-4112-BB99-6FDF18438544}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachaowAuto.Common", "KachaowAuto.Common\KachaowAuto.Common.csproj", "{693A8BD7-CC42-453B-BB42-CB88610C31CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0FD6C0DF-7B8E-4112-BB99-6FDF18438544}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD6C0DF-7B8E-4112-BB99-6FDF18438544}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD6C0DF-7B8E-4112-BB99-6FDF18438544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

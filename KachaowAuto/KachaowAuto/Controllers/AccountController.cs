@@ -9,15 +9,17 @@ namespace KachaowAuto.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
-
         [HttpGet]
         public IActionResult Register() => View();
 
@@ -38,7 +40,10 @@ namespace KachaowAuto.Controllers
 
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, "Client"); 
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
+
                 return RedirectToAction("Index", "Home");
             }
 
