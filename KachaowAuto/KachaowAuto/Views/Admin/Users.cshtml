@@ -1,0 +1,39 @@
+﻿@model List<KachaowAuto.ViewModels.AdminUserViewModel>
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Full name</th>
+            <th>Role</th>
+            <th>Change</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.FullName</td>
+                <td>@(string.IsNullOrEmpty(u.CurrentRole) ? "-" : u.CurrentRole)</td>
+                <td>
+                    <form asp-action="SetRole" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="userId" value="@u.UserId" />
+
+                        <select name="role" class="form-select">
+                            @foreach (var r in u.AllRoles)
+                            {
+                                <option value="@r" selected="@(r == u.CurrentRole)">@r</option>
+                            }
+                        </select>
+
+                        <button type="submit" class="btn btn-primary mt-2">Save</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

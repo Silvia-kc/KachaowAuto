@@ -29,6 +29,68 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Users</a></li>
+
+                                    <li><hr class="dropdown-divider" /></li>
+
+                                    <li><a class="dropdown-item" asp-controller="Brand" asp-action="Index">Brands</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Model" asp-action="Index">Models</a></li>
+                                    <li><a class="dropdown-item" asp-controller="BodyType" asp-action="Index">Body Types</a></li>
+                                    <li><a class="dropdown-item" asp-controller="EngineType" asp-action="Index">Engine Types</a></li>
+
+                                    <li><hr class="dropdown-divider" /></li>
+
+                                    <li><a class="dropdown-item" asp-controller="PartCategory" asp-action="Index">Part Categories</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Part" asp-action="Index">Parts</a></li>
+                                    <li><a class="dropdown-item" asp-controller="PartImage" asp-action="Index">Part Images</a></li>
+
+                                    <li><hr class="dropdown-divider" /></li>
+
+                                    <li><a class="dropdown-item" asp-controller="ServiceCategory" asp-action="Index">Service Categories</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Service" asp-action="Index">Services</a></li>
+
+                                    <li><hr class="dropdown-divider" /></li>
+
+                                    <li><a class="dropdown-item" asp-controller="Region" asp-action="Index">Regions</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Workshop" asp-action="Index">Workshops</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Mechanic"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Index">Appointments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Part" asp-action="Index">Parts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Service" asp-action="Index">Services</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="PartImage" asp-action="Index">Part Images</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Client"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Create">Book Appointment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Car" asp-action="Create">Add Car</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Workshop" asp-action="Index">Workshops</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

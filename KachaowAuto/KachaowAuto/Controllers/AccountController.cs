@@ -59,18 +59,36 @@ namespace KachaowAuto.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                model.Email,
+                model.Password,
+                model.RememberMe,
+                lockoutOnFailure: false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
 
-            ModelState.AddModelError("", "Грешен имейл или парола.");
+                if (user != null)
+                {
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        return RedirectToAction("Users", "Admin");
+
+                    if (await _userManager.IsInRoleAsync(user, "Mechanic"))
+                        return RedirectToAction("Mechanic", "Dashboard");
+
+                    return RedirectToAction("Client", "Dashboard");
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("", "Wrong email or password");
             return View(model);
         }
-
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
