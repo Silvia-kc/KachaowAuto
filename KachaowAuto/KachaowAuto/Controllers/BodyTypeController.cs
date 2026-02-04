@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BodyTypeController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: BodyTypeController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var bodyTypes = await context.BodyTypes
@@ -22,14 +25,12 @@ namespace KachaowAuto.Controllers
             return View(bodyTypes);
         }
 
-        // GET: BodyTypeController/Create
         public async Task <IActionResult> Create()
         {
             ViewBag.Models = await context.Models.ToListAsync();
             return View();
         }
 
-        // POST: BodyTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BodyType bodyType)
@@ -44,7 +45,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: BodyTypeController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Models = await context.Models.ToListAsync();
@@ -56,7 +56,6 @@ namespace KachaowAuto.Controllers
             return View(bodyType);
         }
 
-        // POST: BodyTypeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BodyType bodyType)
@@ -73,8 +72,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-
-        // GET: BodyTypeController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var bodyType = await context.BodyTypes.FirstOrDefaultAsync(a => a.BodyTypeId == id);
@@ -84,12 +81,17 @@ namespace KachaowAuto.Controllers
             }
             return View(bodyType);
         }
-        // POST: BodyTypeController/Delete/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var bodyType = await context.BodyTypes.FirstOrDefaultAsync(a => a.BodyTypeId == id);
+
+            if (bodyType == null)
+            {
+                return NotFound();
+            }
 
             context.BodyTypes.Remove(bodyType);
             await context.SaveChangesAsync();

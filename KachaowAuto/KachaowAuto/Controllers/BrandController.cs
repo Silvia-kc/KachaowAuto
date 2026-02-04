@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: BrandController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var brands = await context.Brands
@@ -22,14 +25,12 @@ namespace KachaowAuto.Controllers
             return View(brands);
         }
 
-        // GET: BrandController/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.Models = await context.Models.ToListAsync();
             return View();
         }
 
-        // POST: BrandController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Brand brand)
@@ -44,7 +45,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: BrandController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Models = await context.Models.ToListAsync();
@@ -56,7 +56,6 @@ namespace KachaowAuto.Controllers
             return View(brand);
         }
 
-        // POST: BrandController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Brand brand)
@@ -73,7 +72,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: BrandController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var brand = await context.Brands.FirstOrDefaultAsync(a => a.BrandId == id);
@@ -84,12 +82,16 @@ namespace KachaowAuto.Controllers
             return View(brand);
         }
 
-        // POST: BrandController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var brand = await context.Brands.FirstOrDefaultAsync(a => a.BrandId == id);
+
+            if (brand == null)
+            {
+                return NotFound();
+            }
 
             context.Brands.Remove(brand);
             await context.SaveChangesAsync();

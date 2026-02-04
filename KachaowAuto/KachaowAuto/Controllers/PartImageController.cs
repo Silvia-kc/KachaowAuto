@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PartImageController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: PartImageController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var partImages = await context.PartImages
@@ -22,15 +25,12 @@ namespace KachaowAuto.Controllers
             return View(partImages);
         }
 
-        // GET: PartImageController/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.Parts = await context.Parts.ToListAsync();
             return View();
         }
 
-
-        // POST: PartImageController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartImage partImage)
@@ -45,7 +45,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: PartImageController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Parts = await context.Parts.ToListAsync();
@@ -57,7 +56,6 @@ namespace KachaowAuto.Controllers
             return View(partImage);
         }
 
-        // POST: PartImageController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PartImage partImage)
@@ -74,7 +72,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: PartImageController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var partImage = await context.PartImages.FirstOrDefaultAsync(a => a.PartImageId == id);
@@ -85,12 +82,16 @@ namespace KachaowAuto.Controllers
             return View(partImage);
         }
 
-        // POST: PartImageController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var partImage = await context.PartImages.FirstOrDefaultAsync(a => a.PartImageId == id);
+
+            if (partImage == null)
+            {
+                return NotFound();
+            }
 
             context.PartImages.Remove(partImage);
             await context.SaveChangesAsync();

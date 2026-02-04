@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize]
     public class AppointmentController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: AppointmentController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var appointments = await context.Appointments
@@ -24,7 +27,8 @@ namespace KachaowAuto.Controllers
                                             .ToListAsync();
             return View(appointments);
         }
-        // GET: AppointmentController/Create
+
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Cars = await context.Cars.ToListAsync();
@@ -34,9 +38,9 @@ namespace KachaowAuto.Controllers
             return View();
         }
 
-        // POST: AppointmentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create(Appointment appointment)
         {
             if (!ModelState.IsValid)
@@ -49,10 +53,10 @@ namespace KachaowAuto.Controllers
             }    
             await context.Appointments.AddAsync(appointment);
             await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
-        // GET: AppointmentController/Edit/5
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Cars = await context.Cars.ToListAsync();
@@ -67,9 +71,9 @@ namespace KachaowAuto.Controllers
             return View(appointment);
         }
 
-        // POST: AppointmentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Edit(Appointment appointment)
         {
             if (!ModelState.IsValid)
@@ -87,7 +91,7 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: AppointmentController/Delete/5
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Delete(int id)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
@@ -98,12 +102,17 @@ namespace KachaowAuto.Controllers
             return View(appointment);
         }
 
-        // POST: AppointmentController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
 
             context.Appointments.Remove(appointment);
             await context.SaveChangesAsync();

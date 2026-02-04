@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ServiceController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: ServiceController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var services = await context.Services
@@ -24,7 +27,6 @@ namespace KachaowAuto.Controllers
             return View(services);
         }
 
-        // GET: ServiceController/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
@@ -33,7 +35,6 @@ namespace KachaowAuto.Controllers
             return View();
         }
 
-        // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Service service)
@@ -50,7 +51,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: ServiceController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
@@ -64,7 +64,6 @@ namespace KachaowAuto.Controllers
             return View(service);
         }
 
-        // POST: ServiceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Service service)
@@ -83,7 +82,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: ServiceController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var service = await context.Services.FirstOrDefaultAsync(a => a.ServiceId == id);
@@ -94,12 +92,16 @@ namespace KachaowAuto.Controllers
             return View(service);
         }
 
-        // POST: ServiceController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var service = await context.Services.FirstOrDefaultAsync(a => a.ServiceId == id);
+
+            if (service == null)
+            {
+                return NotFound();
+            }
 
             context.Services.Remove(service);
             await context.SaveChangesAsync();

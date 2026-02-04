@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EngineTypeController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: EngineTypeController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var engineTypes = await context.EngineTypes
@@ -22,14 +25,12 @@ namespace KachaowAuto.Controllers
             return View(engineTypes);
         }
 
-        // GET: EngineTypeController/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.Models = await context.Models.ToListAsync();
             return View();
         }
 
-        // POST: EngineTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EngineType engineType)
@@ -44,7 +45,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: EngineTypeController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Models = await context.Models.ToListAsync();
@@ -56,7 +56,6 @@ namespace KachaowAuto.Controllers
             return View(engineType);
         }
 
-        // POST: EngineTypeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EngineType engineType)
@@ -73,8 +72,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-
-        // GET: EngineTypeController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var engineType = await context.EngineTypes.FirstOrDefaultAsync(a => a.EngineTypeId == id);
@@ -85,12 +82,16 @@ namespace KachaowAuto.Controllers
             return View(engineType);
         }
 
-        // POST: EngineTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var engineType = await context.EngineTypes.FirstOrDefaultAsync(a => a.EngineTypeId == id);
+
+            if (engineType == null)
+            {
+                return NotFound();
+            }
 
             context.EngineTypes.Remove(engineType);
             await context.SaveChangesAsync();

@@ -30,7 +30,7 @@ namespace KachaowAuto.Controllers
 
             var user = new ApplicationUser
             {
-                UserName = model.Email,   // или отделно поле, ако имаш Username
+                UserName = model.Email,   
                 Email = model.Email,
                 FullName = model.FullName,
                 CreatedAt = DateTime.UtcNow

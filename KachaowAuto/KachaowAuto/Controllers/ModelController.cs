@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ModelController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: ModelController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var models = await context.Models
@@ -25,7 +28,6 @@ namespace KachaowAuto.Controllers
             return View(models);
         }
 
-        // GET: ModelController/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.Brands = await context.Brands.ToListAsync();
@@ -35,7 +37,6 @@ namespace KachaowAuto.Controllers
             return View();
         }
 
-        // POST: ModelController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Model model)
@@ -53,7 +54,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: ModelController/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Brands = await context.Brands.ToListAsync();
@@ -68,7 +68,6 @@ namespace KachaowAuto.Controllers
             return View(model);
         }
 
-        // POST: ModelController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Model model)
@@ -88,7 +87,6 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: ModelController/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
@@ -99,12 +97,16 @@ namespace KachaowAuto.Controllers
             return View(model);
         }
 
-        // POST: ModelController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
 
             context.Models.Remove(model);
             await context.SaveChangesAsync();

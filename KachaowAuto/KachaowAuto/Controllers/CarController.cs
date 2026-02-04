@@ -1,11 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize]
     public class CarController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -13,7 +15,8 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-        // GET: CarController
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var cars = await context.Cars
@@ -23,7 +26,7 @@ namespace KachaowAuto.Controllers
             return View(cars);
         }
 
-        // GET: CarController/Create
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Models = await context.Models.ToListAsync();
@@ -31,9 +34,9 @@ namespace KachaowAuto.Controllers
             return View();
         }
 
-        // POST: CarController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create(Car car)
         {
             if (!ModelState.IsValid)
@@ -47,7 +50,7 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: CarController/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Models = await context.Models.ToListAsync();
@@ -60,9 +63,9 @@ namespace KachaowAuto.Controllers
             return View(car);
         }
 
-        // POST: CarController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Car car)
         {
             if (!ModelState.IsValid)
@@ -78,7 +81,7 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: CarController/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var car = await context.Cars.FirstOrDefaultAsync(a => a.CarId == id);
@@ -89,12 +92,17 @@ namespace KachaowAuto.Controllers
             return View(car);
         }
 
-        // POST: CarController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await context.Cars.FirstOrDefaultAsync(a => a.CarId == id);
+
+            if (car == null)
+            {
+                return NotFound();
+            }
 
             context.Cars.Remove(car);
             await context.SaveChangesAsync();
