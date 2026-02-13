@@ -1,0 +1,114 @@
+﻿@model KachaowAuto.ViewModels.BookAppointmentViewModel
+
+<h2>Book Appointment</h2>
+
+<form asp-action="Create" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label class="form-label">Brand</label>
+        <select class="form-select" asp-for="BrandId" id="brandSelect">
+            <option value="">-- select brand --</option>
+            @foreach (var b in ViewBag.Brands)
+            {
+                <option value="@b.BrandId">@b.BrandName</option>
+            }
+        </select>
+        <span asp-validation-for="BrandId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Model</label>
+        <select class="form-select" asp-for="ModelId" id="modelSelect" disabled>
+            <option value="">-- select model --</option>
+        </select>
+        <span asp-validation-for="ModelId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Year</label>
+        <input class="form-control" asp-for="Year" type="number" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">VIN</label>
+        <input class="form-control" asp-for="VIN" />
+        <span asp-validation-for="VIN" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Service</label>
+        <select class="form-select" asp-for="ServiceId">
+            <option value="">-- select service --</option>
+            @foreach (var s in ViewBag.Services)
+            {
+                <option value="@s.ServiceId">@s.ServiceName</option>
+            }
+        </select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Workshop</label>
+        <select class="form-select" asp-for="WorkshopId">
+            <option value="">-- select workshop --</option>
+            @foreach (var w in ViewBag.Workshops)
+            {
+                <option value="@w.WorkshopId">@w.Name (@w.Region?.Name)</option>
+            }
+        </select>
+        <span asp-validation-for="WorkshopId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Scheduled Date</label>
+        <input class="form-control" asp-for="ScheduledDate" type="datetime-local" />
+        <span asp-validation-for="ScheduledDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Problem description</label>
+        <textarea class="form-control" asp-for="ProblemDescription" rows="4"></textarea>
+        <span asp-validation-for="ProblemDescription" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Appointment</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const brandSelect = document.getElementById('brandSelect');
+        const modelSelect = document.getElementById('modelSelect');
+
+        async function loadModels(brandId) {
+            modelSelect.innerHTML = '<option value="">-- select model --</option>';
+            modelSelect.disabled = true;
+
+            if (!brandId) return;
+
+            const res = await fetch(`/Appointment/GetModelsByBrand?brandId=${brandId}`);
+            if (!res.ok) return;
+
+            const models = await res.json();
+
+            for (const m of models) {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = m.name;
+                modelSelect.appendChild(opt);
+            }
+
+            modelSelect.disabled = models.length === 0;
+        }
+
+        brandSelect.addEventListener('change', (e) => loadModels(e.target.value));
+
+        // ако има вече избран brand при връщане на view със грешки:
+        if (brandSelect.value) {
+            loadModels(brandSelect.value);
+        }
+    </script>
+}

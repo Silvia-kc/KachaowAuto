@@ -1,4 +1,66 @@
 ﻿@model IEnumerable<KachaowAuto.Data.Models.Appointment>
 
 <h2>Appointments</h2>
-<p>Mechanic view is working ✅</p>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="statusId" class="form-select">
+            <option value="">All statuses</option>
+            @foreach (var s in (ViewBag.Statuses as IEnumerable<KachaowAuto.Data.Models.AppointmentStatus>) ?? Enumerable.Empty<KachaowAuto.Data.Models.AppointmentStatus>())
+            {
+                <option value="@s.AppointmentStatusId">@s.StatusName</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>Service</th>
+            <th>Workshop</th>
+            <th>Status</th>
+            <th>Scheduled</th>
+            <th style="width:260px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Car?.Model?.ModelName</td>
+                <td>@a.Service?.ServiceName</td>
+                <td>@a.Workshop?.Name</td>
+                <td>@a.Status?.StatusName</td>
+                <td>@a.ScheduledDate.ToString("dd.MM.yyyy HH:mm")</td>
+
+                <td>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       asp-action="Details"
+                       asp-route-id="@a.AppointmentId">View Details</a>
+
+                    <form asp-action="ChangeStatus" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@a.AppointmentId" />
+
+                        <select name="statusId" class="form-select form-select-sm d-inline" style="width:140px;">
+                            @foreach (var s in (IEnumerable<dynamic>)ViewBag.Statuses)
+                            {
+                                <option value="@s.AppointmentStatusId" selected="@(a.AppointmentStatusId == (int)s.AppointmentStatusId)">
+                                    @s.Name
+                                </option>
+                            }
+                        </select>
+
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

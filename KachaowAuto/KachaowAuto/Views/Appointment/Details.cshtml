@@ -1,0 +1,15 @@
+﻿@model KachaowAuto.Data.Models.Appointment
+
+<h2>Appointment Details</h2>
+
+<div class="card p-3">
+    <p><b>Car:</b> @Model.Car?.Model?.ModelName</p>
+    <p><b>Service:</b> @Model.Service?.ServiceName</p>
+    <p><b>Workshop:</b> @Model.Workshop?.Name</p>
+    <p><b>Status:</b> @Model.Status?.StatusName</p>
+    <p><b>Created:</b> @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</p>
+    <p><b>Scheduled:</b> @Model.ScheduledDate.ToString("dd.MM.yyyy HH:mm")</p>
+    <p><b>Completed:</b> @(Model.CompletedAt.HasValue? Model.CompletedAt.Value.ToString("dd.MM.yyyy HH:mm") : "Not completed")</p>
+</div>
+
+<a class="btn btn-secondary mt-3" asp-action="Index">Back</a>

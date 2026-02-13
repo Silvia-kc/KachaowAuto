@@ -1,0 +1,31 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.Model>
+
+<h2>Models</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Create Model</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Engine Type</th>
+            <th>Volume</th>
+            <th>HP</th>
+            <th>Body Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.Brand?.BrandName</td>
+                <td>@m.ModelName</td>
+                <td>@m.EngineType?.Name</td>
+                <td>@m.EngineVolume</td>
+                <td>@m.HorsePower</td>
+                <td>@m.BodyType?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>>

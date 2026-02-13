@@ -1,0 +1,21 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.BodyType>
+
+<h2>Body Types</h2>
+
+<a class="btn btn-primary mb-3" asp-action="Create">Create Body Type</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Body Type Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bt in Model)
+        {
+            <tr>
+                <td>@bt.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

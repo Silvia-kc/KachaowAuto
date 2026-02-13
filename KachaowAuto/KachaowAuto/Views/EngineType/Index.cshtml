@@ -1,0 +1,14 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.EngineType>
+
+<h2>Engine Types</h2>
+<a class="btn btn-primary mb-2" asp-action="Create">Create</a>
+
+<table class="table">
+    <thead><tr><th>Name</th></tr></thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr><td>@e.Name</td></tr>
+        }
+    </tbody>
+</table>

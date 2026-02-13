@@ -23,7 +23,6 @@ namespace KachaowAuto.Controllers
                                     .Include(a => a.Brand)
                                     .Include(a => a.EngineType)
                                     .Include(a => a.BodyType)
-                                    .Include(a => a.Cars)
                                     .ToListAsync();
             return View(models);
         }
@@ -33,24 +32,28 @@ namespace KachaowAuto.Controllers
             ViewBag.Brands = await context.Brands.ToListAsync();
             ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
             ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-            ViewBag.Cars = await context.Cars.ToListAsync();
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Model model)
         {
+            ModelState.Remove(nameof(Model.Brand));
+            ModelState.Remove(nameof(Model.EngineType));
+            ModelState.Remove(nameof(Model.BodyType));
+            ModelState.Remove(nameof(Model.Cars));
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Brands = await context.Brands.ToListAsync();
                 ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
                 ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-                ViewBag.Cars = await context.Cars.ToListAsync();
                 return View(model);
             }
-            await context.Models.AddAsync(model);
+
+            context.Models.Add(model);
             await context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
