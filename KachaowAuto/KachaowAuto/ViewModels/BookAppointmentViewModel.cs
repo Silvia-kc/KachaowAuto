@@ -13,7 +13,7 @@ namespace KachaowAuto.ViewModels
         [Range(1950, 2100)]
         public int Year { get; set; }
 
-        [Required, StringLength(10, MinimumLength = 10)]
+        [Required, StringLength(8)]
         public string VIN { get; set; } = null!;
 
         [Required]
