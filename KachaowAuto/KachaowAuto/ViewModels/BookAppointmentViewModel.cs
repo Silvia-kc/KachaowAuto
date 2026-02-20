@@ -15,6 +15,10 @@ namespace KachaowAuto.ViewModels
 
         [Required, StringLength(8)]
         public string VIN { get; set; } = null!;
+        [Required]
+        public int EngineTypeId { get; set; }
+        [Required]
+        public int BodyTypeId { get; set; }
 
         [Required]
         public int ServiceId { get; set; }

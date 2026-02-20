@@ -11,7 +11,9 @@
             <option value="">-- select brand --</option>
             @foreach (var b in ViewBag.Brands)
             {
-                <option value="@b.BrandId">@b.BrandName</option>
+                <option value="@b.BrandId" selected="@(Model.BrandId == b.BrandId)">
+                    @b.BrandName
+                </option>
             }
         </select>
         <span asp-validation-for="BrandId" class="text-danger"></span>
@@ -19,7 +21,10 @@
 
     <div class="mb-3">
         <label class="form-label">Model</label>
-        <select class="form-select" asp-for="ModelId" id="modelSelect" disabled>
+        <select class="form-select"
+                asp-for="ModelId"
+                id="modelSelect"
+                disabled="@(Model.BrandId == 0)">
             <option value="">-- select model --</option>
         </select>
         <span asp-validation-for="ModelId" class="text-danger"></span>
@@ -38,12 +43,25 @@
     </div>
 
     <div class="mb-3">
+        <label class="form-label">Engine Type</label>
+        <select class="form-select"
+                asp-for="EngineTypeId"
+                id="modelSelect"
+                disabled="@(Model.EngineTypeId == 0)">
+            <option value="">-- select engine types --</option>
+        </select>
+        <span asp-validation-for="EngineTypeId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
         <label class="form-label">Service</label>
         <select class="form-select" asp-for="ServiceId">
             <option value="">-- select service --</option>
             @foreach (var s in ViewBag.Services)
             {
-                <option value="@s.ServiceId">@s.ServiceName</option>
+                <option value="@s.ServiceId" selected="@(Model.ServiceId == s.ServiceId)">
+                    @s.ServiceName
+                </option>
             }
         </select>
         <span asp-validation-for="ServiceId" class="text-danger"></span>
@@ -55,7 +73,9 @@
             <option value="">-- select workshop --</option>
             @foreach (var w in ViewBag.Workshops)
             {
-                <option value="@w.WorkshopId">@w.Name (@w.Region?.Name)</option>
+                <option value="@w.WorkshopId" selected="@(Model.WorkshopId == w.WorkshopId)">
+                    @w.Name (@w.Region?.Name)
+                </option>
             }
         </select>
         <span asp-validation-for="WorkshopId" class="text-danger"></span>
@@ -63,7 +83,10 @@
 
     <div class="mb-3">
         <label class="form-label">Scheduled Date</label>
-        <input class="form-control" asp-for="ScheduledDate" type="datetime-local" />
+        <input class="form-control"
+               asp-for="ScheduledDate"
+               type="datetime-local"
+               value="@Model.ScheduledDate.ToString("yyyy-MM-ddTHH:mm")" />
         <span asp-validation-for="ScheduledDate" class="text-danger"></span>
     </div>
 
@@ -83,7 +106,7 @@
         const brandSelect = document.getElementById('brandSelect');
         const modelSelect = document.getElementById('modelSelect');
 
-        async function loadModels(brandId) {
+        async function loadModels(brandId, selectedModelId) {
             modelSelect.innerHTML = '<option value="">-- select model --</option>';
             modelSelect.disabled = true;
 
@@ -98,17 +121,21 @@
                 const opt = document.createElement('option');
                 opt.value = m.id;
                 opt.textContent = m.name;
+
+                if (selectedModelId && String(m.id) === String(selectedModelId)) {
+                    opt.selected = true;
+                }
+
                 modelSelect.appendChild(opt);
             }
 
             modelSelect.disabled = models.length === 0;
         }
 
-        brandSelect.addEventListener('change', (e) => loadModels(e.target.value));
+        brandSelect.addEventListener('change', (e) => loadModels(e.target.value, null));
 
-        // ако има вече избран brand при връщане на view със грешки:
         if (brandSelect.value) {
-            loadModels(brandSelect.value);
+            loadModels(brandSelect.value, '@Model.ModelId');
         }
     </script>
 }

@@ -53,9 +53,15 @@ namespace KachaowAuto.Controllers
             return View(appointment);
         }
         [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Brands = await context.Brands.ToListAsync();
+            ViewBag.BrandsCount = await context.Brands.CountAsync();
+            ViewBag.ModelsCount = await context.Models.CountAsync();
+            ViewBag.ServicesCount = await context.Services.CountAsync();
+            ViewBag.WorkshopsCount = await context.Workshops.CountAsync();
+
+            ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
             ViewBag.Services = await context.Services.ToListAsync();
             ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
 
@@ -72,11 +78,17 @@ namespace KachaowAuto.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.Include(m => m.Brand).ToListAsync();
+                ViewBag.Brands = await context.Brands.ToListAsync(); 
+                ViewBag.Models = await context.Models
+                    .Where(m => m.BrandId == model.BrandId)          
+                    .ToListAsync();
+
                 ViewBag.Services = await context.Services.ToListAsync();
                 ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
+
                 return View(model);
             }
+
 
             var userIdStr = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(userIdStr))
