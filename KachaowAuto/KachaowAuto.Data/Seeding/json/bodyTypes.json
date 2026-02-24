@@ -1,0 +1,16 @@
+[
+  { "Name": "Sedan" },
+  { "Name": "Hatchback" },
+  { "Name": "SUV" },
+  { "Name": "Crossover" },
+  { "Name": "Coupe" },
+  { "Name": "Convertible" },
+  { "Name": "Wagon" },
+  { "Name": "Pickup" },
+  { "Name": "Van" },
+  { "Name": "Minivan" },
+  { "Name": "Liftback" },
+  { "Name": "Fastback" },
+  { "Name": "Roadster" },
+  { "Name": "Targa" }
+]

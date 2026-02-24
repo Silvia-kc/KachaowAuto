@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<KachaowAutoDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionArsenal")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionHome")));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
@@ -27,7 +27,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<KachaowAutoDbContext>();
-    await DbSeeder.SeedAsync(db);
+    await DbSeeder.SeedAllAsync(db);
 }
 
 // Configure the HTTP request pipeline.

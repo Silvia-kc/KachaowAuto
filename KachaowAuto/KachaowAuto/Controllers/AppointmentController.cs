@@ -53,7 +53,6 @@ namespace KachaowAuto.Controllers
             return View(appointment);
         }
         [Authorize(Roles = "Client")]
-        [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
             ViewBag.BrandsCount = await context.Brands.CountAsync();
@@ -64,6 +63,9 @@ namespace KachaowAuto.Controllers
             ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
             ViewBag.Services = await context.Services.ToListAsync();
             ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
+
+            ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
+            ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
 
             return View(new BookAppointmentViewModel
             {
@@ -78,17 +80,20 @@ namespace KachaowAuto.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Brands = await context.Brands.ToListAsync(); 
+                ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
+
                 ViewBag.Models = await context.Models
-                    .Where(m => m.BrandId == model.BrandId)          
+                    .Where(m => m.BrandId == model.BrandId)
                     .ToListAsync();
 
                 ViewBag.Services = await context.Services.ToListAsync();
                 ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
 
+                ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
+                ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
+
                 return View(model);
             }
-
 
             var userIdStr = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(userIdStr))

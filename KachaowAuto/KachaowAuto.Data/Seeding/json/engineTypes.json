@@ -1,0 +1,11 @@
+[
+  { "Name": "Petrol" },
+  { "Name": "Diesel" },
+  { "Name": "Hybrid" },
+  { "Name": "Plug-in Hybrid" },
+  { "Name": "Electric" },
+  { "Name": "Mild Hybrid" },
+  { "Name": "Hydrogen" },
+  { "Name": "LPG" },
+  { "Name": "CNG" }
+]

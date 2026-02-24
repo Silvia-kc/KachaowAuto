@@ -1,0 +1,17 @@
+[
+  { "Name": "Periodic Maintenance" },
+  { "Name": "Diagnostics and Inspection" },
+  { "Name": "Engine Repair" },
+  { "Name": "Transmission Repair" },
+  { "Name": "Brake System Service and Repair" },
+  { "Name": "Suspension and Chassis Service" },
+  { "Name": "Electrical System Service" },
+  { "Name": "Air Conditioning System Service" },
+  { "Name": "Consumables Replacement" },
+  { "Name": "Technical Inspection Preparation" },
+  { "Name": "Tire Service and Balancing" },
+  { "Name": "Bodywork and Paint Services" },
+  { "Name": "Computer Diagnostics" },
+  { "Name": "Software Updates" },
+  { "Name": "General Vehicle Inspection" }
+]

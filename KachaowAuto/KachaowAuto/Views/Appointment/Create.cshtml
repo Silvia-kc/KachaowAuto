@@ -44,13 +44,30 @@
 
     <div class="mb-3">
         <label class="form-label">Engine Type</label>
-        <select class="form-select"
-                asp-for="EngineTypeId"
-                id="modelSelect"
-                disabled="@(Model.EngineTypeId == 0)">
-            <option value="">-- select engine types --</option>
+        <select class="form-select" asp-for="EngineTypeId" id="engineTypeSelect">
+            <option value="">-- select engine type --</option>
+            @foreach (var e in ViewBag.EngineTypes)
+            {
+                <option value="@e.EngineTypeId" selected="@(Model.EngineTypeId == e.EngineTypeId)">
+                    @e.Name
+                </option>
+            }
         </select>
         <span asp-validation-for="EngineTypeId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Body Type</label>
+        <select class="form-select" asp-for="BodyTypeId" id="bodyTypeSelect">
+            <option value="">-- select body type --</option>
+            @foreach (var b in ViewBag.BodyTypes)
+            {
+                <option value="@b.BodyTypeId" selected="@(Model.BodyTypeId == b.BodyTypeId)">
+                    @b.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="BodyTypeId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
@@ -60,7 +77,7 @@
             @foreach (var s in ViewBag.Services)
             {
                 <option value="@s.ServiceId" selected="@(Model.ServiceId == s.ServiceId)">
-                    @s.ServiceName
+                    @s.Name
                 </option>
             }
         </select>
