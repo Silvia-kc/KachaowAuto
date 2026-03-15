@@ -1,17 +1,62 @@
 [
-  { "Name": "Periodic Maintenance" },
-  { "Name": "Diagnostics and Inspection" },
-  { "Name": "Engine Repair" },
-  { "Name": "Transmission Repair" },
-  { "Name": "Brake System Service and Repair" },
-  { "Name": "Suspension and Chassis Service" },
-  { "Name": "Electrical System Service" },
-  { "Name": "Air Conditioning System Service" },
-  { "Name": "Consumables Replacement" },
-  { "Name": "Technical Inspection Preparation" },
-  { "Name": "Tire Service and Balancing" },
-  { "Name": "Bodywork and Paint Services" },
-  { "Name": "Computer Diagnostics" },
-  { "Name": "Software Updates" },
-  { "Name": "General Vehicle Inspection" }
+  {
+    "Name": "Periodic Maintenance",
+    "Category": "Maintenance"
+  },
+  {
+    "Name": "Diagnostics and Inspection",
+    "Category": "Diagnostics"
+  },
+  {
+    "Name": "Engine Repair",
+    "Category": "Mechanical Repair"
+  },
+  {
+    "Name": "Transmission Repair",
+    "Category": "Mechanical Repair"
+  },
+  {
+    "Name": "Brake System Service and Repair",
+    "Category": "Mechanical Repair"
+  },
+  {
+    "Name": "Suspension and Chassis Service",
+    "Category": "Mechanical Repair"
+  },
+  {
+    "Name": "Electrical System Service",
+    "Category": "Electrical"
+  },
+  {
+    "Name": "Air Conditioning System Service",
+    "Category": "Maintenance"
+  },
+  {
+    "Name": "Consumables Replacement",
+    "Category": "Maintenance"
+  },
+  {
+    "Name": "Technical Inspection Preparation",
+    "Category": "Inspection"
+  },
+  {
+    "Name": "Tire Service and Balancing",
+    "Category": "Tire Service"
+  },
+  {
+    "Name": "Bodywork and Paint Services",
+    "Category": "Bodywork"
+  },
+  {
+    "Name": "Computer Diagnostics",
+    "Category": "Diagnostics"
+  },
+  {
+    "Name": "Software Updates",
+    "Category": "Diagnostics"
+  },
+  {
+    "Name": "General Vehicle Inspection",
+    "Category": "Inspection"
+  }
 ]

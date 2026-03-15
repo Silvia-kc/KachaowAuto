@@ -77,7 +77,7 @@
             @foreach (var s in ViewBag.Services)
             {
                 <option value="@s.ServiceId" selected="@(Model.ServiceId == s.ServiceId)">
-                    @s.Name
+                    @s.ServiceName
                 </option>
             }
         </select>
@@ -86,12 +86,12 @@
 
     <div class="mb-3">
         <label class="form-label">Workshop</label>
-        <select class="form-select" asp-for="WorkshopId">
+        <select class="form-select" asp-for="WorkshopId" id="workshopSelect">
             <option value="">-- select workshop --</option>
             @foreach (var w in ViewBag.Workshops)
             {
-                <option value="@w.WorkshopId" selected="@(Model.WorkshopId == w.WorkshopId)">
-                    @w.Name (@w.Region?.Name)
+                <option value="@w.WorkshopId" selected="@(Model.WorkshopId == w.WorkshopId ? "selected" : null)">
+                    @w.Name (@w.Region?.RegionName)
                 </option>
             }
         </select>
@@ -113,7 +113,9 @@
         <span asp-validation-for="ProblemDescription" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Book Appointment</button>
+    <div class="mt-3 mb-5 pb-5">
+        <button type="submit" class="btn btn-primary">Book Appointment</button>
+    </div>
 </form>
 
 @section Scripts {

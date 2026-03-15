@@ -1,0 +1,7 @@
+﻿[
+  { "StatusName": "Pending" },
+  { "StatusName": "Confirmed" },
+  { "StatusName": "In Progress" },
+  { "StatusName": "Completed" },
+  { "StatusName": "Cancelled" }
+]

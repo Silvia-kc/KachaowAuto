@@ -1,0 +1,23 @@
+﻿[
+  {
+    "Name": "KachaowAuto Central",
+    "RegionName": "Stara Zagora",
+    "City": "Kazanlak",
+    "Address": "Industrial Zone 12",
+    "PhoneNumber": "+359888111222"
+  },
+  {
+    "Name": "KachaowAuto Express",
+    "RegionName": "Plovdiv",
+    "City": "Plovdiv",
+    "Address": "6th September Blvd 101",
+    "PhoneNumber": "+359888333444"
+  },
+  {
+    "Name": "KachaowAuto Premium",
+    "RegionName": "Sofia",
+    "City": "Sofia",
+    "Address": "Tsarigradsko Shose 210",
+    "PhoneNumber": "+359888555666"
+  }
+]

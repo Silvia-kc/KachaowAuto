@@ -87,7 +87,9 @@ namespace KachaowAuto.Controllers
                     .ToListAsync();
 
                 ViewBag.Services = await context.Services.ToListAsync();
-                ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
+                ViewBag.Workshops = await context.Workshops
+                    .Include(w => w.Region)
+                    .ToListAsync();
 
                 ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
                 ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
@@ -101,27 +103,40 @@ namespace KachaowAuto.Controllers
 
             var userId = int.Parse(userIdStr);
 
-            var car = new Car
+            var pending = await context.AppointmentStatuses
+                .FirstOrDefaultAsync(s => s.StatusName == "Pending");
+
+            if (pending == null)
             {
-                UserId = userId,
-                ModelId = model.ModelId,
-                Year = model.Year,
-                VIN = model.VIN
-            };
+                ModelState.AddModelError("", "Appointment status 'Pending' was not found.");
+
+                ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
+
+                ViewBag.Models = await context.Models
+                    .Where(m => m.BrandId == model.BrandId)
+                    .ToListAsync();
+
+                ViewBag.Services = await context.Services.ToListAsync();
+                ViewBag.Workshops = await context.Workshops
+                    .Include(w => w.Region)
+                    .ToListAsync();
+
+                ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
+                ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
+
+                return View(model);
+            }
+
+            var car = new Car { UserId = userId, ModelId = model.ModelId, Year = model.Year, VIN = model.VIN };
 
             context.Cars.Add(car);
 
-            var pending = await context.AppointmentStatuses.FirstOrDefaultAsync(s => s.StatusName == "Pending");
-            var statusId = pending != null
-                ? pending.AppointmentStatusId
-                : await context.AppointmentStatuses.Select(s => s.AppointmentStatusId).FirstAsync();
-
             var appointment = new Appointment
             {
-                Car = car, 
+                Car = car,
                 ServiceId = model.ServiceId,
                 WorkshopId = model.WorkshopId,
-                AppointmentStatusId = statusId,
+                AppointmentStatusId = pending.AppointmentStatusId,
                 CreatedAt = DateTime.UtcNow,
                 ScheduledDate = model.ScheduledDate,
                 ProblemDescription = model.ProblemDescription

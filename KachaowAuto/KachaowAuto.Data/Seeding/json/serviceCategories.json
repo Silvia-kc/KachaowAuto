@@ -1,0 +1,9 @@
+﻿[
+  { "Name": "Maintenance" },
+  { "Name": "Diagnostics" },
+  { "Name": "Mechanical Repair" },
+  { "Name": "Electrical" },
+  { "Name": "Inspection" },
+  { "Name": "Tire Service" },
+  { "Name": "Bodywork" }
+]
