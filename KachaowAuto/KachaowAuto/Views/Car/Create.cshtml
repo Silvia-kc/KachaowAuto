@@ -1,0 +1,38 @@
+﻿@model KachaowAuto.Data.Models.Car
+
+@{
+    ViewData["Title"] = "Add Car";
+}
+
+<h2 class="mb-4">Add Car</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="ModelId" class="form-label">Model</label>
+        <select asp-for="ModelId" class="form-control" asp-items="@(new SelectList(ViewBag.Models, "Id", "ModelName"))">
+            <option value="">-- Select Model --</option>
+        </select>
+        <span asp-validation-for="ModelId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="VIN" class="form-label"></label>
+        <input asp-for="VIN" class="form-control" />
+        <span asp-validation-for="VIN" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="MyCars" class="btn btn-secondary">Back to My Cars</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

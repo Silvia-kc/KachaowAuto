@@ -1,0 +1,62 @@
+﻿@model IEnumerable<KachaowAuto.ViewModels.MyCarViewModel>
+
+@{
+    ViewData["Title"] = "My Cars";
+}
+
+<h2 class="mb-4">My Cars</h2>
+
+<p>
+    <a asp-controller="Car" asp-action="Create" class="btn btn-primary">Add Car</a>
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        You have no cars added yet.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>License Plate</th>
+                <th>VIN</th>
+                <th>Latest Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.BrandName</td>
+                    <td>@car.ModelName</td>
+                    <td>@car.Year</td>
+                    <td>@car.VIN</td>
+                    <td>
+                        @if (car.LatestStatus == "Completed")
+                        {
+                            <span class="badge bg-success">Completed</span>
+                        }
+                        else if (car.LatestStatus == "Upcoming")
+                        {
+                            <span class="badge bg-warning text-dark">Upcoming</span>
+                        }
+                        else if (car.LatestStatus == "In Progress")
+                        {
+                            <span class="badge bg-primary">In Progress</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No appointments</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,7 +1,57 @@
-﻿<h2>Mechanic Dashboard</h2>
+﻿@{
+    ViewData["Title"] = "Mechanic Dashboard";
+}
 
-<ul>
-    <li><a asp-controller="Appointment" asp-action="Index">Appointments</a></li>
-    <li><a asp-controller="Part" asp-action="Index">Parts</a></li>
-    <li><a asp-controller="Service" asp-action="Index">Services</a></li>
-</ul>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Mechanic Dashboard</h1>
+        <p class="text-muted">Manage appointments, services and parts efficiently.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">📋</div>
+                    <h4 class="card-title fw-semibold">Appointments</h4>
+                    <p class="card-text text-muted">
+                        View and manage all customer appointments and service requests.
+                    </p>
+                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-primary rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">🔧</div>
+                    <h4 class="card-title fw-semibold">Parts</h4>
+                    <p class="card-text text-muted">
+                        Manage available parts and track inventory for repairs.
+                    </p>
+                    <a asp-controller="Part" asp-action="Index" class="btn btn-dark rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">⚙️</div>
+                    <h4 class="card-title fw-semibold">Services</h4>
+                    <p class="card-text text-muted">
+                        View and manage the list of services offered by the workshop.
+                    </p>
+                    <a asp-controller="Service" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

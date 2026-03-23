@@ -1,7 +1,57 @@
-﻿<h2>Client Dashboard</h2>
+﻿@{
+    ViewData["Title"] = "Client Dashboard";
+}
 
-<ul>
-    <li><a asp-controller="Appointment" asp-action="Create">Book Appointment</a></li>
-    <li><a asp-controller="Car" asp-action="Create">Add Car</a></li>
-    <li><a asp-controller="Workshop" asp-action="Index">Workshops</a></li>
-</ul>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Client Dashboard</h1>
+        <p class="text-muted">Manage your cars, appointments and workshops in one place.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">📅</div>
+                    <h4 class="card-title fw-semibold">Book Appointment</h4>
+                    <p class="card-text text-muted">
+                        Schedule a new service appointment for your vehicle quickly and easily.
+                    </p>
+                    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">🚗</div>
+                    <h4 class="card-title fw-semibold">My Cars</h4>
+                    <p class="card-text text-muted">
+                        View your vehicles and check their latest service status.
+                    </p>
+                    <a asp-controller="Car" asp-action="MyCars" class="btn btn-dark rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3 fs-1">🏢</div>
+                    <h4 class="card-title fw-semibold">Workshops</h4>
+                    <p class="card-text text-muted">
+                        Explore available workshops and choose the most suitable location.
+                    </p>
+                    <a asp-controller="Workshop" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
+                        Open
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -52,7 +52,7 @@
                             @foreach (var s in (IEnumerable<dynamic>)ViewBag.Statuses)
                             {
                                 <option value="@s.AppointmentStatusId" selected="@(a.AppointmentStatusId == (int)s.AppointmentStatusId)">
-                                    @s.Name
+                                    @s.StatusName
                                 </option>
                             }
                         </select>

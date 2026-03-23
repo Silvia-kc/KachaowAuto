@@ -1,7 +1,9 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +13,11 @@ namespace KachaowAuto.Controllers
     public class CarController : Controller
     {
         private readonly KachaowAutoDbContext context;
-        public CarController(KachaowAutoDbContext _context)
+        private readonly UserManager<ApplicationUser> userManager;
+        public CarController(KachaowAutoDbContext _context, UserManager<ApplicationUser> _userManager)
         {
             context = _context;
+            userManager = _userManager;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
@@ -47,7 +51,40 @@ namespace KachaowAuto.Controllers
             }
             await context.Cars.AddAsync(car);
             await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("MyCars");
+        }
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> MyCars()
+        {
+            var userIdStr = userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(userIdStr))
+                return Forbid();
+
+            int userId = int.Parse(userIdStr);
+
+            var cars = await context.Cars
+                .Where(c => c.UserId == userId)
+                .Include(c => c.Model)
+                    .ThenInclude(m => m.Brand)
+                .Include(c => c.Appointments)
+                .Select(c => new MyCarViewModel
+                {
+                    CarId = c.CarId,
+                    BrandName = c.Model.Brand.BrandName,
+                    ModelName = c.Model.ModelName,
+                    Year = c.Year,
+                    VIN = c.VIN,
+                    LatestStatus = c.Appointments
+                                    .OrderByDescending(a => a.ScheduledDate)
+                                    .Select(a =>
+                                            a.CompletedAt != null ? "Completed" :
+                                            a.ScheduledDate > DateTime.Now ? "Upcoming" :
+                                    "In Progress")
+                                    .FirstOrDefault() ?? "No appointments"
+                })
+                .ToListAsync();
+
+            return View(cars);
         }
 
         [Authorize(Roles = "Admin")]
