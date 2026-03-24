@@ -217,6 +217,8 @@ namespace KachaowAuto.Data.Seeding
                     City = w.City,
                     Address = w.Address,
                     PhoneNumber = w.PhoneNumber,
+                    Latitude = w.Latitude,
+                    Longitude = w.Longitude,
                     IsActive = true
                 });
             }
@@ -299,6 +301,8 @@ namespace KachaowAuto.Data.Seeding
             public string City { get; set; } = null!;
             public string Address { get; set; } = null!;
             public string? PhoneNumber { get; set; }
+            public decimal? Latitude { get; set; }
+            public decimal? Longitude { get; set; }
         }
         public class AppointmentStatusSeed
         {

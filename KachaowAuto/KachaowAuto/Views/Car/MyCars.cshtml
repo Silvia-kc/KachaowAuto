@@ -1,62 +1,74 @@
 ﻿@model IEnumerable<KachaowAuto.ViewModels.MyCarViewModel>
 
+
 @{
     ViewData["Title"] = "My Cars";
 }
 
-<h2 class="mb-4">My Cars</h2>
-
-<p>
-    <a asp-controller="Car" asp-action="Create" class="btn btn-primary">Add Car</a>
-</p>
-
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info">
-        You have no cars added yet.
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">My Cars</h1>
+            <p class="text-muted mb-0">View your vehicles and their latest service status.</p>
+        </div>
+        <a asp-controller="Car" asp-action="Create" class="btn btn-primary rounded-pill px-4">
+            Add Car
+        </a>
     </div>
-}
-else
-{
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Year</th>
-                <th>License Plate</th>
-                <th>VIN</th>
-                <th>Latest Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var car in Model)
-            {
-                <tr>
-                    <td>@car.BrandName</td>
-                    <td>@car.ModelName</td>
-                    <td>@car.Year</td>
-                    <td>@car.VIN</td>
-                    <td>
-                        @if (car.LatestStatus == "Completed")
-                        {
-                            <span class="badge bg-success">Completed</span>
-                        }
-                        else if (car.LatestStatus == "Upcoming")
-                        {
-                            <span class="badge bg-warning text-dark">Upcoming</span>
-                        }
-                        else if (car.LatestStatus == "In Progress")
-                        {
-                            <span class="badge bg-primary">In Progress</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-secondary">No appointments</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info rounded-4 shadow-sm border-0">
+            You have no cars added yet.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="ps-4">Brand</th>
+                                <th>Model</th>
+                                <th>Year</th>
+                                <th>VIN</th>
+                                <th class="pe-4">Latest Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var car in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-semibold">@car.BrandName</td>
+                                    <td>@car.ModelName</td>
+                                    <td>@car.Year</td>
+                                    <td>@car.VIN</td>
+                                    <td class="pe-4">
+                                        @if (car.LatestStatus == "Completed")
+                                        {
+                                            <span class="badge bg-success px-3 py-2">Completed</span>
+                                        }
+                                        else if (car.LatestStatus == "Upcoming")
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2">Upcoming</span>
+                                        }
+                                        else if (car.LatestStatus == "In Progress")
+                                        {
+                                            <span class="badge bg-primary px-3 py-2">In Progress</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary px-3 py-2">No appointments</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

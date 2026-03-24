@@ -4,20 +4,26 @@
     "RegionName": "Stara Zagora",
     "City": "Kazanlak",
     "Address": "Industrial Zone 12",
-    "PhoneNumber": "+359888111222"
+    "PhoneNumber": "+359888111222",
+    "Latitude": 42.6167,
+    "Longitude": 25.4000
   },
   {
     "Name": "KachaowAuto Express",
     "RegionName": "Plovdiv",
     "City": "Plovdiv",
     "Address": "6th September Blvd 101",
-    "PhoneNumber": "+359888333444"
+    "PhoneNumber": "+359888333444",
+    "Latitude": 42.1354,
+    "Longitude": 24.7453
   },
   {
     "Name": "KachaowAuto Premium",
     "RegionName": "Sofia",
     "City": "Sofia",
     "Address": "Tsarigradsko Shose 210",
-    "PhoneNumber": "+359888555666"
+    "PhoneNumber": "+359888555666",
+    "Latitude": 42.6977,
+    "Longitude": 23.3219
   }
 ]

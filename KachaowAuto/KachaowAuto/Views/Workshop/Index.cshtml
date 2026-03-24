@@ -1,0 +1,192 @@
+﻿@model KachaowAuto.ViewModels.Workshop.WorkshopMapViewModel
+@using System.Globalization
+@using System.Text.Encodings.Web
+
+@{
+    ViewData["Title"] = "Workshops";
+    var cities = ViewBag.Cities as List<string> ?? new List<string>();
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Find a Workshop</h1>
+        <p class="text-muted">Choose your city and explore available workshops on the map.</p>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+        <form method="get" asp-action="Index">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-9">
+                    <label class="form-label fw-semibold">Select city</label>
+                    <select name="city" class="form-select form-select-lg rounded-3">
+                        <option value="">All cities</option>
+                        @foreach (var city in cities)
+                        {
+                            if (Model.SelectedCity == city)
+                            {
+                                <option value="@city" selected>@city</option>
+                            }
+                            else
+                            {
+                                <option value="@city">@city</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-dark btn-lg w-100 rounded-3">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div id="map"></div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h3 class="fw-bold mb-3">Available Workshops</h3>
+
+                    @if (Model.Workshops.Any())
+                    {
+                        @foreach (var workshop in Model.Workshops)
+                        {
+                            <div class="workshop-card border rounded-4 p-3 mb-3"
+                                 data-lat="@(workshop.Latitude?.ToString(CultureInfo.InvariantCulture))"
+                                 data-lng="@(workshop.Longitude?.ToString(CultureInfo.InvariantCulture))">
+                                <h5 class="fw-bold mb-1">@workshop.Name</h5>
+                                <p class="text-muted mb-1">@workshop.City</p>
+                                <p class="mb-1">@workshop.Address</p>
+
+                                @if (!string.IsNullOrWhiteSpace(workshop.PhoneNumber))
+                                {
+                                    <p class="mb-3">📞 @workshop.PhoneNumber</p>
+                                }
+
+                                <a asp-controller="Appointment"
+                                   asp-action="Create"
+                                   asp-route-workshopId="@workshop.WorkshopId"
+                                   class="btn btn-outline-primary rounded-pill px-4">
+                                    Choose
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-light border rounded-4 mb-0">
+                            No workshops found for this city.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #map {
+        width: 100%;
+        height: 550px;
+        min-height: 550px;
+        background: #dde3ea;
+    }
+
+    .workshop-card {
+        cursor: pointer;
+        transition: .2s ease;
+        background: #fff;
+    }
+
+        .workshop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,0,0,.08);
+            border-color: #0d6efd !important;
+        }
+</style>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        (function () {
+            const map = L.map('map');
+            const bulgariaCenter = [42.7339, 25.4858];
+
+            map.setView(bulgariaCenter, 7);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            const markers = [];
+
+        @foreach (var workshop in Model.Workshops)
+        {
+            if (workshop.Latitude.HasValue && workshop.Longitude.HasValue)
+            {
+                <text>
+                            markers.push(
+                            L.circleMarker(
+                            [@workshop.Latitude.Value.ToString(CultureInfo.InvariantCulture),
+                    @workshop.Longitude.Value.ToString(CultureInfo.InvariantCulture)],
+                            {
+                                radius: 8,
+                            fillColor: "#0d6efd",
+                            color: "#ffffff",
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.95
+                                            }
+                            ).addTo(map).bindPopup(`
+                            <strong>@Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Name))</strong><br>
+                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.City))<br>
+                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Address))<br>
+                    @(string.IsNullOrWhiteSpace(workshop.PhoneNumber) ? "" : "📞 " + workshop.PhoneNumber)
+                                        `)
+                                        );
+                </text>
+            }
+        }
+
+                            setTimeout(function () {
+                                map.invalidateSize();
+
+                        if (markers.length > 0) {
+                            const group = L.featureGroup(markers);
+                            map.fitBounds(group.getBounds().pad(0.2));
+                        } else {
+                                map.setView(bulgariaCenter, 7);
+                        }
+                    }, 500);
+
+                    document.querySelectorAll('.workshop-card').forEach(card => {
+                                card.addEventListener('click', function (e) {
+                                    if (e.target.tagName.toLowerCase() === 'a') return;
+
+                                    const lat = parseFloat(this.dataset.lat);
+                                    const lng = parseFloat(this.dataset.lng);
+
+                                    if (!isNaN(lat) && !isNaN(lng)) {
+                                        map.setView([lat, lng], 14);
+
+                                        markers.forEach(m => {
+                                            const pos = m.getLatLng();
+                                            if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lng) < 0.0001) {
+                                                m.openPopup();
+                                            }
+                                        });
+                                    }
+                                });
+                    });
+                })();
+    </script>
+}

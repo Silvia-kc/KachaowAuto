@@ -1,12 +1,13 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.Workshop;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
-    [Authorize(Roles = "Admin")] 
+        
     public class WorkshopController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -17,14 +18,48 @@ namespace KachaowAuto.Controllers
         }
 
         [Authorize(Roles = "Admin,Mechanic,Client")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? city)
         {
-            var workshops = await context.Workshops
-                                         .Include(a => a.Region)
-                                         .Include(a => a.WorkshopServices)
-                                         .Include(a => a.Appointments)
-                                         .ToListAsync();
-            return View(workshops);
+            var workshopsQuery = context.Workshops
+                .Include(w => w.Region)
+                .Where(w => w.IsActive)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(city))
+            {
+                workshopsQuery = workshopsQuery
+                    .Where(w => w.City.ToLower() == city.ToLower());
+            }
+
+            var workshops = await workshopsQuery
+                                 .Select(w => new WorkshopMapItemViewModel
+                                 {
+                                   WorkshopId = w.WorkshopId,
+                                   Name = w.Name,
+                                   City = w.City,
+                                   Address = w.Address,
+                                   PhoneNumber = w.PhoneNumber,
+                                   Latitude = (decimal?)(w.Latitude.HasValue ? (double?)w.Latitude.Value : null),
+                                 Longitude = (decimal?)(w.Longitude.HasValue ? (double?)w.Longitude.Value : null)
+                                 })
+                                .ToListAsync();
+
+            var cities = await context.Workshops
+                .Where(w => w.IsActive)
+                .Select(w => w.City)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            ViewBag.Cities = cities;
+
+            var model = new WorkshopMapViewModel
+            {
+                SelectedCity = city,
+                Workshops = workshops
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> Create()
