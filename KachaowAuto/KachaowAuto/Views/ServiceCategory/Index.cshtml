@@ -1,0 +1,31 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.ServiceCategory>
+
+@{
+    ViewData["Title"] = "Service Categories";
+}
+
+<div class="container mt-4">
+    <h1>Service Categories</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create Service Category</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Services Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.CategoryName</td>
+                    <td>@(category.Services?.Count ?? 0)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

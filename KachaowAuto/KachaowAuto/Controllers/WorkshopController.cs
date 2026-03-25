@@ -61,6 +61,15 @@ namespace KachaowAuto.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdminIndex()
+        {
+            var workshops = await context.Workshops
+                .Include(w => w.Region)
+                .ToListAsync();
+
+            return View(workshops);
+        }
 
         public async Task<IActionResult> Create()
         {

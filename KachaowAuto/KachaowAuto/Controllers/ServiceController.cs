@@ -26,12 +26,9 @@ namespace KachaowAuto.Controllers
                                       .ToListAsync();
             return View(services);
         }
-
         public async Task<IActionResult> Create()
         {
             ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-            ViewBag.WorkshopServices = await context.WorkshopServices.ToListAsync();
-            ViewBag.Appointments = await context.Appointments.ToListAsync();
             return View();
         }
 
@@ -42,15 +39,13 @@ namespace KachaowAuto.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-                ViewBag.WorkshopServices = await context.WorkshopServices.ToListAsync();
-                ViewBag.Appointments = await context.Appointments.ToListAsync();
                 return View(service);
             }
+
             await context.Services.AddAsync(service);
             await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();

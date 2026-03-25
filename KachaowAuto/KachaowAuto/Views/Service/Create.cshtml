@@ -1,0 +1,57 @@
+﻿@model KachaowAuto.Data.Models.Service
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Create Service";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Create Service</h1>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="ServiceName" class="form-label"></label>
+            <input asp-for="ServiceName" class="form-control" />
+            <span asp-validation-for="ServiceName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PriceFrom" class="form-label"></label>
+            <input asp-for="PriceFrom" class="form-control" />
+            <span asp-validation-for="PriceFrom" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PriceTo" class="form-label"></label>
+            <input asp-for="PriceTo" class="form-control" />
+            <span asp-validation-for="PriceTo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ServiceCategoryId" class="form-label"></label>
+            <select asp-for="ServiceCategoryId"
+                    class="form-select"
+                    asp-items="@(new SelectList(ViewBag.ServiceCategories, "ServiceCategoryId", "CategoryName"))">
+                <option value="">-- Select Category --</option>
+            </select>
+            <span asp-validation-for="ServiceCategoryId" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create</button>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

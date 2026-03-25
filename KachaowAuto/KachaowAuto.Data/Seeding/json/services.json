@@ -1,62 +1,107 @@
 [
   {
-    "Name": "Periodic Maintenance",
+    "ServiceName": "Periodic Maintenance",
+    "Description": "Regular servicing including oil change, filters, and general inspection.",
+    "PriceFrom": 80,
+    "PriceTo": 200,
     "Category": "Maintenance"
   },
   {
-    "Name": "Diagnostics and Inspection",
+    "ServiceName": "Diagnostics and Inspection",
+    "Description": "Full diagnostic scan and inspection of vehicle systems.",
+    "PriceFrom": 50,
+    "PriceTo": 120,
     "Category": "Diagnostics"
   },
   {
-    "Name": "Engine Repair",
+    "ServiceName": "Engine Repair",
+    "Description": "Repair and overhaul of engine components and systems.",
+    "PriceFrom": 300,
+    "PriceTo": 1500,
     "Category": "Mechanical Repair"
   },
   {
-    "Name": "Transmission Repair",
+    "ServiceName": "Transmission Repair",
+    "Description": "Repair and maintenance of gearbox and transmission systems.",
+    "PriceFrom": 400,
+    "PriceTo": 1800,
     "Category": "Mechanical Repair"
   },
   {
-    "Name": "Brake System Service and Repair",
+    "ServiceName": "Brake System Service and Repair",
+    "Description": "Inspection, replacement and repair of brake pads, discs and systems.",
+    "PriceFrom": 100,
+    "PriceTo": 500,
     "Category": "Mechanical Repair"
   },
   {
-    "Name": "Suspension and Chassis Service",
+    "ServiceName": "Suspension and Chassis Service",
+    "Description": "Repair of suspension components, shocks, and chassis alignment.",
+    "PriceFrom": 150,
+    "PriceTo": 800,
     "Category": "Mechanical Repair"
   },
   {
-    "Name": "Electrical System Service",
+    "ServiceName": "Electrical System Service",
+    "Description": "Diagnostics and repair of electrical wiring, battery and electronics.",
+    "PriceFrom": 70,
+    "PriceTo": 400,
     "Category": "Electrical"
   },
   {
-    "Name": "Air Conditioning System Service",
+    "ServiceName": "Air Conditioning System Service",
+    "Description": "Recharge, cleaning and repair of AC system.",
+    "PriceFrom": 60,
+    "PriceTo": 250,
     "Category": "Maintenance"
   },
   {
-    "Name": "Consumables Replacement",
+    "ServiceName": "Consumables Replacement",
+    "Description": "Replacement of filters, fluids, belts and other consumables.",
+    "PriceFrom": 40,
+    "PriceTo": 200,
     "Category": "Maintenance"
   },
   {
-    "Name": "Technical Inspection Preparation",
+    "ServiceName": "Technical Inspection Preparation",
+    "Description": "Preparation of vehicle for annual technical inspection.",
+    "PriceFrom": 50,
+    "PriceTo": 150,
     "Category": "Inspection"
   },
   {
-    "Name": "Tire Service and Balancing",
+    "ServiceName": "Tire Service and Balancing",
+    "Description": "Tire change, balancing and alignment services.",
+    "PriceFrom": 30,
+    "PriceTo": 120,
     "Category": "Tire Service"
   },
   {
-    "Name": "Bodywork and Paint Services",
+    "ServiceName": "Bodywork and Paint Services",
+    "Description": "Repair of body damage and professional painting services.",
+    "PriceFrom": 200,
+    "PriceTo": 2000,
     "Category": "Bodywork"
   },
   {
-    "Name": "Computer Diagnostics",
+    "ServiceName": "Computer Diagnostics",
+    "Description": "Advanced computer diagnostics for modern vehicles.",
+    "PriceFrom": 40,
+    "PriceTo": 100,
     "Category": "Diagnostics"
   },
   {
-    "Name": "Software Updates",
+    "ServiceName": "Software Updates",
+    "Description": "Updating vehicle software and control units.",
+    "PriceFrom": 50,
+    "PriceTo": 200,
     "Category": "Diagnostics"
   },
   {
-    "Name": "General Vehicle Inspection",
+    "ServiceName": "General Vehicle Inspection",
+    "Description": "Complete inspection of vehicle condition and safety.",
+    "PriceFrom": 30,
+    "PriceTo": 100,
     "Category": "Inspection"
   }
 ]

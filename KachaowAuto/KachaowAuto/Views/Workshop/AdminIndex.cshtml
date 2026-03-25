@@ -1,0 +1,45 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.Workshop>
+
+@{
+    ViewData["Title"] = "Workshops";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Workshops</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create Workshop</a>
+    </p>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Region</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var workshop in Model)
+            {
+                <tr>
+                    <td>@workshop.WorkshopId</td>
+                    <td>@workshop.Name</td>
+                    <td>@workshop.Region?.RegionName</td>
+                    <td>@workshop.City</td>
+                    <td>@workshop.Address</td>
+                    <td>@workshop.PhoneNumber</td>
+                    <td>@workshop.Latitude</td>
+                    <td>@workshop.Longitude</td>
+                    <td>@workshop.IsActive</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -136,14 +136,15 @@ namespace KachaowAuto.Data.Seeding
             var json = await File.ReadAllTextAsync("../KachaowAuto.Data/Seeding/json/services.json");
             var services = JsonSerializer.Deserialize<List<ServiceSeed>>(json);
 
-            if (services == null || services.Count == 0) return;
+            if (services == null || services.Count == 0)
+                return;
 
             foreach (var s in services)
             {
-                if (string.IsNullOrWhiteSpace(s.Name) || string.IsNullOrWhiteSpace(s.Category))
+                if (string.IsNullOrWhiteSpace(s.ServiceName) || string.IsNullOrWhiteSpace(s.Category))
                     continue;
 
-                bool exists = await db.Services.AnyAsync(x => x.ServiceName == s.Name);
+                bool exists = await db.Services.AnyAsync(x => x.ServiceName == s.ServiceName);
 
                 if (exists)
                     continue;
@@ -156,7 +157,10 @@ namespace KachaowAuto.Data.Seeding
 
                 db.Services.Add(new Service
                 {
-                    ServiceName = s.Name,
+                    ServiceName = s.ServiceName,
+                    Description = s.Description,
+                    PriceFrom = s.PriceFrom,
+                    PriceTo = s.PriceTo,
                     ServiceCategoryId = category.ServiceCategoryId
                 });
             }
@@ -287,7 +291,10 @@ namespace KachaowAuto.Data.Seeding
         }
         public class ServiceSeed
         {
-            public string Name { get; set; } = null!;
+            public string ServiceName { get; set; } = null!;
+            public string Description { get; set; } = null!;
+            public decimal? PriceFrom { get; set; }
+            public decimal? PriceTo { get; set; }
             public string Category { get; set; } = null!;
         }
         public class RegionSeed
