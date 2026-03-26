@@ -1,6 +1,8 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels;
+using KachaowAuto.ViewModels.Appointment;
+using KachaowAuto.Core.Appointment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,60 +14,85 @@ namespace KachaowAuto.Controllers
     [Authorize]
     public class AppointmentController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAppointmentService appointmentService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AppointmentController(KachaowAutoDbContext _context, UserManager<ApplicationUser> userManager)
+        public AppointmentController(
+            IAppointmentService _appointmentService,
+            UserManager<ApplicationUser> _userManager)
         {
-            context = _context;
-            _userManager = userManager;
+            appointmentService = _appointmentService;
+            userManager = _userManager;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index(int? statusId)
         {
-            ViewBag.Statuses = await context.AppointmentStatuses.ToListAsync();
+            ViewBag.Statuses = await appointmentService.GetStatusesAsync();
             ViewBag.SelectedStatusId = statusId;
 
-            var query = context.Appointments
-                .Include(a => a.Car).ThenInclude(c => c.Model)
-                .Include(a => a.Workshop)
-                .Include(a => a.Service)
-                .Include(a => a.Status)
-                .AsQueryable();
+            var serviceModels = await appointmentService.GetAllForIndexAsync(statusId);
 
-            if (statusId.HasValue)
-                query = query.Where(a => a.AppointmentStatusId == statusId.Value); 
+            var viewModels = serviceModels.Select(a => new AppointmentIndexViewModel
+            {
+                AppointmentId = a.AppointmentId,
+                CarModelName = a.CarModelName,
+                VIN = a.VIN,
+                WorkshopName = a.WorkshopName,
+                ServiceName = a.ServiceName,
+                StatusName = a.StatusName,
+                ScheduledDate = a.ScheduledDate,
+                CreatedAt = a.CreatedAt,
+                CompletedAt = a.CompletedAt,
+                ProblemDescription = a.ProblemDescription
+            }).ToList();
 
-            var appointments = await query.ToListAsync();
-            return View(appointments);
+            return View(viewModels);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var appointment = await context.Appointments
-                .Include(a => a.Car)
-                .Include(a => a.Service)
-                .FirstOrDefaultAsync(a => a.AppointmentId == id);
+            var serviceModel = await appointmentService.GetDetailsAsync(id);
 
-            if (appointment == null) return NotFound();
+            if (serviceModel == null)
+            {
+                return NotFound();
+            }
 
-            return View(appointment);
+            var viewModel = new AppointmentDetailsViewModel
+            {
+                AppointmentId = serviceModel.AppointmentId,
+                CarModelName = serviceModel.CarModelName,
+                VIN = serviceModel.VIN,
+                Year = serviceModel.Year,
+                WorkshopName = serviceModel.WorkshopName,
+                ServiceName = serviceModel.ServiceName,
+                StatusName = serviceModel.StatusName,
+                ScheduledDate = serviceModel.ScheduledDate,
+                CreatedAt = serviceModel.CreatedAt,
+                CompletedAt = serviceModel.CompletedAt,
+                ProblemDescription = serviceModel.ProblemDescription
+            };
+
+            return View(viewModel);
         }
+
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.BrandsCount = await context.Brands.CountAsync();
-            ViewBag.ModelsCount = await context.Models.CountAsync();
-            ViewBag.ServicesCount = await context.Services.CountAsync();
-            ViewBag.WorkshopsCount = await context.Workshops.CountAsync();
+            var data = await appointmentService.GetCreatePageDataAsync();
 
-            ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
-            ViewBag.Services = await context.Services.ToListAsync();
-            ViewBag.Workshops = await context.Workshops.Include(w => w.Region).ToListAsync();
+            ViewBag.BrandsCount = data.BrandsCount;
+            ViewBag.ModelsCount = data.ModelsCount;
+            ViewBag.ServicesCount = data.ServicesCount;
+            ViewBag.WorkshopsCount = data.WorkshopsCount;
 
-            ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
-            ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
+            ViewBag.Brands = data.Brands;
+            ViewBag.Models = data.Models;
+            ViewBag.Services = data.Services;
+            ViewBag.Workshops = data.Workshops;
+            ViewBag.EngineTypes = data.EngineTypes;
+            ViewBag.BodyTypes = data.BodyTypes;
 
             return View(new BookAppointmentViewModel
             {
@@ -73,157 +100,219 @@ namespace KachaowAuto.Controllers
                 ScheduledDate = DateTime.Now.AddDays(1)
             });
         }
+
         [Authorize(Roles = "Client")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookAppointmentViewModel model)
+        public async Task<IActionResult> Create(BookAppointmentViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
+                var pageData = await appointmentService.GetCreatePageDataAsync(viewModel.BrandId);
 
-                ViewBag.Models = await context.Models
-                    .Where(m => m.BrandId == model.BrandId)
-                    .ToListAsync();
+                ViewBag.BrandsCount = pageData.BrandsCount;
+                ViewBag.ModelsCount = pageData.ModelsCount;
+                ViewBag.ServicesCount = pageData.ServicesCount;
+                ViewBag.WorkshopsCount = pageData.WorkshopsCount;
 
-                ViewBag.Services = await context.Services.ToListAsync();
-                ViewBag.Workshops = await context.Workshops
-                    .Include(w => w.Region)
-                    .ToListAsync();
+                ViewBag.Brands = pageData.Brands;
+                ViewBag.Models = pageData.Models;
+                ViewBag.Services = pageData.Services;
+                ViewBag.Workshops = pageData.Workshops;
+                ViewBag.EngineTypes = pageData.EngineTypes;
+                ViewBag.BodyTypes = pageData.BodyTypes;
 
-                ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
-                ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
-
-                return View(model);
+                return View(viewModel);
             }
 
-            var userIdStr = _userManager.GetUserId(User);
+            var userIdStr = userManager.GetUserId(User);
             if (string.IsNullOrEmpty(userIdStr))
-                return Forbid();
-
-            var userId = int.Parse(userIdStr);
-
-            var pending = await context.AppointmentStatuses
-                .FirstOrDefaultAsync(s => s.StatusName == "Pending");
-
-            if (pending == null)
             {
-                ModelState.AddModelError("", "Appointment status 'Pending' was not found.");
-
-                ViewBag.Brands = await context.Brands.OrderBy(b => b.BrandName).ToListAsync();
-
-                ViewBag.Models = await context.Models
-                    .Where(m => m.BrandId == model.BrandId)
-                    .ToListAsync();
-
-                ViewBag.Services = await context.Services.ToListAsync();
-                ViewBag.Workshops = await context.Workshops
-                    .Include(w => w.Region)
-                    .ToListAsync();
-
-                ViewBag.EngineTypes = await context.EngineTypes.OrderBy(e => e.Name).ToListAsync();
-                ViewBag.BodyTypes = await context.BodyTypes.OrderBy(b => b.Name).ToListAsync();
-
-                return View(model);
+                return Forbid();
             }
 
-            var car = new Car { UserId = userId, ModelId = model.ModelId, Year = model.Year, VIN = model.VIN };
-
-            context.Cars.Add(car);
-
-            var appointment = new Appointment
+            var serviceModel = new AppointmentCreateServiceModel
             {
-                Car = car,
-                ServiceId = model.ServiceId,
-                WorkshopId = model.WorkshopId,
-                AppointmentStatusId = pending.AppointmentStatusId,
-                CreatedAt = DateTime.UtcNow,
-                ScheduledDate = model.ScheduledDate,
-                ProblemDescription = model.ProblemDescription
+                BrandId = viewModel.BrandId,
+                ModelId = viewModel.ModelId,
+                Year = viewModel.Year,
+                VIN = viewModel.VIN,
+                ServiceId = viewModel.ServiceId,
+                WorkshopId = viewModel.WorkshopId,
+                ScheduledDate = viewModel.ScheduledDate,
+                ProblemDescription = viewModel.ProblemDescription,
+                UserId = int.Parse(userIdStr)
             };
 
-            context.Appointments.Add(appointment);
+            var result = await appointmentService.CreateAsync(serviceModel);
 
-            await context.SaveChangesAsync();
+            if (!result.Success)
+            {
+                ModelState.AddModelError("", result.ErrorMessage!);
+
+                var pageData = await appointmentService.GetCreatePageDataAsync(viewModel.BrandId);
+
+                ViewBag.BrandsCount = pageData.BrandsCount;
+                ViewBag.ModelsCount = pageData.ModelsCount;
+                ViewBag.ServicesCount = pageData.ServicesCount;
+                ViewBag.WorkshopsCount = pageData.WorkshopsCount;
+
+                ViewBag.Brands = pageData.Brands;
+                ViewBag.Models = pageData.Models;
+                ViewBag.Services = pageData.Services;
+                ViewBag.Workshops = pageData.Workshops;
+                ViewBag.EngineTypes = pageData.EngineTypes;
+                ViewBag.BodyTypes = pageData.BodyTypes;
+
+                return View(viewModel);
+            }
 
             return RedirectToAction("Client", "Dashboard");
         }
 
+        [Authorize(Roles = "Admin,Mechanic")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var pageData = await appointmentService.GetEditPageDataAsync(id);
+
+            if (pageData == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Cars = pageData.Cars;
+            ViewBag.Workshops = pageData.Workshops;
+            ViewBag.Services = pageData.Services;
+            ViewBag.Statuses = pageData.Statuses;
+
+            var viewModel = new AppointmentEditViewModel
+            {
+                AppointmentId = pageData.Appointment.AppointmentId,
+                CarId = pageData.Appointment.CarId,
+                WorkshopId = pageData.Appointment.WorkshopId,
+                ServiceId = pageData.Appointment.ServiceId,
+                AppointmentStatusId = pageData.Appointment.AppointmentStatusId,
+                ScheduledDate = pageData.Appointment.ScheduledDate,
+                ProblemDescription = pageData.Appointment.ProblemDescription,
+                CompletedAt = pageData.Appointment.CompletedAt
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize(Roles = "Admin,Mechanic")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Edit(Appointment appointment)
+        public async Task<IActionResult> Edit(AppointmentEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                    ViewBag.Cars = await context.Cars.ToListAsync();
-                    ViewBag.Workshops = await context.Workshops.ToListAsync();
-                    ViewBag.Services = await context.Services.ToListAsync();
-                    ViewBag.Statuses = await context.AppointmentStatuses.ToListAsync();
-                    return View(appointment);
-                
-            }
-            context.Appointments.Update(appointment);
-            await context.SaveChangesAsync();
+                var pageData = await appointmentService.GetEditPageDataAsync(viewModel.AppointmentId);
 
-            return RedirectToAction("Index");
+                if (pageData != null)
+                {
+                    ViewBag.Cars = pageData.Cars;
+                    ViewBag.Workshops = pageData.Workshops;
+                    ViewBag.Services = pageData.Services;
+                    ViewBag.Statuses = pageData.Statuses;
+                }
+
+                return View(viewModel);
+            }
+
+            var serviceModel = new AppointmentEditServiceModel
+            {
+                AppointmentId = viewModel.AppointmentId,
+                CarId = viewModel.CarId,
+                WorkshopId = viewModel.WorkshopId,
+                ServiceId = viewModel.ServiceId,
+                AppointmentStatusId = viewModel.AppointmentStatusId,
+                ScheduledDate = viewModel.ScheduledDate,
+                ProblemDescription = viewModel.ProblemDescription,
+                CompletedAt = viewModel.CompletedAt
+            };
+
+            var success = await appointmentService.EditAsync(serviceModel);
+
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Delete(int id)
         {
-            var appointment = await context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
-            if (appointment == null)
+            var serviceModel = await appointmentService.GetDeleteDataAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(appointment);
+
+            var viewModel = new AppointmentDetailsViewModel
+            {
+                AppointmentId = serviceModel.AppointmentId,
+                CarModelName = serviceModel.CarModelName,
+                VIN = serviceModel.VIN,
+                Year = serviceModel.Year,
+                WorkshopName = serviceModel.WorkshopName,
+                ServiceName = serviceModel.ServiceName,
+                StatusName = serviceModel.StatusName,
+                ScheduledDate = serviceModel.ScheduledDate,
+                CreatedAt = serviceModel.CreatedAt,
+                CompletedAt = serviceModel.CompletedAt,
+                ProblemDescription = serviceModel.ProblemDescription
+            };
+
+            return View(viewModel);
         }
 
+        [Authorize(Roles = "Admin,Mechanic")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointment = await context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
+            var success = await appointmentService.DeleteAsync(id);
 
-            if (appointment == null)
+            if (!success)
             {
                 return NotFound();
             }
-
-            context.Appointments.Remove(appointment);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
+
         [Authorize(Roles = "Admin,Mechanic")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(int id, int statusId)
         {
-            var appointment = await context.Appointments.FirstOrDefaultAsync(a => a.AppointmentId == id);
-            if (appointment == null) return NotFound();
+            var success = await appointmentService.ChangeStatusAsync(id, statusId);
 
-            appointment.AppointmentStatusId = statusId;
+            if (!success)
+            {
+                return NotFound();
+            }
 
-            var status = await context.AppointmentStatuses.FirstOrDefaultAsync(s => s.AppointmentStatusId == statusId);
-            if (status != null && status.StatusName == "Completed")
-                appointment.CompletedAt = DateTime.UtcNow;
-
-            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
         [Authorize(Roles = "Client")]
         [HttpGet]
         public async Task<IActionResult> GetModelsByBrand(int brandId)
         {
-            var models = await context.Models
-                .Where(m => m.BrandId == brandId)
-                .Select(m => new { id = m.ModelId, name = m.ModelName })
-                .OrderBy(m => m.name)
-                .ToListAsync();
+            var serviceModels = await appointmentService.GetModelsByBrandAsync(brandId);
 
-            return Json(models);
+            var result = serviceModels.Select(m => new
+            {
+                id = m.Id,
+                name = m.Name
+            });
+
+            return Json(result);
         }
     }
 }

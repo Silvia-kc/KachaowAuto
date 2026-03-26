@@ -15,6 +15,34 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\parts\AC-Compressor.jpg" />
+    <Content Remove="wwwroot\images\parts\Cabin-Temperature-Sensor.jpg" />
+    <Content Remove="wwwroot\images\parts\Camshaft.jpg" />
+    <Content Remove="wwwroot\images\parts\Condenser.png" />
+    <Content Remove="wwwroot\images\parts\Heater-Core.jpg" />
+    <Content Remove="wwwroot\images\parts\Intake-Manifold-Gasket.JPG" />
+    <Content Remove="wwwroot\images\parts\Oil-Seal-Ring.jpg" />
+    <Content Remove="wwwroot\images\parts\Radiator.jpg" />
+    <Content Remove="wwwroot\images\parts\Thermostat.jpg" />
+    <Content Remove="wwwroot\images\parts\Valve-Cover-Gasket.jpg" />
+    <Content Remove="wwwroot\images\parts\Water-Pump.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\parts\AC-Compressor.jpg" />
+    <None Include="wwwroot\images\parts\Cabin-Temperature-Sensor.jpg" />
+    <None Include="wwwroot\images\parts\Camshaft.jpg" />
+    <None Include="wwwroot\images\parts\Condenser.png" />
+    <None Include="wwwroot\images\parts\Heater-Core.jpg" />
+    <None Include="wwwroot\images\parts\Intake-Manifold-Gasket.JPG" />
+    <None Include="wwwroot\images\parts\Oil-Seal-Ring.jpg" />
+    <None Include="wwwroot\images\parts\Radiator.jpg" />
+    <None Include="wwwroot\images\parts\Thermostat.jpg" />
+    <None Include="wwwroot\images\parts\Valve-Cover-Gasket.jpg" />
+    <None Include="wwwroot\images\parts\Water-Pump.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.2" />
@@ -29,7 +57,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KachaowAuto.Common\KachaowAuto.Common.csproj" />
-    <ProjectReference Include="..\KachaowAuto.Data\KachaowAuto.Data.csproj" />
+    <ProjectReference Include="..\KachaowAuto.Core\KachaowAuto.Core.csproj" />
   </ItemGroup>
 
 </Project>

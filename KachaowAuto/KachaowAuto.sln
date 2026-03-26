@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KachaowAuto.Data", "Kachaow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachaowAuto.Common", "KachaowAuto.Common\KachaowAuto.Common.csproj", "{693A8BD7-CC42-453B-BB42-CB88610C31CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KachaowAuto.Core", "KachaowAuto.Core\KachaowAuto.Core.csproj", "{87BEBBEF-A5AC-49CC-B20F-DAFF1D80BBAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{693A8BD7-CC42-453B-BB42-CB88610C31CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87BEBBEF-A5AC-49CC-B20F-DAFF1D80BBAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BEBBEF-A5AC-49CC-B20F-DAFF1D80BBAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BEBBEF-A5AC-49CC-B20F-DAFF1D80BBAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BEBBEF-A5AC-49CC-B20F-DAFF1D80BBAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KachaowAuto.Common\KachaowAuto.Common.csproj" />
+    <ProjectReference Include="..\KachaowAuto.Data\KachaowAuto.Data.csproj" />
+  </ItemGroup>
+
+</Project>
