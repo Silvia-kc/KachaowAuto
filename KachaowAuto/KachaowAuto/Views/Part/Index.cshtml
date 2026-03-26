@@ -1,0 +1,38 @@
+﻿@model IEnumerable<KachaowAuto.Data.Models.Part>
+
+@{
+    ViewData["Title"] = "Parts";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Parts</h2>
+        <a asp-action="Create" class="btn btn-primary">Add New Part</a>
+    </div>
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Manufacturer</th>
+                <th>Part Number</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var part in Model)
+            {
+                <tr>
+                    <td>@part.PartName</td>
+                    <td>@part.Manufacturer</td>
+                    <td>@part.PartNumber</td>
+                    <td>@part.UnitPrice.ToString("F2") lv.</td>
+                    <td>@part.Category?.Name</td>
+                    <td>@(part.IsActive ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

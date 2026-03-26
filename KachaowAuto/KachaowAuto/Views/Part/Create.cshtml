@@ -1,0 +1,77 @@
+﻿@model KachaowAuto.ViewModels.PartCreateViewModel
+
+@{
+    ViewData["Title"] = "Add Part";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center">Add New Part</h2>
+
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="PartName" class="form-label"></label>
+                            <input asp-for="PartName" class="form-control" />
+                            <span asp-validation-for="PartName" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Manufacturer" class="form-label"></label>
+                                <input asp-for="Manufacturer" class="form-control" />
+                                <span asp-validation-for="Manufacturer" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PartNumber" class="form-label"></label>
+                                <input asp-for="PartNumber" class="form-control" />
+                                <span asp-validation-for="PartNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="UnitPrice" class="form-label"></label>
+                                <input asp-for="UnitPrice" class="form-control" type="number" step="0.01" />
+                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PartCategoryId" class="form-label"></label>
+                                <select asp-for="PartCategoryId" asp-items="Model.Categories" class="form-select">
+                                    <option value="">-- Select category --</option>
+                                </select>
+                                <span asp-validation-for="PartCategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input asp-for="IsActive" class="form-check-input" />
+                            <label asp-for="IsActive" class="form-check-label"></label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                            <button type="submit" class="btn btn-primary px-4">Save Part</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

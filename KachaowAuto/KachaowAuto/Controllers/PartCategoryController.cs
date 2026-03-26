@@ -8,7 +8,6 @@ using System.IO;
 
 namespace KachaowAuto.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class PartCategoryController : Controller
     {
         private readonly KachaowAutoDbContext context;

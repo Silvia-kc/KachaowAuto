@@ -29,6 +29,9 @@ namespace KachaowAuto.Data.Seeding
             await SeedWorkshopServicesAsync(db);
 
             await SeedAppointmentStatusesAsync(db);
+            await SeedPartCategoriesAsync(db);
+
+            await SeedPartsAsync(db);
         }
 
         private static async Task SeedBodyTypesAsync(KachaowAutoDbContext db)
@@ -280,6 +283,72 @@ namespace KachaowAuto.Data.Seeding
 
             await db.SaveChangesAsync();
         }
+        private static async Task SeedPartCategoriesAsync(KachaowAutoDbContext db)
+        {
+            var json = await File.ReadAllTextAsync("../KachaowAuto.Data/Seeding/json/partCategories.json");
+            var categories = JsonSerializer.Deserialize<List<PartCategorySeed>>(json);
+
+            if (categories == null || categories.Count == 0) return;
+
+            var existingNames = await db.PartCategories
+                .Select(x => x.Name.ToLower())
+                .ToListAsync();
+
+            foreach (var s in categories)
+            {
+                if (string.IsNullOrWhiteSpace(s.Name))
+                    continue;
+
+                if (!existingNames.Contains(s.Name.ToLower()))
+                {
+                    db.PartCategories.Add(new PartCategory
+                    {
+                        Name = s.Name
+                    });
+                }
+            }
+
+            await db.SaveChangesAsync();
+        }
+        private static async Task SeedPartsAsync(KachaowAutoDbContext db)
+        {
+            var json = await File.ReadAllTextAsync("../KachaowAuto.Data/Seeding/json/parts.json");
+            var parts = JsonSerializer.Deserialize<List<PartSeed>>(json);
+
+            if (parts == null || parts.Count == 0) return;
+
+            var categories = await db.PartCategories.ToListAsync();
+
+            foreach (var s in parts)
+            {
+                if (string.IsNullOrWhiteSpace(s.PartName) || string.IsNullOrWhiteSpace(s.CategoryName))
+                    continue;
+
+                var category = categories.FirstOrDefault(c => c.Name == s.CategoryName);
+                if (category == null)
+                    continue;
+
+                bool exists = await db.Parts.AnyAsync(p =>
+                    p.Manufacturer == s.Manufacturer &&
+                    p.PartNumber == s.PartNumber);
+
+                if (!exists)
+                {
+                    db.Parts.Add(new Part
+                    {
+                        PartName = s.PartName,
+                        Manufacturer = s.Manufacturer,
+                        PartNumber = s.PartNumber,
+                        Description = s.Description,
+                        UnitPrice = s.UnitPrice,
+                        IsActive = s.IsActive,
+                        PartCategoryId = category.PartCategoryId
+                    });
+                }
+            }
+
+            await db.SaveChangesAsync();
+        }
         private class BrandSeed
         {
             public string BrandName { get; set; } = null!;
@@ -314,6 +383,20 @@ namespace KachaowAuto.Data.Seeding
         public class AppointmentStatusSeed
         {
             public string StatusName { get; set; } = null!;
+        }
+        public class PartCategorySeed
+        {
+            public string Name { get; set; } = null!;
+        }
+        public class PartSeed
+        {
+            public string PartName { get; set; } = null!;
+            public string? Manufacturer { get; set; }
+            public string? PartNumber { get; set; }
+            public string? Description { get; set; }
+            public decimal UnitPrice { get; set; }
+            public bool IsActive { get; set; } = true;
+            public string CategoryName { get; set; } = null!;
         }
     }
 }

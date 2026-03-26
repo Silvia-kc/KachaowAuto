@@ -1,13 +1,14 @@
 ﻿using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class PartController : Controller
     {
         private readonly KachaowAutoDbContext context;
@@ -15,40 +16,87 @@ namespace KachaowAuto.Controllers
         {
             context = _context;
         }
-
-        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var parts = await context.Parts
-                                    .Include(a => a.Category)
-                                    .Include(a => a.AppointmentParts)
-                                    .Include(a => a.Images)
-                                    .ToListAsync();
+                .Include(p => p.Category)
+                .OrderBy(p => p.PartName)
+                .ToListAsync();
+
             return View(parts);
         }
 
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = await context.PartCategories.ToListAsync();
-            ViewBag.AppointmentParts = await context.AppointmentParts.ToListAsync();
-            ViewBag.Images = await context.PartImages.ToListAsync();
-            return View();
+            var model = new PartCreateViewModel
+            {
+                Categories = await context.PartCategories
+                    .OrderBy(c => c.Name)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.PartCategoryId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync()
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Part part)
+        public async Task<IActionResult> Create(PartCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = await context.PartCategories.ToListAsync();
-                ViewBag.AppointmentParts = await context.AppointmentParts.ToListAsync();
-                ViewBag.Images = await context.PartImages.ToListAsync();
-                return View(part);
+                model.Categories = await context.PartCategories
+                    .OrderBy(c => c.Name)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.PartCategoryId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+
+                return View(model);
             }
+
+            bool exists = await context.Parts.AnyAsync(p =>
+                p.Manufacturer == model.Manufacturer &&
+                p.PartNumber == model.PartNumber);
+
+            if (exists)
+            {
+                ModelState.AddModelError("", "Part with the same manufacturer and part number already exists.");
+
+                model.Categories = await context.PartCategories
+                    .OrderBy(c => c.Name)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.PartCategoryId.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+
+                return View(model);
+            }
+
+            var part = new KachaowAuto.Data.Models.Part
+            {
+                PartName = model.PartName,
+                Manufacturer = model.Manufacturer,
+                PartNumber = model.PartNumber,
+                Description = model.Description,
+                UnitPrice = model.UnitPrice,
+                IsActive = model.IsActive,
+                PartCategoryId = model.PartCategoryId
+            };
+
             await context.Parts.AddAsync(part);
             await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
