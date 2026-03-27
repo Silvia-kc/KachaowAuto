@@ -4,8 +4,10 @@ using KachaowAuto.Data.Models;
 using KachaowAuto.Data.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using KachaowAuto.Services.Interfaces;
-using KachaowAuto.Services.Implementations;
+using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Implementations;
+using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
+
 var app = builder.Build();
+app.UseStaticFiles();
 
 using (var scope = app.Services.CreateScope())
 {

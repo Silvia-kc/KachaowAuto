@@ -20,85 +20,102 @@ namespace KachaowAuto.Controllers
         {
             var parts = await context.Parts
                 .Include(p => p.Category)
+                .Include(p => p.Images)
                 .OrderBy(p => p.PartName)
                 .ToListAsync();
 
             return View(parts);
         }
-
-        [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Details(int id)
         {
-            var model = new PartCreateViewModel
+            var part = await context.Parts
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.PartId == id);
+
+            if (part == null)
             {
-                Categories = await context.PartCategories
-                    .OrderBy(c => c.Name)
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.PartCategoryId.ToString(),
-                        Text = c.Name
-                    })
-                    .ToListAsync()
-            };
+                return NotFound();
+            }
+
+            return View(part);
+        }
+        public async Task<IActionResult> Create(int? partId)
+        {
+            ViewBag.Parts = await context.Parts
+                .OrderBy(p => p.PartName)
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PartId.ToString(),
+                    Text = p.PartName
+                })
+                .ToListAsync();
+
+            var model = new PartImage();
+
+            if (partId.HasValue)
+            {
+                model.PartId = partId.Value;
+            }
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PartCreateViewModel model)
+        public async Task<IActionResult> Create(PartImage model)
         {
+            if (model.PartId <= 0)
+            {
+                ModelState.AddModelError("PartId", "Select a part.");
+            }
+
+            if (string.IsNullOrWhiteSpace(model.ImageUrl))
+            {
+                ModelState.AddModelError("ImageUrl", "Image URL is required.");
+            }
+
             if (!ModelState.IsValid)
             {
-                model.Categories = await context.PartCategories
-                    .OrderBy(c => c.Name)
-                    .Select(c => new SelectListItem
+                ViewBag.Parts = await context.Parts
+                    .OrderBy(p => p.PartName)
+                    .Select(p => new SelectListItem
                     {
-                        Value = c.PartCategoryId.ToString(),
-                        Text = c.Name
+                        Value = p.PartId.ToString(),
+                        Text = p.PartName
                     })
                     .ToListAsync();
 
                 return View(model);
             }
 
-            bool exists = await context.Parts.AnyAsync(p =>
-                p.Manufacturer == model.Manufacturer &&
-                p.PartNumber == model.PartNumber);
-
-            if (exists)
+            var partExists = await context.Parts.AnyAsync(p => p.PartId == model.PartId);
+            if (!partExists)
             {
-                ModelState.AddModelError("", "Part with the same manufacturer and part number already exists.");
+                ModelState.AddModelError("PartId", "Selected part does not exist.");
 
-                model.Categories = await context.PartCategories
-                    .OrderBy(c => c.Name)
-                    .Select(c => new SelectListItem
+                ViewBag.Parts = await context.Parts
+                    .OrderBy(p => p.PartName)
+                    .Select(p => new SelectListItem
                     {
-                        Value = c.PartCategoryId.ToString(),
-                        Text = c.Name
+                        Value = p.PartId.ToString(),
+                        Text = p.PartName
                     })
                     .ToListAsync();
 
                 return View(model);
             }
 
-            var part = new KachaowAuto.Data.Models.Part
+            await context.PartImages.AddAsync(new PartImage
             {
-                PartName = model.PartName,
-                Manufacturer = model.Manufacturer,
-                PartNumber = model.PartNumber,
-                Description = model.Description,
-                UnitPrice = model.UnitPrice,
-                IsActive = model.IsActive,
-                PartCategoryId = model.PartCategoryId
-            };
+                PartId = model.PartId,
+                ImageUrl = model.ImageUrl.Trim()
+            });
 
-            await context.Parts.AddAsync(part);
             await context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Part", new { id = model.PartId });
         }
-
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Categories = await context.PartCategories.ToListAsync();
@@ -130,25 +147,36 @@ namespace KachaowAuto.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Delete(int id)
+       public async Task<IActionResult> Delete(int id)
+{
+    var part = await context.Parts
+        .Include(p => p.Category)
+        .Include(p => p.Images)
+        .FirstOrDefaultAsync(p => p.PartId == id);
+
+    if (part == null)
+    {
+        return NotFound();
+    }
+
+    return View(part);
+}
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var part = await context.Parts.FirstOrDefaultAsync(a => a.PartId == id);
+            var part = await context.Parts
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.PartId == id);
+
             if (part == null)
             {
                 return NotFound();
             }
-            return View(part);
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var part = await context.Parts.FirstOrDefaultAsync(a => a.PartId == id);
-
-            if (part == null)
+            if (part.Images != null && part.Images.Any())
             {
-                return NotFound();
+                context.PartImages.RemoveRange(part.Images);
             }
 
             context.Parts.Remove(part);

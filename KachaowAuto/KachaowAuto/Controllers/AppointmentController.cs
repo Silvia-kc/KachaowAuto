@@ -2,12 +2,14 @@
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels;
 using KachaowAuto.ViewModels.Appointment;
-using KachaowAuto.Core.Appointment;
+using KachaowAuto.Core.Models.Appointment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.Appointment;
 
 namespace KachaowAuto.Controllers
 {

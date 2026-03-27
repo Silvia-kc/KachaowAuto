@@ -1,0 +1,76 @@
+﻿@model KachaowAuto.Data.Models.Part
+
+@{
+    ViewData["Title"] = "Part Details";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+            <h2 class="mb-4">Part Details</h2>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-4">Part Name</dt>
+                        <dd class="col-sm-8">@Model.PartName</dd>
+
+                        <dt class="col-sm-4">Manufacturer</dt>
+                        <dd class="col-sm-8">@Model.Manufacturer</dd>
+
+                        <dt class="col-sm-4">Part Number</dt>
+                        <dd class="col-sm-8">@Model.PartNumber</dd>
+
+                        <dt class="col-sm-4">Description</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
+
+                        <dt class="col-sm-4">Category</dt>
+                        <dd class="col-sm-8">@Model.Category?.Name</dd>
+
+                        <dt class="col-sm-4">Price</dt>
+                        <dd class="col-sm-8">@Model.UnitPrice.ToString("F2") лв.</dd>
+
+                        <dt class="col-sm-4">Active</dt>
+                        <dd class="col-sm-8">@(Model.IsActive ? "Yes" : "No")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <hr />
+
+            <h4 class="mb-3">Images</h4>
+
+            <div class="row">
+                @if (Model.Images != null && Model.Images.Any())
+                {
+                    @foreach (var image in Model.Images.OrderByDescending(i => i.PartImageId))
+                    {
+                        <div class="col-md-3 mb-3 text-center">
+                            <img src="@image.ImageUrl"
+                                 alt="@Model.PartName"
+                                 class="img-fluid rounded border mb-2"
+                                 style="height:180px; width:100%; object-fit:cover;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+
+                            <div style="display:none;" class="border rounded p-4 text-muted mb-2">
+                                Missing image
+                            </div>
+
+                            <form asp-controller="PartImage" asp-action="Delete" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@image.PartImageId" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No images available.</p>
+                }
+            </div>
+
+            <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
+        </div>
+    </div>
+</div>

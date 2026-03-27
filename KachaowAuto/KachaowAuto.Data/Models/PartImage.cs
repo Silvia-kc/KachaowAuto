@@ -11,8 +11,7 @@ namespace KachaowAuto.Data.Models
             public int PartImageId { get; set; }
 
             public int PartId { get; set; }
-            public Part Part { get; set; } = null!;
-
+            public Part? Part { get; set; } 
             public string ImageUrl { get; set; } = null!; 
     }
 }
