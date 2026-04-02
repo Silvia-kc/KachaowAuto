@@ -1,64 +1,75 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Appointment>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Appointment.AppointmentIndexViewModel>
 
-<h2>Appointments</h2>
+@{
+    ViewData["Title"] = "Appointments";
+}
 
-<form method="get" class="row g-2 mb-3">
-    <div class="col-auto">
-        <select name="statusId" class="form-select">
-            <option value="">All statuses</option>
-            @foreach (var s in (ViewBag.Statuses as IEnumerable<KachaowAuto.Data.Models.AppointmentStatus>) ?? Enumerable.Empty<KachaowAuto.Data.Models.AppointmentStatus>())
-            {
-                <option value="@s.AppointmentStatusId">@s.StatusName</option>
-            }
-        </select>
-    </div>
+<h2 class="mb-4">Appointments</h2>
 
-    <div class="col-auto">
-        <button type="submit" class="btn btn-outline-primary">Filter</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
-    </div>
-</form>
-
-<table class="table table-striped">
-    <thead>
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
         <tr>
             <th>Car</th>
+            <th>VIN</th>
             <th>Service</th>
             <th>Workshop</th>
             <th>Status</th>
             <th>Scheduled</th>
-            <th style="width:260px;">Actions</th>
+            <th>Created</th>
+            <th>Completed</th>
+            <th>Problem</th>
+            <th style="width: 260px;">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var a in Model)
         {
             <tr>
-                <td>@a.Car?.Model?.ModelName</td>
-                <td>@a.Service?.ServiceName</td>
-                <td>@a.Workshop?.Name</td>
-                <td>@a.Status?.StatusName</td>
-                <td>@a.ScheduledDate.ToString("dd.MM.yyyy HH:mm")</td>
-
+                <td>@a.CarModelName</td>
+                <td>@a.VIN</td>
+                <td>@a.ServiceName</td>
+                <td>@a.WorkshopName</td>
                 <td>
-                    <a class="btn btn-sm btn-outline-secondary"
-                       asp-action="Details"
-                       asp-route-id="@a.AppointmentId">View Details</a>
+                    <span class="badge bg-secondary">@a.StatusName</span>
+                </td>
+                <td>@a.ScheduledDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@a.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@(a.CompletedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                <td>@(string.IsNullOrWhiteSpace(a.ProblemDescription) ? "-" : a.ProblemDescription)</td>
+                <td>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a class="btn btn-sm btn-outline-secondary"
+                           asp-action="Details"
+                           asp-route-id="@a.AppointmentId">
+                            View Details
+                        </a>
 
-                    <form asp-action="ChangeStatus" method="post" class="d-inline">
-                        <input type="hidden" name="id" value="@a.AppointmentId" />
+                        <form asp-action="ChangeStatus" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="id" value="@a.AppointmentId" />
 
-                        <select name="statusId" class="form-select form-select-sm d-inline" style="width:140px;">
-                            @foreach (var s in (IEnumerable<dynamic>)ViewBag.Statuses)
-                            {
-                                <option value="@s.AppointmentStatusId" selected="@(a.AppointmentStatusId == (int)s.AppointmentStatusId)">
-                                    @s.StatusName
-                                </option>
-                            }
-                        </select>
+                            <select name="statusId" class="form-select form-select-sm" style="width: 140px;">
+                                @foreach (var s in (IEnumerable<dynamic>)ViewBag.Statuses)
+                                {
+                                    if (a.AppointmentStatusId == s.AppointmentStatusId)
+                                    {
+                                        <option value="@s.AppointmentStatusId" selected>
+                                            @s.StatusName
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@s.AppointmentStatusId">
+                                            @s.StatusName
+                                        </option>
+                                    }
+                                }
+                            </select>
 
-                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                    </form>
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Change
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }

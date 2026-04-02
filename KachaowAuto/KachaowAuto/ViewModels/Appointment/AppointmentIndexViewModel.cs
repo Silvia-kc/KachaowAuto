@@ -11,6 +11,7 @@
         public DateTime ScheduledDate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
+        public int AppointmentStatusId { get; set; }
         public string? ProblemDescription { get; set; }
     }
 }
