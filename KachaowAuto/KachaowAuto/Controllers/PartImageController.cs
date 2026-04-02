@@ -1,34 +1,37 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Mechanic")]
     public class PartImageController : Controller
     {
         private readonly KachaowAutoDbContext context;
-        private readonly IWebHostEnvironment env;
-        public PartImageController(KachaowAutoDbContext _context, IWebHostEnvironment _env)
+        private readonly ICloudinaryService _cloudinaryService;
+
+        public PartImageController(KachaowAutoDbContext _context, ICloudinaryService cloudinaryService)
         {
             context = _context;
-            env = _env;
+            _cloudinaryService = cloudinaryService;
         }
 
-        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
             var partImages = await context.PartImages
-                                         .Include(a => a.Part)
-                                         .ToListAsync();
+                .Include(i => i.Part)
+                .ToListAsync();
+
             return View(partImages);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create(int? partId)
         {
             ViewBag.Parts = await context.Parts
@@ -52,8 +55,24 @@ namespace KachaowAuto.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PartImage model)
+        public async Task<IActionResult> Create(int partId, IFormFile imageFile)
         {
+            if (partId <= 0)
+            {
+                ModelState.AddModelError("PartId", "Избери част.");
+            }
+
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                ModelState.AddModelError("imageFile", "Моля, избери снимка.");
+            }
+
+            var partExists = await context.Parts.AnyAsync(p => p.PartId == partId);
+            if (!partExists)
+            {
+                ModelState.AddModelError("PartId", "Избраната част не съществува.");
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.Parts = await context.Parts
@@ -65,41 +84,50 @@ namespace KachaowAuto.Controllers
                     })
                     .ToListAsync();
 
+                var model = new PartImage
+                {
+                    PartId = partId
+                };
+
                 return View(model);
             }
 
-            await context.PartImages.AddAsync(model);
+            var uploadResult = await _cloudinaryService.UploadImageAsync(imageFile, "kachaowauto/parts");
+
+            if (uploadResult == null || string.IsNullOrWhiteSpace(uploadResult.Url))
+            {
+                ModelState.AddModelError("", "Грешка при качване на снимката.");
+
+                ViewBag.Parts = await context.Parts
+                    .OrderBy(p => p.PartName)
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.PartId.ToString(),
+                        Text = p.PartName
+                    })
+                    .ToListAsync();
+
+                var model = new PartImage
+                {
+                    PartId = partId
+                };
+
+                return View(model);
+            }
+
+            var image = new PartImage
+            {
+                PartId = partId,
+                ImageUrl = uploadResult.Url,
+                PublicId = uploadResult.PublicId
+            };
+
+            await context.PartImages.AddAsync(image);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Part");
+            return RedirectToAction("Details", "Part", new { id = partId });
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            ViewBag.Parts = await context.Parts.ToListAsync();
-            var partImage = await context.PartImages.FirstOrDefaultAsync(a => a.PartImageId == id);
-            if (partImage == null)
-            {
-                return NotFound();
-            }
-            return View(partImage);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PartImage partImage)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Parts = await context.Parts.ToListAsync();
-                return View(partImage);
-
-            }
-            context.PartImages.Update(partImage);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -112,7 +140,12 @@ namespace KachaowAuto.Controllers
                 return RedirectToAction("Index", "Part");
             }
 
-            int partId = image.PartId;
+            var partId = image.PartId;
+
+            if (!string.IsNullOrWhiteSpace(image.PublicId))
+            {
+                await _cloudinaryService.DeleteImageAsync(image.PublicId);
+            }
 
             context.PartImages.Remove(image);
             await context.SaveChangesAsync();

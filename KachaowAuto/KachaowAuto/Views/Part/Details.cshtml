@@ -43,32 +43,31 @@
             <div class="row">
                 @if (Model.Images != null && Model.Images.Any())
                 {
-                    @foreach (var image in Model.Images.OrderByDescending(i => i.PartImageId))
-                    {
-                        <div class="col-md-3 mb-3 text-center">
-                            <img src="@image.ImageUrl"
-                                 alt="@Model.PartName"
-                                 class="img-fluid rounded border mb-2"
-                                 style="height:180px; width:100%; object-fit:cover;"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                    <div class="row">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-md-3 mb-3">
+                                <img src="@image.ImageUrl" class="img-fluid rounded" alt="Part Image" />
 
-                            <div style="display:none;" class="border rounded p-4 text-muted mb-2">
-                                Missing image
+                                <form asp-controller="PartImage" asp-action="Delete" method="post" class="mt-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@image.PartImageId" />
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete Image
+                                    </button>
+                                </form>
                             </div>
-
-                            <form asp-controller="PartImage" asp-action="Delete" method="post">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@image.PartImageId" />
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p>No images available.</p>
+                        }
+                    </div>
                 }
             </div>
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="partId" value="@Model.PartId" />
+                <div class="mb-3">
+                    <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                </div>
+                <button type="submit" class="btn btn-primary">Add Image</button>
+            </form>
 
             <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
         </div>

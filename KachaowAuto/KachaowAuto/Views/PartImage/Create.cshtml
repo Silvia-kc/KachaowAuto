@@ -1,45 +1,30 @@
 ﻿@model KachaowAuto.Data.Models.PartImage
-@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Add Part Image";
 }
 
 <div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
-                    <h2 class="mb-4 text-center">Add Part Image</h2>
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+            <h2 class="mb-4">Add Image</h2>
 
-                    <form asp-action="Create" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <form asp-controller="PartImage" asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
 
-                        <div class="mb-3">
-                            <label asp-for="PartId" class="form-label">Part</label>
-                            <select asp-for="PartId" asp-items="@(ViewBag.Parts as IEnumerable<SelectListItem>)" class="form-select">
-                                <option value="">-- Select part --</option>
-                            </select>
-                            <span asp-validation-for="PartId" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="ImageUrl" class="form-label">Image URL</label>
-                            <input asp-for="ImageUrl" class="form-control" placeholder="/images/parts/coil-spring.webp" />
-                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a asp-controller="Part" asp-action="Index" class="btn btn-outline-secondary">Back</a>
-                            <button type="submit" class="btn btn-primary">Save Image</button>
-                        </div>
-                    </form>
+                <div class="mb-3">
+                    <label class="form-label">Part</label>
+                    <select asp-for="PartId" asp-items="ViewBag.Parts" class="form-select"></select>
                 </div>
-            </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Image</label>
+                    <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Upload</button>
+                <a asp-controller="Part" asp-action="Index" class="btn btn-secondary">Back</a>
+            </form>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

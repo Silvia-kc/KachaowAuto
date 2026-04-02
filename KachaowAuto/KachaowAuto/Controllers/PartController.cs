@@ -1,4 +1,5 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -9,13 +10,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+    [Authorize]
     public class PartController : Controller
     {
         private readonly KachaowAutoDbContext context;
-        public PartController(KachaowAutoDbContext _context)
+        private readonly ICloudinaryService _cloudinaryService;
+
+        public PartController(KachaowAutoDbContext _context, ICloudinaryService cloudinaryService)
         {
             context = _context;
+            _cloudinaryService = cloudinaryService;
         }
+
         public async Task<IActionResult> Index()
         {
             var parts = await context.Parts
@@ -26,6 +32,7 @@ namespace KachaowAuto.Controllers
 
             return View(parts);
         }
+
         public async Task<IActionResult> Details(int id)
         {
             var part = await context.Parts
@@ -40,6 +47,8 @@ namespace KachaowAuto.Controllers
 
             return View(part);
         }
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Create(int? partId)
         {
             ViewBag.Parts = await context.Parts
@@ -63,16 +72,23 @@ namespace KachaowAuto.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PartImage model)
+        [Authorize(Roles = "Admin,Mechanic")]
+        public async Task<IActionResult> Create(int partId, IFormFile imageFile)
         {
-            if (model.PartId <= 0)
+            if (partId <= 0)
             {
-                ModelState.AddModelError("PartId", "Select a part.");
+                ModelState.AddModelError("PartId", "Избери част.");
             }
 
-            if (string.IsNullOrWhiteSpace(model.ImageUrl))
+            if (imageFile == null || imageFile.Length == 0)
             {
-                ModelState.AddModelError("ImageUrl", "Image URL is required.");
+                ModelState.AddModelError("imageFile", "Моля, избери снимка.");
+            }
+
+            var part = await context.Parts.FirstOrDefaultAsync(p => p.PartId == partId);
+            if (part == null)
+            {
+                ModelState.AddModelError("PartId", "Избраната част не съществува.");
             }
 
             if (!ModelState.IsValid)
@@ -86,13 +102,19 @@ namespace KachaowAuto.Controllers
                     })
                     .ToListAsync();
 
+                var model = new PartImage
+                {
+                    PartId = partId
+                };
+
                 return View(model);
             }
 
-            var partExists = await context.Parts.AnyAsync(p => p.PartId == model.PartId);
-            if (!partExists)
+            var uploadResult = await _cloudinaryService.UploadImageAsync(imageFile, "kachaowauto/parts");
+
+            if (uploadResult == null || string.IsNullOrWhiteSpace(uploadResult.Url))
             {
-                ModelState.AddModelError("PartId", "Selected part does not exist.");
+                ModelState.AddModelError("", "Грешка при качване на снимката.");
 
                 ViewBag.Parts = await context.Parts
                     .OrderBy(p => p.PartName)
@@ -103,66 +125,77 @@ namespace KachaowAuto.Controllers
                     })
                     .ToListAsync();
 
+                var model = new PartImage
+                {
+                    PartId = partId
+                };
+
                 return View(model);
             }
 
-            await context.PartImages.AddAsync(new PartImage
+            var partImage = new PartImage
             {
-                PartId = model.PartId,
-                ImageUrl = model.ImageUrl.Trim()
-            });
+                PartId = partId,
+                ImageUrl = uploadResult.Url,
+                PublicId = uploadResult.PublicId
+            };
 
+            await context.PartImages.AddAsync(partImage);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Part", new { id = model.PartId });
+            return RedirectToAction(nameof(Details), new { id = partId });
         }
+
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Categories = await context.PartCategories.ToListAsync();
-            ViewBag.AppointmentParts = await context.AppointmentParts.ToListAsync();
-            ViewBag.Images = await context.PartImages.ToListAsync();
+
             var part = await context.Parts.FirstOrDefaultAsync(a => a.PartId == id);
             if (part == null)
             {
                 return NotFound();
             }
+
             return View(part);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Edit(Part part)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Categories = await context.PartCategories.ToListAsync();
-                ViewBag.AppointmentParts = await context.AppointmentParts.ToListAsync();
-                ViewBag.Images = await context.PartImages.ToListAsync();
                 return View(part);
-
             }
+
             context.Parts.Update(part);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
-       public async Task<IActionResult> Delete(int id)
-{
-    var part = await context.Parts
-        .Include(p => p.Category)
-        .Include(p => p.Images)
-        .FirstOrDefaultAsync(p => p.PartId == id);
+        [Authorize(Roles = "Admin,Mechanic")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var part = await context.Parts
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.PartId == id);
 
-    if (part == null)
-    {
-        return NotFound();
-    }
+            if (part == null)
+            {
+                return NotFound();
+            }
 
-    return View(part);
-}
+            return View(part);
+        }
 
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var part = await context.Parts
@@ -176,6 +209,14 @@ namespace KachaowAuto.Controllers
 
             if (part.Images != null && part.Images.Any())
             {
+                foreach (var image in part.Images)
+                {
+                    if (!string.IsNullOrWhiteSpace(image.PublicId))
+                    {
+                        await _cloudinaryService.DeleteImageAsync(image.PublicId);
+                    }
+                }
+
                 context.PartImages.RemoveRange(part.Images);
             }
 
@@ -183,6 +224,31 @@ namespace KachaowAuto.Controllers
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Mechanic")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var image = await context.PartImages.FirstOrDefaultAsync(i => i.PartImageId == id);
+
+            if (image == null)
+            {
+                return NotFound();
+            }
+
+            var partId = image.PartId;
+
+            if (!string.IsNullOrWhiteSpace(image.PublicId))
+            {
+                await _cloudinaryService.DeleteImageAsync(image.PublicId);
+            }
+
+            context.PartImages.Remove(image);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = partId });
         }
     }
 }

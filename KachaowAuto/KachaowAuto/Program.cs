@@ -1,15 +1,21 @@
+using KachaowAuto.Config;
+using KachaowAuto.Core.Implementations;
+using KachaowAuto.Core.Implementations;
+using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Interfaces;
 using KachaowAuto.Data;
 using KachaowAuto.Data.Infrastructure;
 using KachaowAuto.Data.Models;
 using KachaowAuto.Data.Seeding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using KachaowAuto.Core.Interfaces;
-using KachaowAuto.Core.Implementations;
-using KachaowAuto.Core.Interfaces;
-using KachaowAuto.Core.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<KachaowAutoDbContext>(options =>
