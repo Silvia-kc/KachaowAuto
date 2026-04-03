@@ -73,10 +73,7 @@
                                 <a class="nav-link text-dark" asp-controller="Part" asp-action="Index">Parts</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Service" asp-action="Index">Services</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="PartImage" asp-action="Index">Part Images</a>
+                                <a class="nav-link text-dark" asp-controller="PartRequest" asp-action="MyRequests">My Requests</a>
                             </li>
                         }
                         else if (User.IsInRole("Client"))

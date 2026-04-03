@@ -38,20 +38,25 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">⚙️</div>
-                    <h4 class="card-title fw-semibold">Services</h4>
-                    <p class="card-text text-muted">
-                        View and manage the list of services offered by the workshop.
-                    </p>
-                    <a asp-controller="Service" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
-                        Open
-                    </a>
+            <div class="card shadow-sm border-0 rounded-4 text-center p-4 h-100">
+                <div class="mb-3">
+                    <i class="bi bi-box-seam" style="font-size: 40px; color: #6f42c1;"></i>
                 </div>
+
+                <h4 class="mb-2">My Requests</h4>
+
+                <p class="text-muted">
+                    Track your requested parts, see their status and admin feedback.
+                </p>
+
+                <a asp-controller="PartRequest"
+                   asp-action="MyRequests"
+                   class="btn btn-outline-primary mt-2">
+                    Open
+                </a>
             </div>
         </div>
+
     </div>
 </div>

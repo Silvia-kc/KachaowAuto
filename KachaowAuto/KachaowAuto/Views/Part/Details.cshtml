@@ -40,34 +40,24 @@
 
             <h4 class="mb-3">Images</h4>
 
-            <div class="row">
-                @if (Model.Images != null && Model.Images.Any())
-                {
-                    <div class="row">
-                        @foreach (var image in Model.Images)
-                        {
-                            <div class="col-md-3 mb-3">
-                                <img src="@image.ImageUrl" class="img-fluid rounded" alt="Part Image" />
-
-                                <form asp-controller="PartImage" asp-action="Delete" method="post" class="mt-2">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@image.PartImageId" />
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        Delete Image
-                                    </button>
-                                </form>
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="partId" value="@Model.PartId" />
-                <div class="mb-3">
-                    <input type="file" name="imageFile" class="form-control" accept="image/*" />
+            @if (Model.Images != null && Model.Images.Any())
+            {
+                <div class="row">
+                    @foreach (var image in Model.Images)
+                    {
+                        <div class="col-md-3 mb-3">
+                            <img src="@image.ImageUrl"
+                                 class="img-fluid rounded"
+                                 alt="Part Image"
+                                 style="object-fit: cover; border: 1px solid #ddd;" />
+                        </div>
+                    }
                 </div>
-                <button type="submit" class="btn btn-primary">Add Image</button>
-            </form>
+            }
+            else
+            {
+                <p class="text-muted">No images available for this part.</p>
+            }
 
             <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
         </div>

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<KachaowAuto.ViewModels.PartRequest.PartRequestAdminViewModel>
+
+@{
+    ViewData["Title"] = "Part Requests";
+}
+
+<h2 class="mb-4">All Part Requests</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Part</th>
+            <th>Mechanic</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Requested</th>
+            <th>Note</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.PartName</td>
+                <td>@r.MechanicName</td>
+                <td>@r.Quantity</td>
+
+                <td>
+                    @if (r.Status == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (r.Status == "Approved")
+                    {
+                        <span class="badge bg-info">Approved</span>
+                    }
+                    else if (r.Status == "Rejected")
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                    else if (r.Status == "Sent")
+                    {
+                        <span class="badge bg-success">Sent</span>
+                    }
+                </td>
+
+                <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@(r.Note ?? "-")</td>
+
+                <td style="min-width: 260px;">
+                    <form method="post" class="d-flex flex-column gap-1">
+
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@r.PartRequestId" />
+
+                        <textarea name="adminNote"
+                              class="form-control form-control-sm"
+                              rows="2"
+                              placeholder="Admin note...">@r.AdminNote</textarea>
+
+                        <div class="d-flex gap-1">
+                            <button type="submit"
+                                    formaction="@Url.Action("Approve", "PartRequest")"
+                                    class="btn btn-sm btn-success w-100">
+                                Approve
+                            </button>
+
+                            <button type="submit"
+                                    formaction="@Url.Action("Reject", "PartRequest")"
+                                    class="btn btn-sm btn-danger w-100">
+                                Reject
+                            </button>
+
+                            <button type="submit"
+                                    formaction="@Url.Action("MarkAsSent", "PartRequest")"
+                                    class="btn btn-sm btn-primary w-100">
+                                Sent
+                            </button>
+                        </div>
+
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -39,8 +39,9 @@ namespace KachaowAuto.Data
         public DbSet<Part> Parts => Set<Part>();
         public DbSet<PartImage> PartImages => Set<PartImage>();
         public DbSet<AppointmentPart> AppointmentParts => Set<AppointmentPart>();
+        public DbSet<PartRequest> PartRequests { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
 
@@ -51,14 +52,38 @@ namespace KachaowAuto.Data
 				.HasOne(am => am.Appointment)
 				.WithMany(a => a.AppointmentMechanics)
 				.HasForeignKey(am => am.AppointmentId)
-				.OnDelete(DeleteBehavior.Cascade); // ок за Appointment -> join
+				.OnDelete(DeleteBehavior.Cascade);
 
 			builder.Entity<AppointmentMechanic>()
 				.HasOne(am => am.Mechanic)
 				.WithMany(u => u.AppointmentMechanics)
 				.HasForeignKey(am => am.MechanicId)
 				.OnDelete(DeleteBehavior.Restrict);
-		}
+            builder.Entity<PartRequest>(entity =>
+            {
+                entity.HasKey(pr => pr.PartRequestId);
+
+                entity.Property(pr => pr.Status)
+                    .HasMaxLength(30)
+                    .IsRequired();
+
+                entity.Property(pr => pr.Note)
+                    .HasMaxLength(500);
+
+                entity.Property(pr => pr.AdminNote)
+                    .HasMaxLength(500);
+
+                entity.HasOne(pr => pr.Part)
+                    .WithMany(p => p.PartRequests)
+                    .HasForeignKey(pr => pr.PartId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(pr => pr.Mechanic)
+                    .WithMany(u => u.PartRequests)
+                    .HasForeignKey(pr => pr.MechanicId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+        }
 
     }
 }

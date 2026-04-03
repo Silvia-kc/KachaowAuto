@@ -25,5 +25,6 @@ namespace KachaowAuto.Data.Models
 
         public ICollection<PartImage> Images { get; set; } = new List<PartImage>();
         public ICollection<AppointmentPart> AppointmentParts { get; set; } = new List<AppointmentPart>();
+        public ICollection<PartRequest> PartRequests { get; set; } = new List<PartRequest>();
     }
 }

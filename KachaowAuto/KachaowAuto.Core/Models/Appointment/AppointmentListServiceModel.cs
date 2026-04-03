@@ -16,6 +16,7 @@ namespace KachaowAuto.Core.Models.Appointment
         public string WorkshopName { get; set; } = null!;
         public string ServiceName { get; set; } = null!;
         public string StatusName { get; set; } = null!;
+        public int AppointmentStatusId { get; set; }
 
         public DateTime ScheduledDate { get; set; }
         public DateTime CreatedAt { get; set; }

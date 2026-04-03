@@ -43,6 +43,7 @@ namespace KachaowAuto.Controllers
                 WorkshopName = a.WorkshopName,
                 ServiceName = a.ServiceName,
                 StatusName = a.StatusName,
+                AppointmentStatusId = a.AppointmentStatusId,
                 ScheduledDate = a.ScheduledDate,
                 CreatedAt = a.CreatedAt,
                 CompletedAt = a.CompletedAt,
@@ -290,6 +291,7 @@ namespace KachaowAuto.Controllers
 
         [Authorize(Roles = "Admin,Mechanic")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeStatus(int id, int statusId)
         {
             var success = await appointmentService.ChangeStatusAsync(id, statusId);

@@ -45,6 +45,7 @@ namespace KachaowAuto.Core.Implementations
                     WorkshopName = a.Workshop.Name,
                     ServiceName = a.Service.ServiceName,
                     StatusName = a.Status.StatusName,
+                    AppointmentStatusId = a.AppointmentStatusId,
                     ScheduledDate = a.ScheduledDate,
                     CreatedAt = a.CreatedAt,
                     CompletedAt = a.CompletedAt,
@@ -258,14 +259,23 @@ namespace KachaowAuto.Core.Implementations
                 return false;
             }
 
-            appointment.AppointmentStatusId = statusId;
-
             var status = await context.AppointmentStatuses
                 .FirstOrDefaultAsync(s => s.AppointmentStatusId == statusId);
 
-            if (status != null && status.StatusName == "Completed")
+            if (status == null)
+            {
+                return false;
+            }
+
+            appointment.AppointmentStatusId = statusId;
+
+            if (status.StatusName == "Completed")
             {
                 appointment.CompletedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                appointment.CompletedAt = null;
             }
 
             await context.SaveChangesAsync();

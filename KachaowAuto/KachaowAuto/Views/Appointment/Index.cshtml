@@ -45,10 +45,11 @@
                         </a>
 
                         <form asp-action="ChangeStatus" method="post" class="d-flex gap-2">
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@a.AppointmentId" />
 
                             <select name="statusId" class="form-select form-select-sm" style="width: 140px;">
-                                @foreach (var s in (IEnumerable<dynamic>)ViewBag.Statuses)
+                                @foreach (var s in (IEnumerable<KachaowAuto.Data.Models.AppointmentStatus>)ViewBag.Statuses)
                                 {
                                     if (a.AppointmentStatusId == s.AppointmentStatusId)
                                     {

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<KachaowAuto.ViewModels.PartRequest.PartRequestMyRequestViewModel>
+
+@{
+    ViewData["Title"] = "My Requests";
+}
+
+<h2 class="mb-4">My Part Requests</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Part</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Requested</th>
+            <th>Processed</th>
+            <th>Note</th>
+            <th>Admin Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.PartName</td>
+                <td>@r.Quantity</td>
+
+                <td>
+                    @if (r.Status == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    }
+                    else if (r.Status == "Approved")
+                    {
+                        <span class="badge bg-info">Approved</span>
+                    }
+                    else if (r.Status == "Rejected")
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                    else if (r.Status == "Sent")
+                    {
+                        <span class="badge bg-success">Sent</span>
+                    }
+                </td>
+
+                <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@(r.ProcessedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+
+                <td>@(r.Note ?? "-")</td>
+                <td>@(r.AdminNote ?? "-")</td>
+            </tr>
+        }
+    </tbody>
+</table>

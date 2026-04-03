@@ -22,10 +22,12 @@ namespace KachaowAuto.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var partImages = await context.PartImages
-                .Include(i => i.Part)
+                .Include(pi => pi.Part)
+                .OrderByDescending(pi => pi.PartImageId)
                 .ToListAsync();
 
             return View(partImages);

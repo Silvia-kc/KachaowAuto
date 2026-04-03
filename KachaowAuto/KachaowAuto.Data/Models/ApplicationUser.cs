@@ -15,5 +15,6 @@ namespace KachaowAuto.Data.Models
 
         public ICollection<Car> Cars { get; set; } = new List<Car>();
         public ICollection<AppointmentMechanic> AppointmentMechanics { get; set; } = new List<AppointmentMechanic>();
+        public ICollection<PartRequest> PartRequests { get; set; } = new List<PartRequest>();
     }
 }

@@ -1,0 +1,41 @@
+﻿@model KachaowAuto.ViewModels.PartRequest.PartRequestCreateViewModel
+
+@{
+    ViewData["Title"] = "Request Part";
+}
+
+<h2 class="mb-4">Request Part</h2>
+
+<div class="card p-4 shadow-sm" style="max-width: 500px;">
+    <form asp-controller="PartRequest" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="PartId" />
+        <input type="hidden" asp-for="PartName" />
+
+        <div class="mb-3">
+            <label class="form-label">Part</label>
+            <input class="form-control" value="@Model.PartName" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label"></label>
+            <input asp-for="Quantity" class="form-control" />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Note" class="form-label"></label>
+            <textarea asp-for="Note" class="form-control"></textarea>
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+            Submit Request
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
