@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="mt-auto">
-                                <div class="fs-5 fw-bold mb-3">@part.UnitPrice.ToString("F2") лв.</div>
+                                <div class="fs-5 fw-bold mb-3">@part.UnitPrice.ToString("F2") €.</div>
 
                                 <div class="d-flex gap-2">
                                     <a asp-action="Details"
@@ -150,7 +150,7 @@
                             <td>@part.Manufacturer</td>
                             <td>@part.PartNumber</td>
                             <td>@part.Category?.Name</td>
-                            <td>@part.UnitPrice.ToString("F2") лв.</td>
+                            <td>@part.UnitPrice.ToString("F2") €.</td>
                             <td>
                                 @if (part.IsActive)
                                 {

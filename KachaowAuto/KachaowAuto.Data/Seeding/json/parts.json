@@ -4,7 +4,7 @@
     "Manufacturer": "Brembo",
     "PartNumber": "BRK-001",
     "Description": "Front axle brake pads set",
-    "UnitPrice": 89.90,
+    "UnitPrice": 46.00,
     "IsActive": true,
     "CategoryName": "Braking system"
   },
@@ -13,7 +13,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "BRK-002",
     "Description": "Rear ventilated brake disc",
-    "UnitPrice": 74.50,
+    "UnitPrice": 38.10,
     "IsActive": true,
     "CategoryName": "Braking system"
   },
@@ -22,7 +22,7 @@
     "Manufacturer": "ATE",
     "PartNumber": "BRK-003",
     "Description": "Front right brake caliper",
-    "UnitPrice": 145.00,
+    "UnitPrice": 74.15,
     "IsActive": true,
     "CategoryName": "Braking system"
   },
@@ -32,7 +32,7 @@
     "Manufacturer": "Monroe",
     "PartNumber": "SUS-001",
     "Description": "Gas front shock absorber",
-    "UnitPrice": 132.00,
+    "UnitPrice": 67.50,
     "IsActive": true,
     "CategoryName": "Wheel suspension"
   },
@@ -41,7 +41,7 @@
     "Manufacturer": "KYB",
     "PartNumber": "SUS-002",
     "Description": "Front suspension coil spring",
-    "UnitPrice": 67.40,
+    "UnitPrice": 34.50,
     "IsActive": true,
     "CategoryName": "Wheel suspension"
   },
@@ -50,7 +50,7 @@
     "Manufacturer": "Lemforder",
     "PartNumber": "SUS-003",
     "Description": "Front lower control arm",
-    "UnitPrice": 118.90,
+    "UnitPrice": 60.80,
     "IsActive": true,
     "CategoryName": "Wheel suspension"
   },
@@ -60,7 +60,7 @@
     "Manufacturer": "TRW",
     "PartNumber": "STR-001",
     "Description": "Outer tie rod end",
-    "UnitPrice": 36.20,
+    "UnitPrice": 18.50,
     "IsActive": true,
     "CategoryName": "Steering system"
   },
@@ -69,7 +69,7 @@
     "Manufacturer": "Febi",
     "PartNumber": "STR-002",
     "Description": "Protective steering rack boot",
-    "UnitPrice": 18.70,
+    "UnitPrice": 9.60,
     "IsActive": true,
     "CategoryName": "Steering system"
   },
@@ -78,7 +78,7 @@
     "Manufacturer": "ZF",
     "PartNumber": "STR-003",
     "Description": "Hydraulic power steering pump",
-    "UnitPrice": 240.00,
+    "UnitPrice": 122.70,
     "IsActive": true,
     "CategoryName": "Steering system"
   },
@@ -88,7 +88,7 @@
     "Manufacturer": "SKF",
     "PartNumber": "DRV-001",
     "Description": "Outer CV joint repair kit",
-    "UnitPrice": 84.60,
+    "UnitPrice": 43.30,
     "IsActive": true,
     "CategoryName": "Wheel drive"
   },
@@ -97,7 +97,7 @@
     "Manufacturer": "GKN",
     "PartNumber": "DRV-002",
     "Description": "Front left drive shaft",
-    "UnitPrice": 215.00,
+    "UnitPrice": 110.00,
     "IsActive": true,
     "CategoryName": "Wheel drive"
   },
@@ -106,7 +106,7 @@
     "Manufacturer": "FAG",
     "PartNumber": "DRV-003",
     "Description": "Front wheel hub bearing",
-    "UnitPrice": 79.99,
+    "UnitPrice": 40.90,
     "IsActive": true,
     "CategoryName": "Wheel drive"
   },
@@ -116,7 +116,7 @@
     "Manufacturer": "Sachs",
     "PartNumber": "TRN-001",
     "Description": "Complete clutch kit",
-    "UnitPrice": 289.00,
+    "UnitPrice": 147.80,
     "IsActive": true,
     "CategoryName": "Transmission"
   },
@@ -125,7 +125,7 @@
     "Manufacturer": "Febi",
     "PartNumber": "TRN-002",
     "Description": "Transmission support mount",
-    "UnitPrice": 54.40,
+    "UnitPrice": 27.80,
     "IsActive": true,
     "CategoryName": "Transmission"
   },
@@ -134,7 +134,7 @@
     "Manufacturer": "Elring",
     "PartNumber": "TRN-003",
     "Description": "Gearbox shaft oil seal",
-    "UnitPrice": 14.80,
+    "UnitPrice": 7.60,
     "IsActive": true,
     "CategoryName": "Transmission"
   },
@@ -144,7 +144,7 @@
     "Manufacturer": "Gates",
     "PartNumber": "BLT-001",
     "Description": "Timing belt with tensioner",
-    "UnitPrice": 159.90,
+    "UnitPrice": 81.80,
     "IsActive": true,
     "CategoryName": "Belt drive"
   },
@@ -153,7 +153,7 @@
     "Manufacturer": "Contitech",
     "PartNumber": "BLT-002",
     "Description": "Multi-rib auxiliary belt",
-    "UnitPrice": 28.50,
+    "UnitPrice": 14.60,
     "IsActive": true,
     "CategoryName": "Belt drive"
   },
@@ -162,7 +162,7 @@
     "Manufacturer": "INA",
     "PartNumber": "BLT-003",
     "Description": "Automatic belt tensioner",
-    "UnitPrice": 73.90,
+    "UnitPrice": 37.80,
     "IsActive": true,
     "CategoryName": "Belt drive"
   },
@@ -172,7 +172,7 @@
     "Manufacturer": "Mahle",
     "PartNumber": "ENG-001",
     "Description": "Engine piston ring set",
-    "UnitPrice": 96.00,
+    "UnitPrice": 49.10,
     "IsActive": true,
     "CategoryName": "Engine parts"
   },
@@ -181,7 +181,7 @@
     "Manufacturer": "Corteco",
     "PartNumber": "ENG-002",
     "Description": "Right engine support mount",
-    "UnitPrice": 88.30,
+    "UnitPrice": 45.20,
     "IsActive": true,
     "CategoryName": "Engine parts"
   },
@@ -190,7 +190,7 @@
     "Manufacturer": "Vaico",
     "PartNumber": "ENG-003",
     "Description": "Steel engine oil pan",
-    "UnitPrice": 104.50,
+    "UnitPrice": 53.40,
     "IsActive": true,
     "CategoryName": "Engine parts"
   },
@@ -200,7 +200,7 @@
     "Manufacturer": "Elring",
     "PartNumber": "CBP-001",
     "Description": "Cylinder head gasket set",
-    "UnitPrice": 63.00,
+    "UnitPrice": 32.20,
     "IsActive": true,
     "CategoryName": "Cylinder block parts"
   },
@@ -209,7 +209,7 @@
     "Manufacturer": "AE",
     "PartNumber": "CBP-002",
     "Description": "Intake engine valve",
-    "UnitPrice": 21.40,
+    "UnitPrice": 10.90,
     "IsActive": true,
     "CategoryName": "Cylinder block parts"
   },
@@ -218,7 +218,7 @@
     "Manufacturer": "Kolbenschmidt",
     "PartNumber": "CBP-003",
     "Description": "Exhaust camshaft",
-    "UnitPrice": 330.00,
+    "UnitPrice": 168.70,
     "IsActive": true,
     "CategoryName": "Cylinder block parts"
   },
@@ -228,7 +228,7 @@
     "Manufacturer": "Victor Reinz",
     "PartNumber": "GAR-001",
     "Description": "Rubber valve cover gasket",
-    "UnitPrice": 19.90,
+    "UnitPrice": 10.20,
     "IsActive": true,
     "CategoryName": "Garnishes"
   },
@@ -237,7 +237,7 @@
     "Manufacturer": "Elring",
     "PartNumber": "GAR-002",
     "Description": "Crankshaft oil seal",
-    "UnitPrice": 11.20,
+    "UnitPrice": 5.70,
     "IsActive": true,
     "CategoryName": "Garnishes"
   },
@@ -246,7 +246,7 @@
     "Manufacturer": "Ajusa",
     "PartNumber": "GAR-003",
     "Description": "Intake manifold gasket set",
-    "UnitPrice": 16.50,
+    "UnitPrice": 8.40,
     "IsActive": true,
     "CategoryName": "Garnishes"
   },
@@ -256,7 +256,7 @@
     "Manufacturer": "Nissens",
     "PartNumber": "COL-001",
     "Description": "Engine cooling radiator",
-    "UnitPrice": 175.00,
+    "UnitPrice": 89.50,
     "IsActive": true,
     "CategoryName": "Cooling system"
   },
@@ -265,7 +265,7 @@
     "Manufacturer": "Wahler",
     "PartNumber": "COL-002",
     "Description": "Coolant thermostat",
-    "UnitPrice": 34.90,
+    "UnitPrice": 17.80,
     "IsActive": true,
     "CategoryName": "Cooling system"
   },
@@ -274,7 +274,7 @@
     "Manufacturer": "HEPU",
     "PartNumber": "COL-003",
     "Description": "Mechanical engine water pump",
-    "UnitPrice": 92.80,
+    "UnitPrice": 47.50,
     "IsActive": true,
     "CategoryName": "Cooling system"
   },
@@ -284,7 +284,7 @@
     "Manufacturer": "Denso",
     "PartNumber": "CLI-001",
     "Description": "Air conditioning compressor",
-    "UnitPrice": 420.00,
+    "UnitPrice": 215.00,
     "IsActive": true,
     "CategoryName": "Climate system"
   },
@@ -293,7 +293,7 @@
     "Manufacturer": "NRF",
     "PartNumber": "CLI-002",
     "Description": "AC condenser radiator",
-    "UnitPrice": 146.70,
+    "UnitPrice": 75.00,
     "IsActive": true,
     "CategoryName": "Climate system"
   },
@@ -302,7 +302,7 @@
     "Manufacturer": "Valeo",
     "PartNumber": "CLI-003",
     "Description": "Interior temperature sensor",
-    "UnitPrice": 27.90,
+    "UnitPrice": 14.30,
     "IsActive": true,
     "CategoryName": "Climate system"
   },
@@ -312,7 +312,7 @@
     "Manufacturer": "Valeo",
     "PartNumber": "HTV-001",
     "Description": "Passenger cabin heater radiator",
-    "UnitPrice": 118.00,
+    "UnitPrice": 60.30,
     "IsActive": true,
     "CategoryName": "Heating and ventilation"
   },
@@ -321,7 +321,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "HTV-002",
     "Description": "Cabin ventilation blower motor",
-    "UnitPrice": 138.50,
+    "UnitPrice": 70.80,
     "IsActive": true,
     "CategoryName": "Heating and ventilation"
   },
@@ -330,7 +330,7 @@
     "Manufacturer": "Hella",
     "PartNumber": "HTV-003",
     "Description": "Ventilation fan resistor",
-    "UnitPrice": 42.30,
+    "UnitPrice": 21.60,
     "IsActive": true,
     "CategoryName": "Heating and ventilation"
   },
@@ -340,7 +340,7 @@
     "Manufacturer": "MANN",
     "PartNumber": "FIL-001",
     "Description": "Engine oil filter cartridge",
-    "UnitPrice": 14.20,
+    "UnitPrice": 7.20,
     "IsActive": true,
     "CategoryName": "Filters"
   },
@@ -349,7 +349,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "FIL-002",
     "Description": "Engine intake air filter",
-    "UnitPrice": 17.80,
+    "UnitPrice": 9.10,
     "IsActive": true,
     "CategoryName": "Filters"
   },
@@ -358,7 +358,7 @@
     "Manufacturer": "Mahle",
     "PartNumber": "FIL-003",
     "Description": "Pollen cabin filter",
-    "UnitPrice": 22.40,
+    "UnitPrice": 11.40,
     "IsActive": true,
     "CategoryName": "Filters"
   },
@@ -368,7 +368,7 @@
     "Manufacturer": "Castrol",
     "PartNumber": "OIL-001",
     "Description": "Fully synthetic engine oil 1L",
-    "UnitPrice": 18.90,
+    "UnitPrice": 9.60,
     "IsActive": true,
     "CategoryName": "Oils and liquids"
   },
@@ -377,7 +377,7 @@
     "Manufacturer": "ATE",
     "PartNumber": "OIL-002",
     "Description": "Brake fluid 500ml",
-    "UnitPrice": 12.60,
+    "UnitPrice": 6.40,
     "IsActive": true,
     "CategoryName": "Oils and liquids"
   },
@@ -386,7 +386,7 @@
     "Manufacturer": "Febi",
     "PartNumber": "OIL-003",
     "Description": "Ready to use coolant 1L",
-    "UnitPrice": 9.80,
+    "UnitPrice": 5.00,
     "IsActive": true,
     "CategoryName": "Oils and liquids"
   },
@@ -396,7 +396,7 @@
     "Manufacturer": "NGK",
     "PartNumber": "IGN-001",
     "Description": "Standard ignition spark plug",
-    "UnitPrice": 11.90,
+    "UnitPrice": 6.10,
     "IsActive": true,
     "CategoryName": "Ignition system"
   },
@@ -405,7 +405,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "IGN-002",
     "Description": "Pencil ignition coil",
-    "UnitPrice": 64.00,
+    "UnitPrice": 32.70,
     "IsActive": true,
     "CategoryName": "Ignition system"
   },
@@ -414,7 +414,7 @@
     "Manufacturer": "Beru",
     "PartNumber": "IGN-003",
     "Description": "Diesel engine glow plug",
-    "UnitPrice": 18.30,
+    "UnitPrice": 9.40,
     "IsActive": true,
     "CategoryName": "Ignition system"
   },
@@ -424,7 +424,7 @@
     "Manufacturer": "Hella",
     "PartNumber": "SEN-001",
     "Description": "Wheel speed ABS sensor",
-    "UnitPrice": 39.50,
+    "UnitPrice": 20.20,
     "IsActive": true,
     "CategoryName": "Sensors and gauges"
   },
@@ -433,7 +433,7 @@
     "Manufacturer": "Facet",
     "PartNumber": "SEN-002",
     "Description": "Engine coolant temperature sensor",
-    "UnitPrice": 21.70,
+    "UnitPrice": 11.10,
     "IsActive": true,
     "CategoryName": "Sensors and gauges"
   },
@@ -442,7 +442,7 @@
     "Manufacturer": "Febi",
     "PartNumber": "SEN-003",
     "Description": "Oil pressure warning switch",
-    "UnitPrice": 17.90,
+    "UnitPrice": 9.20,
     "IsActive": true,
     "CategoryName": "Sensors and gauges"
   },
@@ -451,7 +451,7 @@
     "Manufacturer": "Pierburg",
     "PartNumber": "FUE-001",
     "Description": "Electric in-tank fuel pump",
-    "UnitPrice": 154.00,
+    "UnitPrice": 78.70,
     "IsActive": true,
     "CategoryName": "Fuel system"
   },
@@ -460,7 +460,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "FUE-002",
     "Description": "Petrol fuel injector",
-    "UnitPrice": 96.50,
+    "UnitPrice": 49.30,
     "IsActive": true,
     "CategoryName": "Fuel system"
   },
@@ -469,7 +469,7 @@
     "Manufacturer": "Mahle",
     "PartNumber": "FUE-003",
     "Description": "Diesel fuel filter housing",
-    "UnitPrice": 82.20,
+    "UnitPrice": 42.00,
     "IsActive": true,
     "CategoryName": "Fuel system"
   },
@@ -479,7 +479,7 @@
     "Manufacturer": "Valeo",
     "PartNumber": "ELE-001",
     "Description": "Vehicle charging alternator",
-    "UnitPrice": 310.00,
+    "UnitPrice": 158.50,
     "IsActive": true,
     "CategoryName": "Electrical system"
   },
@@ -488,7 +488,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "ELE-002",
     "Description": "Positive battery terminal clamp",
-    "UnitPrice": 13.60,
+    "UnitPrice": 6.90,
     "IsActive": true,
     "CategoryName": "Electrical system"
   },
@@ -497,7 +497,7 @@
     "Manufacturer": "Hella",
     "PartNumber": "ELE-003",
     "Description": "Main vehicle fuse box",
-    "UnitPrice": 129.00,
+    "UnitPrice": 66.00,
     "IsActive": true,
     "CategoryName": "Electrical system"
   },
@@ -507,7 +507,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "STA-001",
     "Description": "12V starter motor",
-    "UnitPrice": 265.00,
+    "UnitPrice": 135.50,
     "IsActive": true,
     "CategoryName": "Starting system"
   },
@@ -516,7 +516,7 @@
     "Manufacturer": "Valeo",
     "PartNumber": "STA-002",
     "Description": "Starter solenoid switch",
-    "UnitPrice": 49.80,
+    "UnitPrice": 25.50,
     "IsActive": true,
     "CategoryName": "Starting system"
   },
@@ -525,7 +525,7 @@
     "Manufacturer": "Varta",
     "PartNumber": "STA-003",
     "Description": "Maintenance-free starter battery",
-    "UnitPrice": 189.00,
+    "UnitPrice": 96.60,
     "IsActive": true,
     "CategoryName": "Starting system"
   },
@@ -535,7 +535,7 @@
     "Manufacturer": "Bosch",
     "PartNumber": "WND-001",
     "Description": "Front flat wiper blade",
-    "UnitPrice": 16.90,
+    "UnitPrice": 8.60,
     "IsActive": true,
     "CategoryName": "Window cleaning"
   },
@@ -544,7 +544,7 @@
     "Manufacturer": "Febi",
     "PartNumber": "WND-002",
     "Description": "Windshield washer pump",
-    "UnitPrice": 24.70,
+    "UnitPrice": 12.60,
     "IsActive": true,
     "CategoryName": "Window cleaning"
   },
@@ -553,7 +553,7 @@
     "Manufacturer": "Vemo",
     "PartNumber": "WND-003",
     "Description": "Bonnet washer spray nozzle",
-    "UnitPrice": 8.90,
+    "UnitPrice": 4.50,
     "IsActive": true,
     "CategoryName": "Window cleaning"
   },
@@ -563,7 +563,7 @@
     "Manufacturer": "Walker",
     "PartNumber": "EXH-001",
     "Description": "Rear silencer muffler",
-    "UnitPrice": 144.20,
+    "UnitPrice": 73.70,
     "IsActive": true,
     "CategoryName": "Exhausts and mufflers"
   },
@@ -572,7 +572,7 @@
     "Manufacturer": "BM Catalysts",
     "PartNumber": "EXH-002",
     "Description": "Emission catalytic converter",
-    "UnitPrice": 390.00,
+    "UnitPrice": 199.40,
     "IsActive": true,
     "CategoryName": "Exhausts and mufflers"
   },
@@ -581,7 +581,7 @@
     "Manufacturer": "Bosal",
     "PartNumber": "EXH-003",
     "Description": "Steel exhaust clamp",
-    "UnitPrice": 11.50,
+    "UnitPrice": 5.80,
     "IsActive": true,
     "CategoryName": "Exhausts and mufflers"
   },
@@ -591,7 +591,7 @@
     "Manufacturer": "TYC",
     "PartNumber": "LRG-001",
     "Description": "Primed front bumper",
-    "UnitPrice": 220.00,
+    "UnitPrice": 112.50,
     "IsActive": true,
     "CategoryName": "Large parts"
   },
@@ -600,7 +600,7 @@
     "Manufacturer": "BLIC",
     "PartNumber": "LRG-002",
     "Description": "Front bonnet hood panel",
-    "UnitPrice": 315.00,
+    "UnitPrice": 161.00,
     "IsActive": true,
     "CategoryName": "Large parts"
   },
@@ -609,7 +609,7 @@
     "Manufacturer": "Van Wezel",
     "PartNumber": "LRG-003",
     "Description": "Left front wing panel",
-    "UnitPrice": 128.60,
+    "UnitPrice": 65.70,
     "IsActive": true,
     "CategoryName": "Large parts"
   },
@@ -619,7 +619,7 @@
     "Manufacturer": "Hella",
     "PartNumber": "LGT-001",
     "Description": "Front left headlight",
-    "UnitPrice": 248.00,
+    "UnitPrice": 126.80,
     "IsActive": true,
     "CategoryName": "Lights"
   },
@@ -628,7 +628,7 @@
     "Manufacturer": "Depo",
     "PartNumber": "LGT-002",
     "Description": "Rear right tail lamp",
-    "UnitPrice": 92.70,
+    "UnitPrice": 47.40,
     "IsActive": true,
     "CategoryName": "Lights"
   },
@@ -637,7 +637,7 @@
     "Manufacturer": "Valeo",
     "PartNumber": "LGT-003",
     "Description": "Front bumper fog light",
-    "UnitPrice": 47.30,
+    "UnitPrice": 24.20,
     "IsActive": true,
     "CategoryName": "Lights"
   },
@@ -647,7 +647,7 @@
     "Manufacturer": "Vemo",
     "PartNumber": "INT-001",
     "Description": "Driver electric window switch",
-    "UnitPrice": 39.00,
+    "UnitPrice": 19.90,
     "IsActive": true,
     "CategoryName": "Interior"
   },
@@ -656,7 +656,7 @@
     "Manufacturer": "Topran",
     "PartNumber": "INT-002",
     "Description": "Manual gear lever knob",
-    "UnitPrice": 26.80,
+    "UnitPrice": 13.70,
     "IsActive": true,
     "CategoryName": "Interior"
   },
@@ -665,7 +665,7 @@
     "Manufacturer": "Petex",
     "PartNumber": "INT-003",
     "Description": "Textile interior floor mat set",
-    "UnitPrice": 44.50,
+    "UnitPrice": 22.80,
     "IsActive": true,
     "CategoryName": "Interior"
   }
