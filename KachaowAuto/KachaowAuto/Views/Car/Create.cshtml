@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.Car
+﻿@model KachaowAuto.ViewModels.Car.CarCreateViewModel
 
 @{
     ViewData["Title"] = "My Cars";
@@ -8,8 +8,9 @@
 
 <form asp-action="Create" method="post">
     <div class="mb-3">
-        <label asp-for="ModelId" class="form-label">Model</label>
-        <select asp-for="ModelId" class="form-control" asp-items="@(new SelectList(ViewBag.Models, "Id", "ModelName"))">
+        <label asp-for="ModelId" class="form-label"></label>
+        <select asp-for="ModelId" class="form-control"
+                asp-items="@(new SelectList(Model.Models, "ModelId", "ModelName"))">
             <option value="">-- Select Model --</option>
         </select>
         <span asp-validation-for="ModelId" class="text-danger"></span>

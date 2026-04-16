@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.PartImage
+﻿@model KachaowAuto.ViewModels.PartImage.PartImageCreateViewModel
 
 @{
     ViewData["Title"] = "Add Part Image";
@@ -9,17 +9,24 @@
         <div class="card-body p-4">
             <h2 class="mb-4">Add Image</h2>
 
-            <form asp-controller="PartImage" asp-action="Create" method="post" enctype="multipart/form-data">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
 
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
                 <div class="mb-3">
-                    <label class="form-label">Part</label>
-                    <select asp-for="PartId" asp-items="ViewBag.Parts" class="form-select"></select>
+                    <label asp-for="PartId" class="form-label"></label>
+                    <select asp-for="PartId" class="form-select"
+                            asp-items="@(new SelectList(Model.Parts, "PartId", "PartName"))">
+                        <option value="">-- select part --</option>
+                    </select>
+                    <span asp-validation-for="PartId" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Image</label>
-                    <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                    <label asp-for="ImageFile" class="form-label"></label>
+                    <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Upload</button>
@@ -28,3 +35,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

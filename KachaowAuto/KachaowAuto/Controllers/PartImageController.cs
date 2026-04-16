@@ -1,6 +1,8 @@
 ﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.PartImageModels;
 using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.PartImage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,146 +15,112 @@ namespace KachaowAuto.Controllers
     [Authorize(Roles = "Admin,Mechanic")]
     public class PartImageController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IPartImageService partImageService;
 
-        public PartImageController(KachaowAutoDbContext _context, ICloudinaryService cloudinaryService)
+        public PartImageController(IPartImageService _partImageService)
         {
-            context = _context;
-            _cloudinaryService = cloudinaryService;
+            partImageService = _partImageService;
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var partImages = await context.PartImages
-                .Include(pi => pi.Part)
-                .OrderByDescending(pi => pi.PartImageId)
-                .ToListAsync();
+            var serviceModels = await partImageService.GetAllAsync();
 
-            return View(partImages);
+            var viewModels = serviceModels.Select(pi => new PartImageListViewModel
+            {
+                PartImageId = pi.PartImageId,
+                PartId = pi.PartId,
+                PartName = pi.PartName,
+                ImageUrl = pi.ImageUrl
+            }).ToList();
+
+            return View(viewModels);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create(int? partId)
         {
-            ViewBag.Parts = await context.Parts
-                .OrderBy(p => p.PartName)
-                .Select(p => new SelectListItem
-                {
-                    Value = p.PartId.ToString(),
-                    Text = p.PartName
-                })
-                .ToListAsync();
+            var serviceModel = await partImageService.GetCreatePageModelAsync(partId);
 
-            var model = new PartImage();
-
-            if (partId.HasValue)
+            var viewModel = new PartImageCreateViewModel
             {
-                model.PartId = partId.Value;
-            }
+                PartId = serviceModel.Image.PartId,
+                Parts = serviceModel.Parts.Select(p => new PartOptionViewModel
+                {
+                    PartId = p.PartId,
+                    PartName = p.PartName
+                }).ToList()
+            };
 
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int partId, IFormFile imageFile)
+        public async Task<IActionResult> Create(PartImageCreateViewModel viewModel)
         {
-            if (partId <= 0)
+            if (viewModel.PartId <= 0)
             {
-                ModelState.AddModelError("PartId", "Избери част.");
+                ModelState.AddModelError(nameof(viewModel.PartId), "Избери част.");
             }
 
-            if (imageFile == null || imageFile.Length == 0)
+            if (viewModel.ImageFile == null || viewModel.ImageFile.Length == 0)
             {
-                ModelState.AddModelError("imageFile", "Моля, избери снимка.");
-            }
-
-            var partExists = await context.Parts.AnyAsync(p => p.PartId == partId);
-            if (!partExists)
-            {
-                ModelState.AddModelError("PartId", "Избраната част не съществува.");
+                ModelState.AddModelError(nameof(viewModel.ImageFile), "Моля, избери снимка.");
             }
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Parts = await context.Parts
-                    .OrderBy(p => p.PartName)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.PartId.ToString(),
-                        Text = p.PartName
-                    })
-                    .ToListAsync();
+                var reload = await partImageService.GetCreatePageModelAsync(viewModel.PartId);
 
-                var model = new PartImage
+                viewModel.Parts = reload.Parts.Select(p => new PartOptionViewModel
                 {
-                    PartId = partId
-                };
+                    PartId = p.PartId,
+                    PartName = p.PartName
+                }).ToList();
 
-                return View(model);
+                return View(viewModel);
             }
 
-            var uploadResult = await _cloudinaryService.UploadImageAsync(imageFile, "kachaowauto/parts");
+            var serviceModel = new PartImageCreateServiceModel
+            {
+                PartId = viewModel.PartId,
+                ImageFile = viewModel.ImageFile
+            };
 
-            if (uploadResult == null || string.IsNullOrWhiteSpace(uploadResult.Url))
+            var partId = await partImageService.CreateAsync(serviceModel);
+
+            if (partId == null)
             {
                 ModelState.AddModelError("", "Грешка при качване на снимката.");
 
-                ViewBag.Parts = await context.Parts
-                    .OrderBy(p => p.PartName)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.PartId.ToString(),
-                        Text = p.PartName
-                    })
-                    .ToListAsync();
+                var reload = await partImageService.GetCreatePageModelAsync(viewModel.PartId);
 
-                var model = new PartImage
+                viewModel.Parts = reload.Parts.Select(p => new PartOptionViewModel
                 {
-                    PartId = partId
-                };
+                    PartId = p.PartId,
+                    PartName = p.PartName
+                }).ToList();
 
-                return View(model);
+                return View(viewModel);
             }
 
-            var image = new PartImage
-            {
-                PartId = partId,
-                ImageUrl = uploadResult.Url,
-                PublicId = uploadResult.PublicId
-            };
-
-            await context.PartImages.AddAsync(image);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "Part", new { id = partId });
+            return RedirectToAction("Details", "Part", new { id = partId.Value });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var image = await context.PartImages
-                .FirstOrDefaultAsync(i => i.PartImageId == id);
+            var partId = await partImageService.DeleteAsync(id);
 
-            if (image == null)
+            if (partId == null)
             {
                 return RedirectToAction("Index", "Part");
             }
 
-            var partId = image.PartId;
-
-            if (!string.IsNullOrWhiteSpace(image.PublicId))
-            {
-                await _cloudinaryService.DeleteImageAsync(image.PublicId);
-            }
-
-            context.PartImages.Remove(image);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "Part", new { id = partId });
+            return RedirectToAction("Details", "Part", new { id = partId.Value });
         }
     }
 }

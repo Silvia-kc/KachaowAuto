@@ -1,7 +1,9 @@
 ﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.PartModels;
 using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels;
+using KachaowAuto.ViewModels.Part;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,184 +15,204 @@ namespace KachaowAuto.Controllers
     [Authorize]
     public class PartController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IPartService partService;
 
-        public PartController(KachaowAutoDbContext _context, ICloudinaryService cloudinaryService)
+        public PartController(IPartService _partService)
         {
-            context = _context;
-            _cloudinaryService = cloudinaryService;
+            partService = _partService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var parts = await context.Parts
-                .Include(p => p.Category)
-                .Include(p => p.Images)
-                .OrderBy(p => p.PartName)
-                .ToListAsync();
+            var serviceModels = await partService.GetAllAsync();
 
-            return View(parts);
+            var viewModels = serviceModels.Select(p => new PartListViewModel
+            {
+                PartId = p.PartId,
+                PartName = p.PartName,
+                Manufacturer = p.Manufacturer,
+                PartNumber = p.PartNumber,
+                CategoryName = p.CategoryName,
+                UnitPrice = p.UnitPrice,
+                IsActive = p.IsActive,
+                FirstImageUrl = p.FirstImageUrl
+            }).ToList();
+
+            return View(viewModels);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var part = await context.Parts
-                .Include(p => p.Category)
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.PartId == id);
+            var serviceModel = await partService.GetByIdAsync(id);
 
-            if (part == null)
+            if (serviceModel == null)
             {
                 return NotFound();
             }
 
-            return View(part);
+            var viewModel = new PartDetailsViewModel
+            {
+                PartId = serviceModel.PartId,
+                PartName = serviceModel.PartName,
+                Manufacturer = serviceModel.Manufacturer,
+                PartNumber = serviceModel.PartNumber,
+                Description = serviceModel.Description,
+                UnitPrice = serviceModel.UnitPrice,
+                IsActive = serviceModel.IsActive,
+                CategoryName = serviceModel.CategoryName,
+                Images = serviceModel.Images.Select(i => new PartDetailsImageViewModel
+                {
+                    PartImageId = i.PartImageId,
+                    ImageUrl = i.ImageUrl
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Create(int? partId)
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Parts = await context.Parts
-                .OrderBy(p => p.PartName)
-                .Select(p => new SelectListItem
-                {
-                    Value = p.PartId.ToString(),
-                    Text = p.PartName
-                })
-                .ToListAsync();
+            var serviceModel = await partService.GetCreatePageModelAsync();
 
-            var model = new PartImage();
-
-            if (partId.HasValue)
+            var viewModel = new PartCreateViewModel
             {
-                model.PartId = partId.Value;
-            }
+                Categories = serviceModel.Categories.Select(c => new PartCategoryOptionViewModel
+                {
+                    PartCategoryId = c.PartCategoryId,
+                    Name = c.Name
+                }).ToList()
+            };
 
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Create(int partId, IFormFile imageFile)
+        public async Task<IActionResult> Create(PartCreateViewModel viewModel)
         {
-            if (partId <= 0)
-            {
-                ModelState.AddModelError("PartId", "Избери част.");
-            }
-
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                ModelState.AddModelError("imageFile", "Моля, избери снимка.");
-            }
-
-            var part = await context.Parts.FirstOrDefaultAsync(p => p.PartId == partId);
-            if (part == null)
-            {
-                ModelState.AddModelError("PartId", "Избраната част не съществува.");
-            }
-
             if (!ModelState.IsValid)
             {
-                ViewBag.Parts = await context.Parts
-                    .OrderBy(p => p.PartName)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.PartId.ToString(),
-                        Text = p.PartName
-                    })
-                    .ToListAsync();
+                var reload = await partService.GetCreatePageModelAsync();
 
-                var model = new PartImage
+                viewModel.Categories = reload.Categories.Select(c => new PartCategoryOptionViewModel
                 {
-                    PartId = partId
-                };
+                    PartCategoryId = c.PartCategoryId,
+                    Name = c.Name
+                }).ToList();
 
-                return View(model);
+                return View(viewModel);
             }
 
-            var uploadResult = await _cloudinaryService.UploadImageAsync(imageFile, "kachaowauto/parts");
-
-            if (uploadResult == null || string.IsNullOrWhiteSpace(uploadResult.Url))
+            var serviceModel = new PartCreateServiceModel
             {
-                ModelState.AddModelError("", "Грешка при качване на снимката.");
-
-                ViewBag.Parts = await context.Parts
-                    .OrderBy(p => p.PartName)
-                    .Select(p => new SelectListItem
-                    {
-                        Value = p.PartId.ToString(),
-                        Text = p.PartName
-                    })
-                    .ToListAsync();
-
-                var model = new PartImage
-                {
-                    PartId = partId
-                };
-
-                return View(model);
-            }
-
-            var partImage = new PartImage
-            {
-                PartId = partId,
-                ImageUrl = uploadResult.Url,
-                PublicId = uploadResult.PublicId
+                PartName = viewModel.PartName,
+                Manufacturer = viewModel.Manufacturer,
+                PartNumber = viewModel.PartNumber,
+                Description = viewModel.Description,
+                UnitPrice = viewModel.UnitPrice,
+                IsActive = viewModel.IsActive,
+                PartCategoryId = viewModel.PartCategoryId,
+                ImageFile = viewModel.ImageFile
             };
 
-            await context.PartImages.AddAsync(partImage);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Details), new { id = partId });
+            await partService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Categories = await context.PartCategories.ToListAsync();
+            var serviceModel = await partService.GetEditPageModelAsync(id);
 
-            var part = await context.Parts.FirstOrDefaultAsync(a => a.PartId == id);
-            if (part == null)
+            if (serviceModel == null)
             {
                 return NotFound();
             }
 
-            return View(part);
+            var viewModel = new PartEditViewModel
+            {
+                PartId = serviceModel.Part.PartId,
+                PartName = serviceModel.Part.PartName,
+                Manufacturer = serviceModel.Part.Manufacturer,
+                PartNumber = serviceModel.Part.PartNumber,
+                Description = serviceModel.Part.Description,
+                UnitPrice = serviceModel.Part.UnitPrice,
+                IsActive = serviceModel.Part.IsActive,
+                PartCategoryId = serviceModel.Part.PartCategoryId,
+                Categories = serviceModel.Categories.Select(c => new PartCategoryOptionViewModel
+                {
+                    PartCategoryId = c.PartCategoryId,
+                    Name = c.Name
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Edit(Part part)
+        public async Task<IActionResult> Edit(PartEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = await context.PartCategories.ToListAsync();
-                return View(part);
+                var reload = await partService.GetCreatePageModelAsync();
+
+                viewModel.Categories = reload.Categories.Select(c => new PartCategoryOptionViewModel
+                {
+                    PartCategoryId = c.PartCategoryId,
+                    Name = c.Name
+                }).ToList();
+
+                return View(viewModel);
             }
 
-            context.Parts.Update(part);
-            await context.SaveChangesAsync();
+            var serviceModel = new PartEditServiceModel
+            {
+                PartId = viewModel.PartId,
+                PartName = viewModel.PartName,
+                Manufacturer = viewModel.Manufacturer,
+                PartNumber = viewModel.PartNumber,
+                Description = viewModel.Description,
+                UnitPrice = viewModel.UnitPrice,
+                IsActive = viewModel.IsActive,
+                PartCategoryId = viewModel.PartCategoryId
+            };
 
+            await partService.UpdateAsync(serviceModel);
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Delete(int id)
         {
-            var part = await context.Parts
-                .Include(p => p.Category)
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.PartId == id);
+            var serviceModel = await partService.GetByIdAsync(id);
 
-            if (part == null)
+            if (serviceModel == null)
             {
                 return NotFound();
             }
 
-            return View(part);
+            var viewModel = new PartDetailsViewModel
+            {
+                PartId = serviceModel.PartId,
+                PartName = serviceModel.PartName,
+                Manufacturer = serviceModel.Manufacturer,
+                PartNumber = serviceModel.PartNumber,
+                Description = serviceModel.Description,
+                UnitPrice = serviceModel.UnitPrice,
+                IsActive = serviceModel.IsActive,
+                CategoryName = serviceModel.CategoryName,
+                Images = serviceModel.Images.Select(i => new PartDetailsImageViewModel
+                {
+                    PartImageId = i.PartImageId,
+                    ImageUrl = i.ImageUrl
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -198,30 +220,12 @@ namespace KachaowAuto.Controllers
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var part = await context.Parts
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.PartId == id);
+            var isDeleted = await partService.DeleteAsync(id);
 
-            if (part == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            if (part.Images != null && part.Images.Any())
-            {
-                foreach (var image in part.Images)
-                {
-                    if (!string.IsNullOrWhiteSpace(image.PublicId))
-                    {
-                        await _cloudinaryService.DeleteImageAsync(image.PublicId);
-                    }
-                }
-
-                context.PartImages.RemoveRange(part.Images);
-            }
-
-            context.Parts.Remove(part);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -231,24 +235,14 @@ namespace KachaowAuto.Controllers
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            var image = await context.PartImages.FirstOrDefaultAsync(i => i.PartImageId == id);
+            var isDeleted = await partService.DeleteImageAsync(id);
 
-            if (image == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
 
-            var partId = image.PartId;
-
-            if (!string.IsNullOrWhiteSpace(image.PublicId))
-            {
-                await _cloudinaryService.DeleteImageAsync(image.PublicId);
-            }
-
-            context.PartImages.Remove(image);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Details), new { id = partId });
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Service>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Service.ServiceListViewModel>
 
 @{
     ViewData["Title"] = "Services";
@@ -20,6 +20,7 @@
                 <th>Price From</th>
                 <th>Price To</th>
                 <th>Category</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -31,7 +32,11 @@
                     <td>@service.Description</td>
                     <td>@service.PriceFrom</td>
                     <td>@service.PriceTo</td>
-                    <td>@service.ServiceCategory?.CategoryName</td>
+                    <td>@service.CategoryName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@service.ServiceId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@service.ServiceId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

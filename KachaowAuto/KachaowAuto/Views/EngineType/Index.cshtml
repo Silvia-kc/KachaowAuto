@@ -1,14 +1,27 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.EngineType>
+﻿@model IEnumerable<KachaowAuto.ViewModels.EngineType.EngineTypeListViewModel>
 
 <h2>Engine Types</h2>
 <a class="btn btn-primary mb-2" asp-action="Create">Create</a>
 
 <table class="table">
-    <thead><tr><th>Name</th></tr></thead>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Models Count</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (var e in Model)
         {
-            <tr><td>@e.Name</td></tr>
+            <tr>
+                <td>@e.Name</td>
+                <td>@e.ModelsCount</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@e.EngineTypeId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@e.EngineTypeId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

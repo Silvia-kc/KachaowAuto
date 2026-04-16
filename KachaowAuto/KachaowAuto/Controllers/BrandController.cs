@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.Brand;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.Brand;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,93 +11,120 @@ using Microsoft.EntityFrameworkCore;
 namespace KachaowAuto.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public BrandController(KachaowAutoDbContext _context)
+        private readonly IBrandService brandService;
+
+        public BrandController(IBrandService _brandService)
         {
-            context = _context;
+            brandService = _brandService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var brands = await context.Brands
-                                      .Include(a => a.Models)
-                                      .ToListAsync();
-            return View(brands);
+            var serviceModels = await brandService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(b => new BrandListViewModel
+            {
+                BrandId = b.BrandId,
+                BrandName = b.BrandName,
+                ModelsCount = b.ModelsCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            return View();
+            var viewModel = new BrandCreateViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Brand brand)
+        public async Task<IActionResult> Create(BrandCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(brand);
+                return View(viewModel);
             }
-            await context.Brands.AddAsync(brand);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            var serviceModel = new BrandCreateServiceModel
+            {
+                BrandName = viewModel.BrandName
+            };
+
+            await brandService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            var brand = await context.Brands.FirstOrDefaultAsync(a => a.BrandId == id);
-            if (brand == null)
+            var serviceModel = await brandService.GetEditByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(brand);
+
+            var viewModel = new BrandEditViewModel
+            {
+                BrandId = serviceModel.BrandId,
+                BrandName = serviceModel.BrandName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Brand brand)
+        public async Task<IActionResult> Edit(BrandEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(brand);
-
+                return View(viewModel);
             }
-            context.Brands.Update(brand);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new BrandEditServiceModel
+            {
+                BrandId = viewModel.BrandId,
+                BrandName = viewModel.BrandName
+            };
+
+            await brandService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var brand = await context.Brands.FirstOrDefaultAsync(a => a.BrandId == id);
-            if (brand == null)
+            var serviceModel = await brandService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(brand);
+
+            var viewModel = new BrandDetailsViewModel
+            {
+                BrandId = serviceModel.BrandId,
+                BrandName = serviceModel.BrandName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var brand = await context.Brands.FirstOrDefaultAsync(a => a.BrandId == id);
+            var isDeleted = await brandService.DeleteAsync(id);
 
-            if (brand == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Brands.Remove(brand);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

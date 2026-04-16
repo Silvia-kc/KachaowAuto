@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.ViewModels.PartCreateViewModel
+﻿@model KachaowAuto.ViewModels.Part.PartCreateViewModel
 
 @{
     ViewData["Title"] = "Add Part";
@@ -11,7 +11,7 @@
                 <div class="card-body p-4">
                     <h2 class="mb-4 text-center">Add New Part</h2>
 
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
@@ -49,11 +49,18 @@
 
                             <div class="col-md-6 mb-3">
                                 <label asp-for="PartCategoryId" class="form-label"></label>
-                                <select asp-for="PartCategoryId" asp-items="Model.Categories" class="form-select">
+                                <select asp-for="PartCategoryId" class="form-select"
+                                        asp-items="@(new SelectList(Model.Categories, "PartCategoryId", "Name"))">
                                     <option value="">-- Select category --</option>
                                 </select>
                                 <span asp-validation-for="PartCategoryId" class="text-danger"></span>
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageFile" class="form-label"></label>
+                            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
                         </div>
 
                         <div class="form-check mb-4">

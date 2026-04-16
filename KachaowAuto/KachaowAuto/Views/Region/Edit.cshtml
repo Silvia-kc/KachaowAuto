@@ -1,0 +1,27 @@
+﻿@model KachaowAuto.ViewModels.Region.RegionEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Region";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Edit Region</h1>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="RegionId" />
+
+        <div class="mb-3">
+            <label asp-for="RegionName" class="form-label"></label>
+            <input asp-for="RegionName" class="form-control" />
+            <span asp-validation-for="RegionName" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

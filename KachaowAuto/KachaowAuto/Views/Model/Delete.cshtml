@@ -1,0 +1,21 @@
+﻿@model KachaowAuto.ViewModels.Model.ModelDetailsViewModel
+
+<h2>Delete Model</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this model?
+</div>
+
+<div class="mb-3"><strong>Brand:</strong> @Model.BrandName</div>
+<div class="mb-3"><strong>Model:</strong> @Model.ModelName</div>
+<div class="mb-3"><strong>Engine Type:</strong> @Model.EngineTypeName</div>
+<div class="mb-3"><strong>Engine Volume:</strong> @Model.EngineVolume</div>
+<div class="mb-3"><strong>Horse Power:</strong> @Model.HorsePower</div>
+<div class="mb-3"><strong>Body Type:</strong> @Model.BodyTypeName</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.ModelId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

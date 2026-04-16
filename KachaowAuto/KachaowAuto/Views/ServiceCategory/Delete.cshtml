@@ -1,0 +1,24 @@
+﻿@model KachaowAuto.ViewModels.ServiceCategory.ServiceCategoryDetailsViewModel
+
+@{
+    ViewData["Title"] = "Delete Service Category";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Delete Service Category</h1>
+
+    <div class="alert alert-warning">
+        Are you sure you want to delete this service category?
+    </div>
+
+    <div class="mb-3">
+        <strong>Category Name:</strong> @Model.CategoryName
+    </div>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ServiceCategoryId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

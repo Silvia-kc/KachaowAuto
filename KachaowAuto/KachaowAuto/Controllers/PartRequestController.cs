@@ -1,4 +1,6 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.PartRequest;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels.PartRequest;
 using Microsoft.AspNetCore.Authorization;
@@ -11,14 +13,14 @@ namespace KachaowAuto.Controllers
     [Authorize]
     public class PartRequestController : Controller
     {
-        private readonly KachaowAutoDbContext context;
+        private readonly IPartRequestService partRequestService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public PartRequestController(
-            KachaowAutoDbContext _context,
+            IPartRequestService _partRequestService,
             UserManager<ApplicationUser> _userManager)
         {
-            context = _context;
+            partRequestService = _partRequestService;
             userManager = _userManager;
         }
 
@@ -26,18 +28,19 @@ namespace KachaowAuto.Controllers
         [HttpGet]
         public async Task<IActionResult> Create(int partId)
         {
-            var part = await context.Parts.FirstOrDefaultAsync(p => p.PartId == partId);
+            var serviceModel = await partRequestService.GetCreateModelAsync(partId);
 
-            if (part == null)
+            if (serviceModel == null)
             {
                 return NotFound();
             }
 
             var viewModel = new PartRequestCreateViewModel
             {
-                PartId = part.PartId,
-                PartName = part.PartName,
-                Quantity = 1
+                PartId = serviceModel.PartId,
+                PartName = serviceModel.PartName,
+                Quantity = serviceModel.Quantity,
+                Note = serviceModel.Note
             };
 
             return View(viewModel);
@@ -48,16 +51,16 @@ namespace KachaowAuto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartRequestCreateViewModel viewModel)
         {
-            var part = await context.Parts.FirstOrDefaultAsync(p => p.PartId == viewModel.PartId);
+            var serviceModelForPart = await partRequestService.GetCreateModelAsync(viewModel.PartId);
 
-            if (part == null)
+            if (serviceModelForPart == null)
             {
                 return NotFound();
             }
 
             if (!ModelState.IsValid)
             {
-                viewModel.PartName = part.PartName;
+                viewModel.PartName = serviceModelForPart.PartName;
                 return View(viewModel);
             }
 
@@ -69,18 +72,20 @@ namespace KachaowAuto.Controllers
 
             int mechanicId = int.Parse(userIdStr);
 
-            var request = new PartRequest
+            var createServiceModel = new PartRequestCreateServiceModel
             {
                 PartId = viewModel.PartId,
-                MechanicId = mechanicId,
+                PartName = serviceModelForPart.PartName,
                 Quantity = viewModel.Quantity,
-                Note = viewModel.Note,
-                Status = "Pending",
-                RequestedAt = DateTime.UtcNow
+                Note = viewModel.Note
             };
 
-            context.PartRequests.Add(request);
-            await context.SaveChangesAsync();
+            var isCreated = await partRequestService.CreateAsync(createServiceModel, mechanicId);
+
+            if (!isCreated)
+            {
+                return NotFound();
+            }
 
             return RedirectToAction(nameof(MyRequests));
         }
@@ -97,23 +102,20 @@ namespace KachaowAuto.Controllers
 
             int mechanicId = int.Parse(userIdStr);
 
-            var viewModels = await context.PartRequests
-                .Include(r => r.Part)
-                .Where(r => r.MechanicId == mechanicId)
-                .OrderByDescending(r => r.RequestedAt)
-                .Select(r => new PartRequestMyRequestViewModel
-                {
-                    PartRequestId = r.PartRequestId,
-                    PartId = r.PartId,
-                    PartName = r.Part.PartName,
-                    Quantity = r.Quantity,
-                    Status = r.Status,
-                    Note = r.Note,
-                    AdminNote = r.AdminNote,
-                    RequestedAt = r.RequestedAt,
-                    ProcessedAt = r.ProcessedAt
-                })
-                .ToListAsync();
+            var serviceModels = await partRequestService.GetMyRequestsAsync(mechanicId);
+
+            var viewModels = serviceModels.Select(r => new PartRequestMyRequestViewModel
+            {
+                PartRequestId = r.PartRequestId,
+                PartId = r.PartId,
+                PartName = r.PartName,
+                Quantity = r.Quantity,
+                Status = r.Status,
+                Note = r.Note,
+                AdminNote = r.AdminNote,
+                RequestedAt = r.RequestedAt,
+                ProcessedAt = r.ProcessedAt
+            }).ToList();
 
             return View(viewModels);
         }
@@ -122,25 +124,22 @@ namespace KachaowAuto.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var viewModels = await context.PartRequests
-                .Include(r => r.Part)
-                .Include(r => r.Mechanic)
-                .OrderByDescending(r => r.RequestedAt)
-                .Select(r => new PartRequestAdminViewModel
-                {
-                    PartRequestId = r.PartRequestId,
-                    PartId = r.PartId,
-                    PartName = r.Part.PartName,
-                    MechanicId = r.MechanicId,
-                    MechanicName = r.Mechanic.UserName!,
-                    Quantity = r.Quantity,
-                    Status = r.Status,
-                    Note = r.Note,
-                    AdminNote = r.AdminNote,
-                    RequestedAt = r.RequestedAt,
-                    ProcessedAt = r.ProcessedAt
-                })
-                .ToListAsync();
+            var serviceModels = await partRequestService.GetAllRequestsAsync();
+
+            var viewModels = serviceModels.Select(r => new PartRequestAdminViewModel
+            {
+                PartRequestId = r.PartRequestId,
+                PartId = r.PartId,
+                PartName = r.PartName,
+                MechanicId = r.MechanicId,
+                MechanicName = r.MechanicName,
+                Quantity = r.Quantity,
+                Status = r.Status,
+                Note = r.Note,
+                AdminNote = r.AdminNote,
+                RequestedAt = r.RequestedAt,
+                ProcessedAt = r.ProcessedAt
+            }).ToList();
 
             return View(viewModels);
         }
@@ -150,14 +149,13 @@ namespace KachaowAuto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(int id, string? adminNote)
         {
-            var request = await context.PartRequests.FirstOrDefaultAsync(r => r.PartRequestId == id);
-            if (request == null) return NotFound();
+            var isUpdated = await partRequestService.ApproveAsync(id, adminNote);
 
-            request.Status = "Approved";
-            request.AdminNote = adminNote;
-            request.ProcessedAt = DateTime.UtcNow;
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
 
-            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -166,14 +164,13 @@ namespace KachaowAuto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reject(int id, string? adminNote)
         {
-            var request = await context.PartRequests.FirstOrDefaultAsync(r => r.PartRequestId == id);
-            if (request == null) return NotFound();
+            var isUpdated = await partRequestService.RejectAsync(id, adminNote);
 
-            request.Status = "Rejected";
-            request.AdminNote = adminNote;
-            request.ProcessedAt = DateTime.UtcNow;
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
 
-            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -182,14 +179,13 @@ namespace KachaowAuto.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkAsSent(int id, string? adminNote)
         {
-            var request = await context.PartRequests.FirstOrDefaultAsync(r => r.PartRequestId == id);
-            if (request == null) return NotFound();
+            var isUpdated = await partRequestService.MarkAsSentAsync(id, adminNote);
 
-            request.Status = "Sent";
-            request.AdminNote = adminNote;
-            request.ProcessedAt = DateTime.UtcNow;
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
 
-            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

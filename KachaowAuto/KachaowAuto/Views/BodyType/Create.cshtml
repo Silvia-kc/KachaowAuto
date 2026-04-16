@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.BodyType
+﻿@model KachaowAuto.ViewModels.BodyType.BodyTypeCreateViewModel
 
 <h2>Create Body Type</h2>
 
@@ -6,7 +6,7 @@
     @Html.AntiForgeryToken()
 
     <div class="mb-3">
-        <label class="form-label">Body Type Name</label>
+        <label asp-for="Name" class="form-label"></label>
         <input class="form-control" asp-for="Name" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>

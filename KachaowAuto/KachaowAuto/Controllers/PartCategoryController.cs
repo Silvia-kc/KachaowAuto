@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.PartCategoryModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.PartCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,91 +13,117 @@ namespace KachaowAuto.Controllers
 {
     public class PartCategoryController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public PartCategoryController(KachaowAutoDbContext _context)
+        private readonly IPartCategoryService partCategoryService;
+
+        public PartCategoryController(IPartCategoryService _partCategoryService)
         {
-            context = _context;
+            partCategoryService = _partCategoryService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var partCategories = await context.PartCategories
-                                    .Include(a => a.Parts)
-                                    .ToListAsync();
-            return View(partCategories);
+            var serviceModels = await partCategoryService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(pc => new PartCategoryListViewModel
+            {
+                PartCategoryId = pc.PartCategoryId,
+                Name = pc.Name,
+                PartsCount = pc.PartsCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Parts = await context.Parts.ToListAsync();
-            return View();
+            var viewModel = new PartCategoryCreateViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PartCategory partCategory)
+        public async Task<IActionResult> Create(PartCategoryCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Parts = await context.Parts.ToListAsync();
-                return View(partCategory);
+                return View(viewModel);
             }
-            await context.PartCategories.AddAsync(partCategory);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            var serviceModel = new PartCategoryCreateServiceModel
+            {
+                Name = viewModel.Name
+            };
+
+            await partCategoryService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Parts = await context.Parts.ToListAsync();
-            var partCategory = await context.PartCategories.FirstOrDefaultAsync(a => a.PartCategoryId == id);
-            if (partCategory == null)
+            var serviceModel = await partCategoryService.GetEditByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(partCategory);
+
+            var viewModel = new PartCategoryEditViewModel
+            {
+                PartCategoryId = serviceModel.PartCategoryId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PartCategory partCategory)
+        public async Task<IActionResult> Edit(PartCategoryEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Parts = await context.Parts.ToListAsync();
-                return View(partCategory);
-
+                return View(viewModel);
             }
-            context.PartCategories.Update(partCategory);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new PartCategoryEditServiceModel
+            {
+                PartCategoryId = viewModel.PartCategoryId,
+                Name = viewModel.Name
+            };
+
+            await partCategoryService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var partCategory = await context.PartCategories.FirstOrDefaultAsync(a => a.PartCategoryId == id);
-            if (partCategory == null)
+            var serviceModel = await partCategoryService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(partCategory);
+
+            var viewModel = new PartCategoryDetailsViewModel
+            {
+                PartCategoryId = serviceModel.PartCategoryId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var partCategory = await context.PartCategories.FirstOrDefaultAsync(a => a.PartCategoryId == id);
+            var isDeleted = await partCategoryService.DeleteAsync(id);
 
-            if (partCategory == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.PartCategories.Remove(partCategory);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

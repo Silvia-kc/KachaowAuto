@@ -83,6 +83,129 @@ namespace KachaowAuto.Data
                     .HasForeignKey(pr => pr.MechanicId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+            builder.Entity<PartCategory>().HasData(
+        new PartCategory { PartCategoryId = 1, Name = "Braking system" },
+        new PartCategory { PartCategoryId = 2, Name = "Wheel suspension" },
+        new PartCategory { PartCategoryId = 3, Name = "Steering system" },
+        new PartCategory { PartCategoryId = 4, Name = "Wheel drive" },
+        new PartCategory { PartCategoryId = 5, Name = "Transmission" },
+        new PartCategory { PartCategoryId = 6, Name = "Belt drive" },
+        new PartCategory { PartCategoryId = 7, Name = "Engine parts" },
+        new PartCategory { PartCategoryId = 8, Name = "Cylinder block parts" },
+        new PartCategory { PartCategoryId = 9, Name = "Garnishes" },
+        new PartCategory { PartCategoryId = 10, Name = "Cooling system" },
+        new PartCategory { PartCategoryId = 11, Name = "Climate system" },
+        new PartCategory { PartCategoryId = 12, Name = "Heating and ventilation" },
+        new PartCategory { PartCategoryId = 13, Name = "Filters" },
+        new PartCategory { PartCategoryId = 14, Name = "Oils and liquids" },
+        new PartCategory { PartCategoryId = 15, Name = "Ignition system" },
+        new PartCategory { PartCategoryId = 16, Name = "Sensors and gauges" },
+        new PartCategory { PartCategoryId = 17, Name = "Fuel system" },
+        new PartCategory { PartCategoryId = 18, Name = "Electrical system" },
+        new PartCategory { PartCategoryId = 19, Name = "Starting system" },
+        new PartCategory { PartCategoryId = 20, Name = "Window cleaning" },
+        new PartCategory { PartCategoryId = 21, Name = "Exhausts and mufflers" },
+        new PartCategory { PartCategoryId = 22, Name = "Large parts" },
+        new PartCategory { PartCategoryId = 23, Name = "Lights" },
+        new PartCategory { PartCategoryId = 24, Name = "Interior" }
+    );
+            builder.Entity<Part>().HasData(
+    new Part { PartId = 1, PartName = "Front Brake Pads Set", Manufacturer = "Brembo", PartNumber = "BRK-001", Description = "Front axle brake pads set", UnitPrice = 46.00m, IsActive = true, PartCategoryId = 1 },
+    new Part { PartId = 2, PartName = "Rear Brake Disc", Manufacturer = "Bosch", PartNumber = "BRK-002", Description = "Rear ventilated brake disc", UnitPrice = 38.10m, IsActive = true, PartCategoryId = 1 },
+    new Part { PartId = 3, PartName = "Brake Caliper", Manufacturer = "ATE", PartNumber = "BRK-003", Description = "Front right brake caliper", UnitPrice = 74.15m, IsActive = true, PartCategoryId = 1 },
+
+    new Part { PartId = 4, PartName = "Front Shock Absorber", Manufacturer = "Monroe", PartNumber = "SUS-001", Description = "Gas front shock absorber", UnitPrice = 67.50m, IsActive = true, PartCategoryId = 2 },
+    new Part { PartId = 5, PartName = "Coil Spring", Manufacturer = "KYB", PartNumber = "SUS-002", Description = "Front suspension coil spring", UnitPrice = 34.50m, IsActive = true, PartCategoryId = 2 },
+    new Part { PartId = 6, PartName = "Control Arm", Manufacturer = "Lemforder", PartNumber = "SUS-003", Description = "Front lower control arm", UnitPrice = 60.80m, IsActive = true, PartCategoryId = 2 },
+
+    new Part { PartId = 7, PartName = "Tie Rod End", Manufacturer = "TRW", PartNumber = "STR-001", Description = "Outer tie rod end", UnitPrice = 18.50m, IsActive = true, PartCategoryId = 3 },
+    new Part { PartId = 8, PartName = "Steering Rack Boot", Manufacturer = "Febi", PartNumber = "STR-002", Description = "Protective steering rack boot", UnitPrice = 9.60m, IsActive = true, PartCategoryId = 3 },
+    new Part { PartId = 9, PartName = "Power Steering Pump", Manufacturer = "ZF", PartNumber = "STR-003", Description = "Hydraulic power steering pump", UnitPrice = 122.70m, IsActive = true, PartCategoryId = 3 },
+
+    new Part { PartId = 10, PartName = "CV Joint Kit", Manufacturer = "SKF", PartNumber = "DRV-001", Description = "Outer CV joint repair kit", UnitPrice = 43.30m, IsActive = true, PartCategoryId = 4 },
+    new Part { PartId = 11, PartName = "Drive Shaft", Manufacturer = "GKN", PartNumber = "DRV-002", Description = "Front left drive shaft", UnitPrice = 110.00m, IsActive = true, PartCategoryId = 4 },
+    new Part { PartId = 12, PartName = "Wheel Hub Bearing", Manufacturer = "FAG", PartNumber = "DRV-003", Description = "Front wheel hub bearing", UnitPrice = 40.90m, IsActive = true, PartCategoryId = 4 },
+
+    new Part { PartId = 13, PartName = "Clutch Kit", Manufacturer = "Sachs", PartNumber = "TRN-001", Description = "Complete clutch kit", UnitPrice = 147.80m, IsActive = true, PartCategoryId = 5 },
+    new Part { PartId = 14, PartName = "Gearbox Mount", Manufacturer = "Febi", PartNumber = "TRN-002", Description = "Transmission support mount", UnitPrice = 27.80m, IsActive = true, PartCategoryId = 5 },
+    new Part { PartId = 15, PartName = "Transmission Oil Seal", Manufacturer = "Elring", PartNumber = "TRN-003", Description = "Gearbox shaft oil seal", UnitPrice = 7.60m, IsActive = true, PartCategoryId = 5 },
+
+    new Part { PartId = 16, PartName = "Timing Belt Kit", Manufacturer = "Gates", PartNumber = "BLT-001", Description = "Timing belt with tensioner", UnitPrice = 81.80m, IsActive = true, PartCategoryId = 6 },
+    new Part { PartId = 17, PartName = "Accessory Belt", Manufacturer = "Contitech", PartNumber = "BLT-002", Description = "Multi-rib auxiliary belt", UnitPrice = 14.60m, IsActive = true, PartCategoryId = 6 },
+    new Part { PartId = 18, PartName = "Belt Tensioner", Manufacturer = "INA", PartNumber = "BLT-003", Description = "Automatic belt tensioner", UnitPrice = 37.80m, IsActive = true, PartCategoryId = 6 },
+
+    new Part { PartId = 19, PartName = "Piston Ring Set", Manufacturer = "Mahle", PartNumber = "ENG-001", Description = "Engine piston ring set", UnitPrice = 49.10m, IsActive = true, PartCategoryId = 7 },
+    new Part { PartId = 20, PartName = "Engine Mount", Manufacturer = "Corteco", PartNumber = "ENG-002", Description = "Right engine support mount", UnitPrice = 45.20m, IsActive = true, PartCategoryId = 7 },
+    new Part { PartId = 21, PartName = "Oil Pan", Manufacturer = "Vaico", PartNumber = "ENG-003", Description = "Steel engine oil pan", UnitPrice = 53.40m, IsActive = true, PartCategoryId = 7 },
+
+    new Part { PartId = 22, PartName = "Cylinder Head Gasket", Manufacturer = "Elring", PartNumber = "CBP-001", Description = "Cylinder head gasket set", UnitPrice = 32.20m, IsActive = true, PartCategoryId = 8 },
+    new Part { PartId = 23, PartName = "Engine Valve", Manufacturer = "AE", PartNumber = "CBP-002", Description = "Intake engine valve", UnitPrice = 10.90m, IsActive = true, PartCategoryId = 8 },
+    new Part { PartId = 24, PartName = "Camshaft", Manufacturer = "Kolbenschmidt", PartNumber = "CBP-003", Description = "Exhaust camshaft", UnitPrice = 168.70m, IsActive = true, PartCategoryId = 8 },
+
+    new Part { PartId = 25, PartName = "Valve Cover Gasket", Manufacturer = "Victor Reinz", PartNumber = "GAR-001", Description = "Rubber valve cover gasket", UnitPrice = 10.20m, IsActive = true, PartCategoryId = 9 },
+    new Part { PartId = 26, PartName = "Oil Seal Ring", Manufacturer = "Elring", PartNumber = "GAR-002", Description = "Crankshaft oil seal", UnitPrice = 5.70m, IsActive = true, PartCategoryId = 9 },
+    new Part { PartId = 27, PartName = "Intake Manifold Gasket", Manufacturer = "Ajusa", PartNumber = "GAR-003", Description = "Intake manifold gasket set", UnitPrice = 8.40m, IsActive = true, PartCategoryId = 9 },
+
+    new Part { PartId = 28, PartName = "Radiator", Manufacturer = "Nissens", PartNumber = "COL-001", Description = "Engine cooling radiator", UnitPrice = 89.50m, IsActive = true, PartCategoryId = 10 },
+    new Part { PartId = 29, PartName = "Thermostat", Manufacturer = "Wahler", PartNumber = "COL-002", Description = "Coolant thermostat", UnitPrice = 17.80m, IsActive = true, PartCategoryId = 10 },
+    new Part { PartId = 30, PartName = "Water Pump", Manufacturer = "HEPU", PartNumber = "COL-003", Description = "Mechanical engine water pump", UnitPrice = 47.50m, IsActive = true, PartCategoryId = 10 },
+
+    new Part { PartId = 31, PartName = "AC Compressor", Manufacturer = "Denso", PartNumber = "CLI-001", Description = "Air conditioning compressor", UnitPrice = 215.00m, IsActive = true, PartCategoryId = 11 },
+    new Part { PartId = 32, PartName = "Condenser", Manufacturer = "NRF", PartNumber = "CLI-002", Description = "AC condenser radiator", UnitPrice = 75.00m, IsActive = true, PartCategoryId = 11 },
+    new Part { PartId = 33, PartName = "Cabin Temperature Sensor", Manufacturer = "Valeo", PartNumber = "CLI-003", Description = "Interior temperature sensor", UnitPrice = 14.30m, IsActive = true, PartCategoryId = 11 },
+
+    new Part { PartId = 34, PartName = "Heater Core", Manufacturer = "Valeo", PartNumber = "HTV-001", Description = "Passenger cabin heater radiator", UnitPrice = 60.30m, IsActive = true, PartCategoryId = 12 },
+    new Part { PartId = 35, PartName = "Blower Motor", Manufacturer = "Bosch", PartNumber = "HTV-002", Description = "Cabin ventilation blower motor", UnitPrice = 70.80m, IsActive = true, PartCategoryId = 12 },
+    new Part { PartId = 36, PartName = "Blower Resistor", Manufacturer = "Hella", PartNumber = "HTV-003", Description = "Ventilation fan resistor", UnitPrice = 21.60m, IsActive = true, PartCategoryId = 12 },
+
+    new Part { PartId = 37, PartName = "Oil Filter", Manufacturer = "MANN", PartNumber = "FIL-001", Description = "Engine oil filter cartridge", UnitPrice = 7.20m, IsActive = true, PartCategoryId = 13 },
+    new Part { PartId = 38, PartName = "Air Filter", Manufacturer = "Bosch", PartNumber = "FIL-002", Description = "Engine intake air filter", UnitPrice = 9.10m, IsActive = true, PartCategoryId = 13 },
+    new Part { PartId = 39, PartName = "Cabin Filter", Manufacturer = "Mahle", PartNumber = "FIL-003", Description = "Pollen cabin filter", UnitPrice = 11.40m, IsActive = true, PartCategoryId = 13 },
+
+    new Part { PartId = 40, PartName = "Engine Oil 5W-30", Manufacturer = "Castrol", PartNumber = "OIL-001", Description = "Fully synthetic engine oil 1L", UnitPrice = 9.60m, IsActive = true, PartCategoryId = 14 },
+    new Part { PartId = 41, PartName = "Brake Fluid DOT 4", Manufacturer = "ATE", PartNumber = "OIL-002", Description = "Brake fluid 500ml", UnitPrice = 6.40m, IsActive = true, PartCategoryId = 14 },
+    new Part { PartId = 42, PartName = "Coolant G12", Manufacturer = "Febi", PartNumber = "OIL-003", Description = "Ready to use coolant 1L", UnitPrice = 5.00m, IsActive = true, PartCategoryId = 14 },
+
+    new Part { PartId = 43, PartName = "Spark Plug", Manufacturer = "NGK", PartNumber = "IGN-001", Description = "Standard ignition spark plug", UnitPrice = 6.10m, IsActive = true, PartCategoryId = 15 },
+    new Part { PartId = 44, PartName = "Ignition Coil", Manufacturer = "Bosch", PartNumber = "IGN-002", Description = "Pencil ignition coil", UnitPrice = 32.70m, IsActive = true, PartCategoryId = 15 },
+    new Part { PartId = 45, PartName = "Glow Plug", Manufacturer = "Beru", PartNumber = "IGN-003", Description = "Diesel engine glow plug", UnitPrice = 9.40m, IsActive = true, PartCategoryId = 15 },
+
+    new Part { PartId = 46, PartName = "ABS Sensor", Manufacturer = "Hella", PartNumber = "SEN-001", Description = "Wheel speed ABS sensor", UnitPrice = 20.20m, IsActive = true, PartCategoryId = 16 },
+    new Part { PartId = 47, PartName = "Coolant Temperature Sensor", Manufacturer = "Facet", PartNumber = "SEN-002", Description = "Engine coolant temperature sensor", UnitPrice = 11.10m, IsActive = true, PartCategoryId = 16 },
+    new Part { PartId = 48, PartName = "Oil Pressure Switch", Manufacturer = "Febi", PartNumber = "SEN-003", Description = "Oil pressure warning switch", UnitPrice = 9.20m, IsActive = true, PartCategoryId = 16 },
+
+    new Part { PartId = 49, PartName = "Fuel Pump", Manufacturer = "Pierburg", PartNumber = "FUE-001", Description = "Electric in-tank fuel pump", UnitPrice = 78.70m, IsActive = true, PartCategoryId = 17 },
+    new Part { PartId = 50, PartName = "Fuel Injector", Manufacturer = "Bosch", PartNumber = "FUE-002", Description = "Petrol fuel injector", UnitPrice = 49.30m, IsActive = true, PartCategoryId = 17 },
+    new Part { PartId = 51, PartName = "Fuel Filter Housing", Manufacturer = "Mahle", PartNumber = "FUE-003", Description = "Diesel fuel filter housing", UnitPrice = 42.00m, IsActive = true, PartCategoryId = 17 },
+
+    new Part { PartId = 52, PartName = "Alternator", Manufacturer = "Valeo", PartNumber = "ELE-001", Description = "Vehicle charging alternator", UnitPrice = 158.50m, IsActive = true, PartCategoryId = 18 },
+    new Part { PartId = 53, PartName = "Battery Terminal", Manufacturer = "Bosch", PartNumber = "ELE-002", Description = "Positive battery terminal clamp", UnitPrice = 6.90m, IsActive = true, PartCategoryId = 18 },
+    new Part { PartId = 54, PartName = "Fuse Box", Manufacturer = "Hella", PartNumber = "ELE-003", Description = "Main vehicle fuse box", UnitPrice = 66.00m, IsActive = true, PartCategoryId = 18 },
+
+    new Part { PartId = 55, PartName = "Starter Motor", Manufacturer = "Bosch", PartNumber = "STA-001", Description = "12V starter motor", UnitPrice = 135.50m, IsActive = true, PartCategoryId = 19 },
+    new Part { PartId = 56, PartName = "Starter Solenoid", Manufacturer = "Valeo", PartNumber = "STA-002", Description = "Starter solenoid switch", UnitPrice = 25.50m, IsActive = true, PartCategoryId = 19 },
+    new Part { PartId = 57, PartName = "Battery 74Ah", Manufacturer = "Varta", PartNumber = "STA-003", Description = "Maintenance-free starter battery", UnitPrice = 96.60m, IsActive = true, PartCategoryId = 19 },
+
+    new Part { PartId = 58, PartName = "Wiper Blade Front", Manufacturer = "Bosch", PartNumber = "WND-001", Description = "Front flat wiper blade", UnitPrice = 8.60m, IsActive = true, PartCategoryId = 20 },
+    new Part { PartId = 59, PartName = "Washer Pump", Manufacturer = "Febi", PartNumber = "WND-002", Description = "Windshield washer pump", UnitPrice = 12.60m, IsActive = true, PartCategoryId = 20 },
+    new Part { PartId = 60, PartName = "Washer Nozzle", Manufacturer = "Vemo", PartNumber = "WND-003", Description = "Bonnet washer spray nozzle", UnitPrice = 4.50m, IsActive = true, PartCategoryId = 20 },
+
+    new Part { PartId = 61, PartName = "Rear Muffler", Manufacturer = "Walker", PartNumber = "EXH-001", Description = "Rear silencer muffler", UnitPrice = 73.70m, IsActive = true, PartCategoryId = 21 },
+    new Part { PartId = 62, PartName = "Catalytic Converter", Manufacturer = "BM Catalysts", PartNumber = "EXH-002", Description = "Emission catalytic converter", UnitPrice = 199.40m, IsActive = true, PartCategoryId = 21 },
+    new Part { PartId = 63, PartName = "Exhaust Pipe Clamp", Manufacturer = "Bosal", PartNumber = "EXH-003", Description = "Steel exhaust clamp", UnitPrice = 5.80m, IsActive = true, PartCategoryId = 21 },
+
+    new Part { PartId = 64, PartName = "Front Bumper", Manufacturer = "TYC", PartNumber = "LRG-001", Description = "Primed front bumper", UnitPrice = 112.50m, IsActive = true, PartCategoryId = 22 },
+    new Part { PartId = 65, PartName = "Engine Hood", Manufacturer = "BLIC", PartNumber = "LRG-002", Description = "Front bonnet hood panel", UnitPrice = 161.00m, IsActive = true, PartCategoryId = 22 },
+    new Part { PartId = 66, PartName = "Front Fender", Manufacturer = "Van Wezel", PartNumber = "LRG-003", Description = "Left front wing panel", UnitPrice = 65.70m, IsActive = true, PartCategoryId = 22 },
+
+    new Part { PartId = 67, PartName = "Headlight Assembly", Manufacturer = "Hella", PartNumber = "LGT-001", Description = "Front left headlight", UnitPrice = 126.80m, IsActive = true, PartCategoryId = 23 },
+    new Part { PartId = 68, PartName = "Tail Light", Manufacturer = "Depo", PartNumber = "LGT-002", Description = "Rear right tail lamp", UnitPrice = 47.40m, IsActive = true, PartCategoryId = 23 },
+    new Part { PartId = 69, PartName = "Fog Light", Manufacturer = "Valeo", PartNumber = "LGT-003", Description = "Front bumper fog light", UnitPrice = 24.20m, IsActive = true, PartCategoryId = 23 },
+
+    new Part { PartId = 70, PartName = "Window Switch", Manufacturer = "Vemo", PartNumber = "INT-001", Description = "Driver electric window switch", UnitPrice = 19.90m, IsActive = true, PartCategoryId = 24 },
+    new Part { PartId = 71, PartName = "Gear Shift Knob", Manufacturer = "Topran", PartNumber = "INT-002", Description = "Manual gear lever knob", UnitPrice = 13.70m, IsActive = true, PartCategoryId = 24 },
+    new Part { PartId = 72, PartName = "Floor Mat Set", Manufacturer = "Petex", PartNumber = "INT-003", Description = "Textile interior floor mat set", UnitPrice = 22.80m, IsActive = true, PartCategoryId = 24 }
+);  
             builder.Entity<PartImage>().HasData(
                      new PartImage { PartImageId = 1, PartId = 46, ImageUrl = "https://res.cloudinary.com/dlfzltmrr/image/upload/v1775203068/kachaowauto/parts/rxdv9gqcsp49mzwnr8fm.jpg" },
                      new PartImage { PartImageId = 2, PartId = 31, ImageUrl = "https://res.cloudinary.com/dlfzltmrr/image/upload/v1775203091/kachaowauto/parts/dyaie8c7ynikcuuiiqej.jpg" },

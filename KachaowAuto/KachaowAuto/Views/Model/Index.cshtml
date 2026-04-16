@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Model>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Model.ModelListViewModel>
 
 <h2>Models</h2>
 
@@ -13,19 +13,24 @@
             <th>Volume</th>
             <th>HP</th>
             <th>Body Type</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var m in Model)
         {
             <tr>
-                <td>@m.Brand?.BrandName</td>
+                <td>@m.BrandName</td>
                 <td>@m.ModelName</td>
-                <td>@m.EngineType?.Name</td>
+                <td>@m.EngineTypeName</td>
                 <td>@m.EngineVolume</td>
                 <td>@m.HorsePower</td>
-                <td>@m.BodyType?.Name</td>
+                <td>@m.BodyTypeName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@m.ModelId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@m.ModelId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
-</table>>
+</table>

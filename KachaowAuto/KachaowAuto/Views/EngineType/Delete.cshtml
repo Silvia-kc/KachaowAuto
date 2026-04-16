@@ -1,0 +1,18 @@
+﻿@model KachaowAuto.ViewModels.EngineType.EngineTypeDetailsViewModel
+
+<h2>Delete Engine Type</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this engine type?
+</div>
+
+<div class="mb-3">
+    <strong>Name:</strong> @Model.Name
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.EngineTypeId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

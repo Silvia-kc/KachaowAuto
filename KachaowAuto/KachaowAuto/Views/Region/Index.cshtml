@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Region>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Region.RegionListViewModel>
 
 @{
     ViewData["Title"] = "Regions";
@@ -17,6 +17,7 @@
                 <th>Id</th>
                 <th>Region Name</th>
                 <th>Workshops Count</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +26,11 @@
                 <tr>
                     <td>@region.RegionId</td>
                     <td>@region.RegionName</td>
-                    <td>@(region.Workshops?.Count ?? 0)</td>
+                    <td>@region.WorkshopsCount</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@region.RegionId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@region.RegionId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

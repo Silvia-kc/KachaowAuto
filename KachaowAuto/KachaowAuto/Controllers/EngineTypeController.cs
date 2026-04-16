@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.EngineTypeModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.EngineType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,93 +11,120 @@ using Microsoft.EntityFrameworkCore;
 namespace KachaowAuto.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class EngineTypeController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public EngineTypeController(KachaowAutoDbContext _context)
+        private readonly IEngineTypeService engineTypeService;
+
+        public EngineTypeController(IEngineTypeService _engineTypeService)
         {
-            context = _context;
+            engineTypeService = _engineTypeService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var engineTypes = await context.EngineTypes
-                                    .Include(a => a.Models)
-                                    .ToListAsync();
-            return View(engineTypes);
+            var serviceModels = await engineTypeService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(e => new EngineTypeListViewModel
+            {
+                EngineTypeId = e.EngineTypeId,
+                Name = e.Name,
+                ModelsCount = e.ModelsCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            return View();
+            var viewModel = new EngineTypeCreateViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EngineType engineType)
+        public async Task<IActionResult> Create(EngineTypeCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(engineType);
+                return View(viewModel);
             }
-            await context.EngineTypes.AddAsync(engineType);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            var serviceModel = new EngineTypeCreateServiceModel
+            {
+                Name = viewModel.Name
+            };
+
+            await engineTypeService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            var engineType = await context.EngineTypes.FirstOrDefaultAsync(a => a.EngineTypeId == id);
-            if (engineType == null)
+            var serviceModel = await engineTypeService.GetEditByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(engineType);
+
+            var viewModel = new EngineTypeEditViewModel
+            {
+                EngineTypeId = serviceModel.EngineTypeId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EngineType engineType)
+        public async Task<IActionResult> Edit(EngineTypeEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(engineType);
-
+                return View(viewModel);
             }
-            context.EngineTypes.Update(engineType);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new EngineTypeEditServiceModel
+            {
+                EngineTypeId = viewModel.EngineTypeId,
+                Name = viewModel.Name
+            };
+
+            await engineTypeService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var engineType = await context.EngineTypes.FirstOrDefaultAsync(a => a.EngineTypeId == id);
-            if (engineType == null)
+            var serviceModel = await engineTypeService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(engineType);
+
+            var viewModel = new EngineTypeDetailsViewModel
+            {
+                EngineTypeId = serviceModel.EngineTypeId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var engineType = await context.EngineTypes.FirstOrDefaultAsync(a => a.EngineTypeId == id);
+            var isDeleted = await engineTypeService.DeleteAsync(id);
 
-            if (engineType == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.EngineTypes.Remove(engineType);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

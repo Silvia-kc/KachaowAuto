@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.Part
+﻿@model KachaowAuto.ViewModels.Part.PartDetailsViewModel
 
 @{
     ViewData["Title"] = "Part Details";
@@ -9,38 +9,34 @@
         <div class="card-body p-4">
             <h2 class="mb-4">Part Details</h2>
 
-            <div class="row">
-                <div class="col-md-8">
-                    <dl class="row">
-                        <dt class="col-sm-4">Part Name</dt>
-                        <dd class="col-sm-8">@Model.PartName</dd>
+            <dl class="row">
+                <dt class="col-sm-4">Part Name</dt>
+                <dd class="col-sm-8">@Model.PartName</dd>
 
-                        <dt class="col-sm-4">Manufacturer</dt>
-                        <dd class="col-sm-8">@Model.Manufacturer</dd>
+                <dt class="col-sm-4">Manufacturer</dt>
+                <dd class="col-sm-8">@Model.Manufacturer</dd>
 
-                        <dt class="col-sm-4">Part Number</dt>
-                        <dd class="col-sm-8">@Model.PartNumber</dd>
+                <dt class="col-sm-4">Part Number</dt>
+                <dd class="col-sm-8">@Model.PartNumber</dd>
 
-                        <dt class="col-sm-4">Description</dt>
-                        <dd class="col-sm-8">@Model.Description</dd>
+                <dt class="col-sm-4">Description</dt>
+                <dd class="col-sm-8">@Model.Description</dd>
 
-                        <dt class="col-sm-4">Category</dt>
-                        <dd class="col-sm-8">@Model.Category?.Name</dd>
+                <dt class="col-sm-4">Category</dt>
+                <dd class="col-sm-8">@Model.CategoryName</dd>
 
-                        <dt class="col-sm-4">Price</dt>
-                        <dd class="col-sm-8">@Model.UnitPrice.ToString("F2") €.</dd>
+                <dt class="col-sm-4">Price</dt>
+                <dd class="col-sm-8">@Model.UnitPrice.ToString("F2") €</dd>
 
-                        <dt class="col-sm-4">Active</dt>
-                        <dd class="col-sm-8">@(Model.IsActive ? "Yes" : "No")</dd>
-                    </dl>
-                </div>
-            </div>
+                <dt class="col-sm-4">Active</dt>
+                <dd class="col-sm-8">@(Model.IsActive ? "Yes" : "No")</dd>
+            </dl>
 
             <hr />
 
-            <h4 class="mb-3">Images</h4>
+            <h4>Images</h4>
 
-            @if (Model.Images != null && Model.Images.Any())
+            @if (Model.Images.Any())
             {
                 <div class="row">
                     @foreach (var image in Model.Images)
@@ -48,15 +44,14 @@
                         <div class="col-md-3 mb-3">
                             <img src="@image.ImageUrl"
                                  class="img-fluid rounded"
-                                 alt="Part Image"
-                                 style="object-fit: cover; border: 1px solid #ddd;" />
+                                 style="object-fit: cover;" />
                         </div>
                     }
                 </div>
             }
             else
             {
-                <p class="text-muted">No images available for this part.</p>
+                <p class="text-muted">No images available.</p>
             }
 
             <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>

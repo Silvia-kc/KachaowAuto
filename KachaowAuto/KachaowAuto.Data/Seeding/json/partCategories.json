@@ -1,26 +1,98 @@
 ﻿[
-  { "Name": "Braking system" },
-  { "Name": "Wheel suspension" },
-  { "Name": "Steering system" },
-  { "Name": "Wheel drive" },
-  { "Name": "Transmission" },
-  { "Name": "Belt drive" },
-  { "Name": "Engine parts" },
-  { "Name": "Cylinder block parts" },
-  { "Name": "Garnishes" },
-  { "Name": "Cooling system" },
-  { "Name": "Climate system" },
-  { "Name": "Heating and ventilation" },
-  { "Name": "Filters" },
-  { "Name": "Oils and liquids" },
-  { "Name": "Ignition system" },
-  { "Name": "Sensors and gauges" },
-  { "Name": "Fuel system" },
-  { "Name": "Electrical system" },
-  { "Name": "Starting system" },
-  { "Name": "Window cleaning" },
-  { "Name": "Exhausts and mufflers" },
-  { "Name": "Large parts" },
-  { "Name": "Lights" },
-  { "Name": "Interior" }
+  {
+    "PartCategoryId": 1,
+    "Name": "Braking system"
+  },
+  {
+    "PartCategoryId": 2,
+    "Name": "Wheel suspension"
+  },
+  {
+    "PartCategoryId": 3,
+    "Name": "Steering system"
+  },
+  {
+    "PartCategoryId": 4,
+    "Name": "Wheel drive"
+  },
+  {
+    "PartCategoryId": 5,
+    "Name": "Transmission"
+  },
+  {
+    "PartCategoryId": 6,
+    "Name": "Belt drive"
+  },
+  {
+    "PartCategoryId": 7,
+    "Name": "Engine parts"
+  },
+  {
+    "PartCategoryId": 8,
+    "Name": "Cylinder block parts"
+  },
+  {
+    "PartCategoryId": 9,
+    "Name": "Garnishes"
+  },
+  {
+    "PartCategoryId": 10,
+    "Name": "Cooling system"
+  },
+  {
+    "PartCategoryId": 11,
+    "Name": "Climate system"
+  },
+  {
+    "PartCategoryId": 12,
+    "Name": "Heating and ventilation"
+  },
+  {
+    "PartCategoryId": 13,
+    "Name": "Filters"
+  },
+  {
+    "PartCategoryId": 14,
+    "Name": "Oils and liquids"
+  },
+  {
+    "PartCategoryId": 15,
+    "Name": "Ignition system"
+  },
+  {
+    "PartCategoryId": 16,
+    "Name": "Sensors and gauges"
+  },
+  {
+    "PartCategoryId": 17,
+    "Name": "Fuel system"
+  },
+  {
+    "PartCategoryId": 18,
+    "Name": "Electrical system"
+  },
+  {
+    "PartCategoryId": 19,
+    "Name": "Starting system"
+  },
+  {
+    "PartCategoryId": 20,
+    "Name": "Window cleaning"
+  },
+  {
+    "PartCategoryId": 21,
+    "Name": "Exhausts and mufflers"
+  },
+  {
+    "PartCategoryId": 22,
+    "Name": "Large parts"
+  },
+  {
+    "PartCategoryId": 23,
+    "Name": "Lights"
+  },
+  {
+    "PartCategoryId": 24,
+    "Name": "Interior"
+  }
 ]

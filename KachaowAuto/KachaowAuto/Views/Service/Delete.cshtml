@@ -1,0 +1,26 @@
+﻿@model KachaowAuto.ViewModels.Service.ServiceDetailsViewModel
+
+@{
+    ViewData["Title"] = "Delete Service";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Delete Service</h1>
+
+    <div class="alert alert-warning">
+        Are you sure you want to delete this service?
+    </div>
+
+    <div class="mb-3"><strong>Service Name:</strong> @Model.ServiceName</div>
+    <div class="mb-3"><strong>Description:</strong> @Model.Description</div>
+    <div class="mb-3"><strong>Price From:</strong> @Model.PriceFrom</div>
+    <div class="mb-3"><strong>Price To:</strong> @Model.PriceTo</div>
+    <div class="mb-3"><strong>Category:</strong> @Model.CategoryName</div>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.ServiceId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

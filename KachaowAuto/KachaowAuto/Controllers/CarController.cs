@@ -1,6 +1,9 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.CarModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
 using KachaowAuto.ViewModels;
+using KachaowAuto.ViewModels.Car;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,123 +13,196 @@ using Microsoft.EntityFrameworkCore;
 namespace KachaowAuto.Controllers
 {
     [Authorize]
+    [Authorize]
     public class CarController : Controller
     {
-        private readonly KachaowAutoDbContext context;
+        private readonly ICarService carService;
         private readonly UserManager<ApplicationUser> userManager;
-        public CarController(KachaowAutoDbContext _context, UserManager<ApplicationUser> _userManager)
+
+        public CarController(ICarService _carService, UserManager<ApplicationUser> _userManager)
         {
-            context = _context;
+            carService = _carService;
             userManager = _userManager;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var cars = await context.Cars
-                                    .Include(a => a.Model)
-                                    .Include(a => a.Appointments)
-                                    .ToListAsync();
-            return View(cars);
+            var serviceModels = await carService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(c => new CarListViewModel
+            {
+                CarId = c.CarId,
+                BrandName = c.BrandName,
+                ModelName = c.ModelName,
+                Year = c.Year,
+                VIN = c.VIN,
+                AppointmentsCount = c.AppointmentsCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            ViewBag.Appointments = await context.Appointments.ToListAsync();
-            return View();
+            var serviceModel = await carService.GetCreatePageModelAsync();
+
+            var viewModel = new CarCreateViewModel
+            {
+                Models = serviceModel.Models.Select(m => new CarModelOptionViewModel
+                {
+                    ModelId = m.ModelId,
+                    ModelName = m.ModelName,
+                    BrandName = m.Brand?.BrandName
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> Create(Car car)
+        public async Task<IActionResult> Create(CarCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                ViewBag.Appointments = await context.Appointments.ToListAsync();
-                return View(car);
+                var reload = await carService.GetCreatePageModelAsync();
+
+                viewModel.Models = reload.Models.Select(m => new CarModelOptionViewModel
+                {
+                    ModelId = m.ModelId,
+                    ModelName = m.ModelName,
+                    BrandName = m.Brand?.BrandName
+                }).ToList();
+
+                return View(viewModel);
             }
-            await context.Cars.AddAsync(car);
-            await context.SaveChangesAsync();
-            return RedirectToAction("MyCars");
+
+            var userIdStr = userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(userIdStr))
+            {
+                return Forbid();
+            }
+
+            var serviceModel = new CarCreateServiceModel
+            {
+                UserId = int.Parse(userIdStr),
+                ModelId = viewModel.ModelId,
+                Year = viewModel.Year,
+                VIN = viewModel.VIN
+            };
+
+            await carService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(MyCars));
         }
+
         [Authorize(Roles = "Client")]
         public async Task<IActionResult> MyCars()
         {
             var userIdStr = userManager.GetUserId(User);
             if (string.IsNullOrEmpty(userIdStr))
+            {
                 return Forbid();
+            }
 
             int userId = int.Parse(userIdStr);
+            var serviceModels = await carService.GetMyCarsAsync(userId);
 
-            var cars = await context.Cars
-                .Where(c => c.UserId == userId)
-                .Include(c => c.Model)
-                    .ThenInclude(m => m.Brand)
-                .Include(c => c.Appointments)
-                .Select(c => new MyCarViewModel
-                {
-                    CarId = c.CarId,
-                    BrandName = c.Model.Brand.BrandName,
-                    ModelName = c.Model.ModelName,
-                    Year = c.Year,
-                    VIN = c.VIN,
-                    LatestStatus = c.Appointments
-                                    .OrderByDescending(a => a.ScheduledDate)
-                                    .Select(a =>
-                                            a.CompletedAt != null ? "Completed" :
-                                            a.ScheduledDate > DateTime.Now ? "Upcoming" :
-                                    "In Progress")
-                                    .FirstOrDefault() ?? "No appointments"
-                })
-                .ToListAsync();
+            var viewModels = serviceModels.Select(c => new MyCarViewModel
+            {
+                CarId = c.CarId,
+                BrandName = c.BrandName,
+                ModelName = c.ModelName,
+                Year = c.Year,
+                VIN = c.VIN,
+                LatestStatus = c.LatestStatus
+            }).ToList();
 
-            return View(cars);
+            return View(viewModels);
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            ViewBag.Appointments = await context.Appointments.ToListAsync();
-            var car = await context.Cars.FirstOrDefaultAsync(a => a.CarId == id);
-            if (car == null)
+            var serviceModel = await carService.GetEditPageModelAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(car);
+
+            var viewModel = new CarEditViewModel
+            {
+                CarId = serviceModel.Car.CarId,
+                UserId = serviceModel.Car.UserId,
+                ModelId = serviceModel.Car.ModelId,
+                Year = serviceModel.Car.Year,
+                VIN = serviceModel.Car.VIN,
+                Models = serviceModel.Models.Select(m => new CarModelOptionViewModel
+                {
+                    ModelId = m.ModelId,
+                    ModelName = m.ModelName,
+                    BrandName = m.Brand?.BrandName
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(Car car)
+        public async Task<IActionResult> Edit(CarEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                ViewBag.Appointments = await context.Appointments.ToListAsync();
-                return View(car);
+                var reload = await carService.GetCreatePageModelAsync();
 
+                viewModel.Models = reload.Models.Select(m => new CarModelOptionViewModel
+                {
+                    ModelId = m.ModelId,
+                    ModelName = m.ModelName,
+                    BrandName = m.Brand?.BrandName
+                }).ToList();
+
+                return View(viewModel);
             }
-            context.Cars.Update(car);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new CarEditServiceModel
+            {
+                CarId = viewModel.CarId,
+                UserId = viewModel.UserId,
+                ModelId = viewModel.ModelId,
+                Year = viewModel.Year,
+                VIN = viewModel.VIN
+            };
+
+            await carService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var car = await context.Cars.FirstOrDefaultAsync(a => a.CarId == id);
-            if (car == null)
+            var serviceModel = await carService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(car);
+
+            var viewModel = new CarDetailsViewModel
+            {
+                CarId = serviceModel.CarId,
+                BrandName = serviceModel.BrandName,
+                ModelName = serviceModel.ModelName,
+                Year = serviceModel.Year,
+                VIN = serviceModel.VIN
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -134,15 +210,12 @@ namespace KachaowAuto.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var car = await context.Cars.FirstOrDefaultAsync(a => a.CarId == id);
+            var isDeleted = await carService.DeleteAsync(id);
 
-            if (car == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Cars.Remove(car);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

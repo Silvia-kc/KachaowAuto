@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.ServiceModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,96 +13,167 @@ namespace KachaowAuto.Controllers
     [Authorize(Roles = "Admin")]
     public class ServiceController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public ServiceController(KachaowAutoDbContext _context)
+        private readonly IServiceService serviceService;
+
+        public ServiceController(IServiceService _serviceService)
         {
-            context = _context;
+            serviceService = _serviceService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var services = await context.Services
-                                      .Include(a => a.ServiceCategory)
-                                      .Include(a => a.WorkshopServices)
-                                      .Include(a => a.Appointments)
-                                      .ToListAsync();
-            return View(services);
+            var serviceModels = await serviceService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(s => new ServiceListViewModel
+            {
+                ServiceId = s.ServiceId,
+                ServiceName = s.ServiceName,
+                Description = s.Description,
+                PriceFrom = s.PriceFrom,
+                PriceTo = s.PriceTo,
+                CategoryName = s.CategoryName
+            }).ToList();
+
+            return View(viewModels);
         }
+
         public async Task<IActionResult> Create()
         {
-            ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-            return View();
+            var serviceModel = await serviceService.GetCreatePageModelAsync();
+
+            var viewModel = new ServiceCreateViewModel
+            {
+                Categories = serviceModel.Categories.Select(c => new ServiceCategoryOptionViewModel
+                {
+                    ServiceCategoryId = c.ServiceCategoryId,
+                    CategoryName = c.CategoryName
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Service service)
+        public async Task<IActionResult> Create(ServiceCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-                return View(service);
+                var reload = await serviceService.GetCreatePageModelAsync();
+
+                viewModel.Categories = reload.Categories.Select(c => new ServiceCategoryOptionViewModel
+                {
+                    ServiceCategoryId = c.ServiceCategoryId,
+                    CategoryName = c.CategoryName
+                }).ToList();
+
+                return View(viewModel);
             }
 
-            await context.Services.AddAsync(service);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            var serviceModel = new ServiceCreateServiceModel
+            {
+                ServiceName = viewModel.ServiceName,
+                Description = viewModel.Description,
+                PriceFrom = viewModel.PriceFrom,
+                PriceTo = viewModel.PriceTo,
+                ServiceCategoryId = viewModel.ServiceCategoryId
+            };
+
+            await serviceService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
+
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-            ViewBag.WorkshopServices = await context.WorkshopServices.ToListAsync();
-            ViewBag.Appointments = await context.Appointments.ToListAsync();
-            var service = await context.Services.FirstOrDefaultAsync(a => a.ServiceId == id);
-            if (service == null)
+            var serviceModel = await serviceService.GetEditPageModelAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(service);
+
+            var viewModel = new ServiceEditViewModel
+            {
+                ServiceId = serviceModel.Service.ServiceId,
+                ServiceName = serviceModel.Service.ServiceName,
+                Description = serviceModel.Service.Description,
+                PriceFrom = serviceModel.Service.PriceFrom,
+                PriceTo = serviceModel.Service.PriceTo,
+                ServiceCategoryId = serviceModel.Service.ServiceCategoryId,
+                Categories = serviceModel.Categories.Select(c => new ServiceCategoryOptionViewModel
+                {
+                    ServiceCategoryId = c.ServiceCategoryId,
+                    CategoryName = c.CategoryName
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Service service)
+        public async Task<IActionResult> Edit(ServiceEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ServiceCategories = await context.ServiceCategories.ToListAsync();
-                ViewBag.WorkshopServices = await context.WorkshopServices.ToListAsync();
-                ViewBag.Appointments = await context.Appointments.ToListAsync();
-                return View(service);
+                var reload = await serviceService.GetCreatePageModelAsync();
 
+                viewModel.Categories = reload.Categories.Select(c => new ServiceCategoryOptionViewModel
+                {
+                    ServiceCategoryId = c.ServiceCategoryId,
+                    CategoryName = c.CategoryName
+                }).ToList();
+
+                return View(viewModel);
             }
-            context.Services.Update(service);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new ServiceEditServiceModel
+            {
+                ServiceId = viewModel.ServiceId,
+                ServiceName = viewModel.ServiceName,
+                Description = viewModel.Description,
+                PriceFrom = viewModel.PriceFrom,
+                PriceTo = viewModel.PriceTo,
+                ServiceCategoryId = viewModel.ServiceCategoryId
+            };
+
+            await serviceService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var service = await context.Services.FirstOrDefaultAsync(a => a.ServiceId == id);
-            if (service == null)
+            var serviceModel = await serviceService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(service);
+
+            var viewModel = new ServiceDetailsViewModel
+            {
+                ServiceId = serviceModel.ServiceId,
+                ServiceName = serviceModel.ServiceName,
+                Description = serviceModel.Description,
+                PriceFrom = serviceModel.PriceFrom,
+                PriceTo = serviceModel.PriceTo,
+                CategoryName = serviceModel.CategoryName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var service = await context.Services.FirstOrDefaultAsync(a => a.ServiceId == id);
+            var isDeleted = await serviceService.DeleteAsync(id);
 
-            if (service == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Services.Remove(service);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

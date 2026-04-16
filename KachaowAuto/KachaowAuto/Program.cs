@@ -32,6 +32,18 @@ builder.Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IBodyTypeService, BodyTypeService>();
+builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<IEngineTypeService, EngineTypeService>();
+builder.Services.AddScoped<IModelService, ModelService>();
+builder.Services.AddScoped<IPartCategoryService, PartCategoryService>();
+builder.Services.AddScoped<IPartService, PartService>();
+builder.Services.AddScoped<IPartImageService, PartImageService>();
+builder.Services.AddScoped<IPartRequestService, PartRequestService>();
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
 
 
 var app = builder.Build();

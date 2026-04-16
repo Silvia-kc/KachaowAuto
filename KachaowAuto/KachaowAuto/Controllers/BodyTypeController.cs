@@ -1,102 +1,125 @@
-﻿using KachaowAuto.Data;
-using KachaowAuto.Data.Models;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.BodyType;
+using KachaowAuto.ViewModels.BodyType;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace KachaowAuto.Controllers
-{
-    [Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
+
     public class BodyTypeController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public BodyTypeController(KachaowAutoDbContext _context)
+        private readonly IBodyTypeService bodyTypeService;
+
+        public BodyTypeController(IBodyTypeService _bodyTypeService)
         {
-            context = _context;
+            bodyTypeService = _bodyTypeService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var bodyTypes = await context.BodyTypes
-                                         .Include(a => a.Models)
-                                         .ToListAsync();
-            return View(bodyTypes);
+            var serviceModels = await bodyTypeService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(bt => new BodyTypeListViewModel
+            {
+                BodyTypeId = bt.BodyTypeId,
+                Name = bt.Name,
+                ModelsCount = bt.ModelsCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
-        public async Task <IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            return View();
+            var viewModel = new BodyTypeCreateViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BodyType bodyType)
+        public async Task<IActionResult> Create(BodyTypeCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(bodyType);
+                return View(viewModel);
             }
-            await context.BodyTypes.AddAsync(bodyType);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            var serviceModel = new BodyTypeCreateServiceModel
+            {
+                Name = viewModel.Name
+            };
+
+            await bodyTypeService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Models = await context.Models.ToListAsync();
-            var bodyType = await context.BodyTypes.FirstOrDefaultAsync(a => a.BodyTypeId == id);
-            if (bodyType == null)
+            var serviceModel = await bodyTypeService.GetEditByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(bodyType);
+
+            var viewModel = new BodyTypeEditViewModel
+            {
+                BodyTypeId = serviceModel.BodyTypeId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(BodyType bodyType)
+        public async Task<IActionResult> Edit(BodyTypeEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Models = await context.Models.ToListAsync();
-                return View(bodyType);
-
+                return View(viewModel);
             }
-            context.BodyTypes.Update(bodyType);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new BodyTypeEditServiceModel
+            {
+                BodyTypeId = viewModel.BodyTypeId,
+                Name = viewModel.Name
+            };
+
+            await bodyTypeService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var bodyType = await context.BodyTypes.FirstOrDefaultAsync(a => a.BodyTypeId == id);
-            if (bodyType == null)
+            var serviceModel = await bodyTypeService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(bodyType);
+
+            var viewModel = new BodyTypeDetailsViewModel
+            {
+                BodyTypeId = serviceModel.BodyTypeId,
+                Name = serviceModel.Name
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bodyType = await context.BodyTypes.FirstOrDefaultAsync(a => a.BodyTypeId == id);
+            var isDeleted = await bodyTypeService.DeleteAsync(id);
 
-            if (bodyType == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
 
-            context.BodyTypes.Remove(bodyType);
-            await context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
     }
-}

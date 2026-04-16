@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.PartCategory>
+﻿@model IEnumerable<KachaowAuto.ViewModels.PartCategory.PartCategoryListViewModel>
 
 @{
     ViewData["Title"] = "Part Categories";
@@ -23,7 +23,7 @@
             {
                 <tr>
                     <td>@category.Name</td>
-                    <td>@category.Parts.Count</td>
+                    <td>@category.PartsCount</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@category.PartCategoryId" class="btn btn-warning btn-sm">Edit</a>
                         <a asp-action="Delete" asp-route-id="@category.PartCategoryId" class="btn btn-danger btn-sm">Delete</a>

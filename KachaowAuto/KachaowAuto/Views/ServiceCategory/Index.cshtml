@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.ServiceCategory>
+﻿@model IEnumerable<KachaowAuto.ViewModels.ServiceCategory.ServiceCategoryListViewModel>
 
 @{
     ViewData["Title"] = "Service Categories";
@@ -16,6 +16,7 @@
             <tr>
                 <th>Category Name</th>
                 <th>Services Count</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,7 +24,11 @@
             {
                 <tr>
                     <td>@category.CategoryName</td>
-                    <td>@(category.Services?.Count ?? 0)</td>
+                    <td>@category.ServicesCount</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@category.ServiceCategoryId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@category.ServiceCategoryId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
             }
         </tbody>

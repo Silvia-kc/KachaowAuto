@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.ModelModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,111 +11,219 @@ using Microsoft.EntityFrameworkCore;
 namespace KachaowAuto.Controllers
 {
     [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class ModelController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public ModelController(KachaowAutoDbContext _context)
+        private readonly IModelService modelService;
+
+        public ModelController(IModelService _modelService)
         {
-            context = _context;
+            modelService = _modelService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var models = await context.Models
-                                    .Include(a => a.Brand)
-                                    .Include(a => a.EngineType)
-                                    .Include(a => a.BodyType)
-                                    .ToListAsync();
-            return View(models);
+            var serviceModels = await modelService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(m => new ModelListViewModel
+            {
+                ModelId = m.ModelId,
+                BrandName = m.BrandName,
+                ModelName = m.ModelName,
+                EngineTypeName = m.EngineTypeName,
+                EngineVolume = m.EngineVolume,
+                HorsePower = m.HorsePower,
+                BodyTypeName = m.BodyTypeName
+            }).ToList();
+
+            return View(viewModels);
         }
 
         public async Task<IActionResult> Create()
         {
-            ViewBag.Brands = await context.Brands.ToListAsync();
-            ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
-            ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-            return View();
+            var serviceModel = await modelService.GetCreatePageModelAsync();
+
+            var viewModel = new ModelCreateViewModel
+            {
+                Brands = serviceModel.Brands.Select(b => new ModelBrandOptionViewModel
+                {
+                    BrandId = b.BrandId,
+                    BrandName = b.BrandName
+                }).ToList(),
+                EngineTypes = serviceModel.EngineTypes.Select(e => new ModelEngineTypeOptionViewModel
+                {
+                    EngineTypeId = e.EngineTypeId,
+                    Name = e.Name
+                }).ToList(),
+                BodyTypes = serviceModel.BodyTypes.Select(b => new ModelBodyTypeOptionViewModel
+                {
+                    BodyTypeId = b.BodyTypeId,
+                    Name = b.Name
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Model model)
+        public async Task<IActionResult> Create(ModelCreateViewModel viewModel)
         {
-            ModelState.Remove(nameof(Model.Brand));
-            ModelState.Remove(nameof(Model.EngineType));
-            ModelState.Remove(nameof(Model.BodyType));
-            ModelState.Remove(nameof(Model.Cars));
-
             if (!ModelState.IsValid)
             {
-                ViewBag.Brands = await context.Brands.ToListAsync();
-                ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
-                ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-                return View(model);
+                var reload = await modelService.GetCreatePageModelAsync();
+
+                viewModel.Brands = reload.Brands.Select(b => new ModelBrandOptionViewModel
+                {
+                    BrandId = b.BrandId,
+                    BrandName = b.BrandName
+                }).ToList();
+
+                viewModel.EngineTypes = reload.EngineTypes.Select(e => new ModelEngineTypeOptionViewModel
+                {
+                    EngineTypeId = e.EngineTypeId,
+                    Name = e.Name
+                }).ToList();
+
+                viewModel.BodyTypes = reload.BodyTypes.Select(b => new ModelBodyTypeOptionViewModel
+                {
+                    BodyTypeId = b.BodyTypeId,
+                    Name = b.Name
+                }).ToList();
+
+                return View(viewModel);
             }
 
-            context.Models.Add(model);
-            await context.SaveChangesAsync();
+            var serviceModel = new ModelCreateServiceModel
+            {
+                BrandId = viewModel.BrandId,
+                ModelName = viewModel.ModelName,
+                EngineTypeId = viewModel.EngineTypeId,
+                EngineVolume = viewModel.EngineVolume,
+                HorsePower = viewModel.HorsePower,
+                BodyTypeId = viewModel.BodyTypeId
+            };
 
-            return RedirectToAction("Index");
+            await modelService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Brands = await context.Brands.ToListAsync();
-            ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
-            ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-            ViewBag.Cars = await context.Cars.ToListAsync();
-            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
-            if (model == null)
+            var serviceModel = await modelService.GetEditPageModelAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(model);
+
+            var viewModel = new ModelEditViewModel
+            {
+                ModelId = serviceModel.Model.ModelId,
+                BrandId = serviceModel.Model.BrandId,
+                ModelName = serviceModel.Model.ModelName,
+                EngineTypeId = serviceModel.Model.EngineTypeId,
+                EngineVolume = serviceModel.Model.EngineVolume,
+                HorsePower = serviceModel.Model.HorsePower,
+                BodyTypeId = serviceModel.Model.BodyTypeId,
+                Brands = serviceModel.Brands.Select(b => new ModelBrandOptionViewModel
+                {
+                    BrandId = b.BrandId,
+                    BrandName = b.BrandName
+                }).ToList(),
+                EngineTypes = serviceModel.EngineTypes.Select(e => new ModelEngineTypeOptionViewModel
+                {
+                    EngineTypeId = e.EngineTypeId,
+                    Name = e.Name
+                }).ToList(),
+                BodyTypes = serviceModel.BodyTypes.Select(b => new ModelBodyTypeOptionViewModel
+                {
+                    BodyTypeId = b.BodyTypeId,
+                    Name = b.Name
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Model model)
+        public async Task<IActionResult> Edit(ModelEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Brands = await context.Brands.ToListAsync();
-                ViewBag.EngineTypes = await context.EngineTypes.ToListAsync();
-                ViewBag.BodyTypes = await context.BodyTypes.ToListAsync();
-                ViewBag.Cars = await context.Cars.ToListAsync();
-                return View(model);
+                var reload = await modelService.GetCreatePageModelAsync();
 
+                viewModel.Brands = reload.Brands.Select(b => new ModelBrandOptionViewModel
+                {
+                    BrandId = b.BrandId,
+                    BrandName = b.BrandName
+                }).ToList();
+
+                viewModel.EngineTypes = reload.EngineTypes.Select(e => new ModelEngineTypeOptionViewModel
+                {
+                    EngineTypeId = e.EngineTypeId,
+                    Name = e.Name
+                }).ToList();
+
+                viewModel.BodyTypes = reload.BodyTypes.Select(b => new ModelBodyTypeOptionViewModel
+                {
+                    BodyTypeId = b.BodyTypeId,
+                    Name = b.Name
+                }).ToList();
+
+                return View(viewModel);
             }
-            context.Models.Update(model);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new ModelEditServiceModel
+            {
+                ModelId = viewModel.ModelId,
+                BrandId = viewModel.BrandId,
+                ModelName = viewModel.ModelName,
+                EngineTypeId = viewModel.EngineTypeId,
+                EngineVolume = viewModel.EngineVolume,
+                HorsePower = viewModel.HorsePower,
+                BodyTypeId = viewModel.BodyTypeId
+            };
+
+            await modelService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
-            if (model == null)
+            var serviceModel = await modelService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(model);
+
+            var viewModel = new ModelDetailsViewModel
+            {
+                ModelId = serviceModel.ModelId,
+                BrandName = serviceModel.BrandName,
+                ModelName = serviceModel.ModelName,
+                EngineTypeName = serviceModel.EngineTypeName,
+                EngineVolume = serviceModel.EngineVolume,
+                HorsePower = serviceModel.HorsePower,
+                BodyTypeName = serviceModel.BodyTypeName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var model = await context.Models.FirstOrDefaultAsync(a => a.ModelId == id);
+            var isDeleted = await modelService.DeleteAsync(id);
 
-            if (model == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.Models.Remove(model);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }

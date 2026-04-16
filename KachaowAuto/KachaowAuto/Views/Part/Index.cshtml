@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Part>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Part.PartListViewModel>
 
 @{
     ViewData["Title"] = "Parts";
@@ -23,14 +23,12 @@
         <div class="row g-4">
             @foreach (var part in Model)
             {
-                var firstImage = part.Images.OrderByDescending(i => i.PartImageId).FirstOrDefault();
-
                 <div class="col-md-6 col-lg-4 col-xl-3">
                     <div class="card h-100 shadow-sm border-0 rounded-4">
                         <div class="p-3 text-center bg-light rounded-top-4" style="height: 230px;">
-                            @if (firstImage != null)
+                            @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
                             {
-                                <img src="@firstImage.ImageUrl"
+                                <img src="@part.FirstImageUrl"
                                      alt="@part.PartName"
                                      class="img-fluid h-100"
                                      style="object-fit: contain;" />
@@ -55,7 +53,7 @@
                             </p>
 
                             <p class="text-muted mb-2">
-                                <strong>Category:</strong> @(part.Category?.Name ?? "-")
+                                <strong>Category:</strong> @(part.CategoryName ?? "-")
                             </p>
 
                             <div class="mb-3">
@@ -70,7 +68,7 @@
                             </div>
 
                             <div class="mt-auto">
-                                <div class="fs-5 fw-bold mb-3">@part.UnitPrice.ToString("F2") €.</div>
+                                <div class="fs-5 fw-bold mb-3">@part.UnitPrice.ToString("F2") €</div>
 
                                 <div class="d-flex gap-2">
                                     <a asp-action="Details"
@@ -98,18 +96,10 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Parts</h2>
 
-            <div class="d-flex gap-2">
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-action="Create" class="btn btn-primary">Add New Part</a>
-
-                    <a asp-controller="PartRequest"
-                       asp-action="Index"
-                       class="btn btn-dark">
-                        View Requests
-                    </a>
-                }
-            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Create" class="btn btn-primary">Add New Part</a>
+            }
         </div>
 
         <div class="table-responsive">
@@ -129,17 +119,14 @@
                 <tbody>
                     @foreach (var part in Model)
                     {
-                        var firstImage = part.Images.OrderByDescending(i => i.PartImageId).FirstOrDefault();
-
                         <tr>
                             <td>
-                                @if (firstImage != null)
+                                @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
                                 {
-                                    <img src="@firstImage.ImageUrl"
-                                         alt="@part.PartName"
+                                    <img src="@part.FirstImageUrl"
                                          width="80"
                                          height="80"
-                                         style="object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" />
+                                         style="object-fit: cover; border-radius: 8px;" />
                                 }
                                 else
                                 {
@@ -149,8 +136,8 @@
                             <td>@part.PartName</td>
                             <td>@part.Manufacturer</td>
                             <td>@part.PartNumber</td>
-                            <td>@part.Category?.Name</td>
-                            <td>@part.UnitPrice.ToString("F2") €.</td>
+                            <td>@part.CategoryName</td>
+                            <td>@part.UnitPrice.ToString("F2") €</td>
                             <td>
                                 @if (part.IsActive)
                                 {
@@ -161,7 +148,7 @@
                                     <span class="badge bg-secondary">No</span>
                                 }
                             </td>
-                            <td class="d-flex flex-wrap gap-1">
+                            <td class="d-flex gap-1">
                                 <a asp-action="Details" asp-route-id="@part.PartId" class="btn btn-sm btn-info text-white">Details</a>
                                 <a asp-action="Edit" asp-route-id="@part.PartId" class="btn btn-sm btn-warning">Edit</a>
                                 <a asp-action="Delete" asp-route-id="@part.PartId" class="btn btn-sm btn-danger">Delete</a>

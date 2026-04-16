@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.Model
+﻿@model KachaowAuto.ViewModels.Model.ModelCreateViewModel
 
 <h2>Create Model</h2>
 
@@ -7,45 +7,45 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="mb-3">
-        <label class="form-label">Brand</label>
+        <label asp-for="BrandId" class="form-label"></label>
         <select class="form-select" asp-for="BrandId"
-                asp-items="@(new SelectList(ViewBag.Brands, "BrandId", "BrandName"))">
+                asp-items="@(new SelectList(Model.Brands, "BrandId", "BrandName"))">
             <option value="">-- select brand --</option>
         </select>
         <span asp-validation-for="BrandId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Model Name</label>
+        <label asp-for="ModelName" class="form-label"></label>
         <input class="form-control" asp-for="ModelName" />
         <span asp-validation-for="ModelName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Engine Type</label>
+        <label asp-for="EngineTypeId" class="form-label"></label>
         <select class="form-select" asp-for="EngineTypeId"
-                asp-items="@(new SelectList(ViewBag.EngineTypes, "EngineTypeId", "Name"))">
+                asp-items="@(new SelectList(Model.EngineTypes, "EngineTypeId", "Name"))">
             <option value="">-- select engine type --</option>
         </select>
         <span asp-validation-for="EngineTypeId" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Engine Volume (L)</label>
+        <label asp-for="EngineVolume" class="form-label"></label>
         <input class="form-control" asp-for="EngineVolume" type="number" step="0.1" />
         <span asp-validation-for="EngineVolume" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Horse Power</label>
+        <label asp-for="HorsePower" class="form-label"></label>
         <input class="form-control" asp-for="HorsePower" type="number" />
         <span asp-validation-for="HorsePower" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Body Type</label>
+        <label asp-for="BodyTypeId" class="form-label"></label>
         <select class="form-select" asp-for="BodyTypeId"
-                asp-items="@(new SelectList(ViewBag.BodyTypes, "BodyTypeId", "Name"))">
+                asp-items="@(new SelectList(Model.BodyTypes, "BodyTypeId", "Name"))">
             <option value="">-- select body type --</option>
         </select>
         <span asp-validation-for="BodyTypeId" class="text-danger"></span>
@@ -56,5 +56,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
 }

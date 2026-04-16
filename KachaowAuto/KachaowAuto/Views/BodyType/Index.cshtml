@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.BodyType>
+﻿@model IEnumerable<KachaowAuto.ViewModels.BodyType.BodyTypeListViewModel>
 
 <h2>Body Types</h2>
 
@@ -8,6 +8,8 @@
     <thead>
         <tr>
             <th>Body Type Name</th>
+            <th>Models Count</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +17,11 @@
         {
             <tr>
                 <td>@bt.Name</td>
+                <td>@bt.ModelsCount</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@bt.BodyTypeId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@bt.BodyTypeId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

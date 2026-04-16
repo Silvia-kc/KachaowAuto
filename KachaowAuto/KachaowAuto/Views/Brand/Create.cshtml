@@ -1,4 +1,4 @@
-﻿@model KachaowAuto.Data.Models.Brand
+﻿@model KachaowAuto.ViewModels.Brand.BrandCreateViewModel
 
 <h2>Create Brand</h2>
 
@@ -6,7 +6,7 @@
     @Html.AntiForgeryToken()
 
     <div class="mb-3">
-        <label class="form-label">Brand Name</label>
+        <label asp-for="BrandName" class="form-label"></label>
         <input class="form-control" asp-for="BrandName" />
         <span asp-validation-for="BrandName" class="text-danger"></span>
     </div>

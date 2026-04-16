@@ -1,5 +1,8 @@
-﻿using KachaowAuto.Data;
+﻿using KachaowAuto.Core.Interfaces;
+using KachaowAuto.Core.Models.ServiceCategoryModels;
+using KachaowAuto.Data;
 using KachaowAuto.Data.Models;
+using KachaowAuto.ViewModels.ServiceCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,94 +10,121 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KachaowAuto.Controllers
 {
+
     [Authorize(Roles = "Admin")]
     public class ServiceCategoryController : Controller
     {
-        private readonly KachaowAutoDbContext context;
-        public ServiceCategoryController(KachaowAutoDbContext _context)
+        private readonly IServiceCategoryService serviceCategoryService;
+
+        public ServiceCategoryController(IServiceCategoryService _serviceCategoryService)
         {
-            context = _context;
+            serviceCategoryService = _serviceCategoryService;
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
         public async Task<IActionResult> Index()
         {
-            var serviceCategory = await context.ServiceCategories
-                                        .Include(a => a.Services)
-                                        .ToListAsync();
-            return View(serviceCategory);
+            var serviceModels = await serviceCategoryService.GetAllAsync();
+
+            var viewModels = serviceModels.Select(sc => new ServiceCategoryListViewModel
+            {
+                ServiceCategoryId = sc.ServiceCategoryId,
+                CategoryName = sc.CategoryName,
+                ServicesCount = sc.ServicesCount
+            }).ToList();
+
+            return View(viewModels);
         }
 
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            ViewBag.Services = await context.Services.ToListAsync();
-            return View();
+            var viewModel = new ServiceCategoryCreateViewModel();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ServiceCategory serviceCategory)
+        public async Task<IActionResult> Create(ServiceCategoryCreateViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Services = await context.Services.ToListAsync();
-                return View(serviceCategory);
+                return View(viewModel);
             }
-            await context.ServiceCategories.AddAsync(serviceCategory);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            var serviceModel = new ServiceCategoryCreateServiceModel
+            {
+                CategoryName = viewModel.CategoryName
+            };
+
+            await serviceCategoryService.CreateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            ViewBag.Services = await context.Services.ToListAsync();
-            var serviceCategory = await context.ServiceCategories.FirstOrDefaultAsync(a => a.ServiceCategoryId == id);
-            if (serviceCategory == null)
+            var serviceModel = await serviceCategoryService.GetEditByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(serviceCategory);
+
+            var viewModel = new ServiceCategoryEditViewModel
+            {
+                ServiceCategoryId = serviceModel.ServiceCategoryId,
+                CategoryName = serviceModel.CategoryName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ServiceCategory serviceCategory)
+        public async Task<IActionResult> Edit(ServiceCategoryEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Services = await context.Services.ToListAsync();
-                return View(serviceCategory);
-
+                return View(viewModel);
             }
-            context.ServiceCategories.Update(serviceCategory);
-            await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            var serviceModel = new ServiceCategoryEditServiceModel
+            {
+                ServiceCategoryId = viewModel.ServiceCategoryId,
+                CategoryName = viewModel.CategoryName
+            };
+
+            await serviceCategoryService.UpdateAsync(serviceModel);
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var serviceCategory = await context.ServiceCategories.FirstOrDefaultAsync(a => a.ServiceCategoryId == id);
-            if (serviceCategory == null)
+            var serviceModel = await serviceCategoryService.GetByIdAsync(id);
+
+            if (serviceModel == null)
             {
                 return NotFound();
             }
-            return View(serviceCategory);
+
+            var viewModel = new ServiceCategoryDetailsViewModel
+            {
+                ServiceCategoryId = serviceModel.ServiceCategoryId,
+                CategoryName = serviceModel.CategoryName
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var serviceCategory = await context.ServiceCategories.FirstOrDefaultAsync(a => a.ServiceCategoryId == id);
+            var isDeleted = await serviceCategoryService.DeleteAsync(id);
 
-            if (serviceCategory == null)
+            if (!isDeleted)
             {
                 return NotFound();
             }
-
-            context.ServiceCategories.Remove(serviceCategory);
-            await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
