@@ -4,52 +4,90 @@
     ViewData["Title"] = "My Requests";
 }
 
-<h2 class="mb-4">My Part Requests</h2>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>My Part Requests</h1>
+            <p class="admin-subtitle">
+                Track your submitted requests, status changes and admin responses.
+            </p>
+        </div>
+    </div>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Part</th>
-            <th>Quantity</th>
-            <th>Status</th>
-            <th>Requested</th>
-            <th>Processed</th>
-            <th>Note</th>
-            <th>Admin Note</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var r in Model)
-        {
-            <tr>
-                <td>@r.PartName</td>
-                <td>@r.Quantity</td>
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">My Requests</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
+        </div>
 
-                <td>
-                    @if (r.Status == "Pending")
-                    {
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    }
-                    else if (r.Status == "Approved")
-                    {
-                        <span class="badge bg-info">Approved</span>
-                    }
-                    else if (r.Status == "Rejected")
-                    {
-                        <span class="badge bg-danger">Rejected</span>
-                    }
-                    else if (r.Status == "Sent")
-                    {
-                        <span class="badge bg-success">Sent</span>
-                    }
-                </td>
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Module</div>
+            <div class="admin-stat-value">Parts</div>
+        </div>
 
-                <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@(r.ProcessedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">View</div>
+            <div class="admin-stat-value">Mechanic</div>
+        </div>
+    </div>
 
-                <td>@(r.Note ?? "-")</td>
-                <td>@(r.AdminNote ?? "-")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Request History</h2>
+                <p class="admin-panel-text">Review the progress and final response for each request.</p>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Part</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Requested</th>
+                        <th>Processed</th>
+                        <th>Note</th>
+                        <th>Admin Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>@r.PartName</td>
+                            <td>@r.Quantity</td>
+                            <td>
+                                @if (r.Status == "Pending")
+                                {
+                                    <span class="badge-status badge-status-pending">Pending</span>
+                                }
+                                else if (r.Status == "Approved")
+                                {
+                                    <span class="badge-status badge-status-approved">Approved</span>
+                                }
+                                else if (r.Status == "Rejected")
+                                {
+                                    <span class="badge-status badge-status-rejected">Rejected</span>
+                                }
+                                else if (r.Status == "Sent")
+                                {
+                                    <span class="badge-status badge-status-sent">Sent</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status">@r.Status</span>
+                                }
+                            </td>
+                            <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@(r.ProcessedAt?.ToString("dd.MM.yyyy HH:mm") ?? "-")</td>
+                            <td>@(string.IsNullOrWhiteSpace(r.Note) ? "-" : r.Note)</td>
+                            <td>@(string.IsNullOrWhiteSpace(r.AdminNote) ? "-" : r.AdminNote)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

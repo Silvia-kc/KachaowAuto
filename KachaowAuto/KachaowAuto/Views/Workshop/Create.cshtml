@@ -1,74 +1,96 @@
-﻿@model KachaowAuto.Data.Models.Workshop
-@using Microsoft.AspNetCore.Mvc.Rendering
+﻿@model IEnumerable<KachaowAuto.ViewModels.Workshop.WorkshopListViewModel>
 
 @{
-    ViewData["Title"] = "Create Workshop";
+    ViewData["Title"] = "Workshops";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Create Workshop</h1>
-
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Workshops</h1>
+            <p class="admin-subtitle">
+                Manage all workshops, locations, contact details and active status across the platform.
+            </p>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="RegionId" class="form-label">Region</label>
-            <select asp-for="RegionId"
-                    class="form-select"
-                    asp-items="@(new SelectList(ViewBag.Regions, "RegionId", "RegionName"))">
-                <option value="">-- Select Region --</option>
-            </select>
-            <span asp-validation-for="RegionId" class="text-danger"></span>
+        <div class="admin-toolbar">
+            <a asp-action="Create" class="btn btn-primary btn-admin">Create Workshop</a>
+        </div>
+    </div>
+
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Workshops</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="City" class="form-label"></label>
-            <input asp-for="City" class="form-control" />
-            <span asp-validation-for="City" class="text-danger"></span>
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Module</div>
+            <div class="admin-stat-value">Workshops</div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Address" class="form-label"></label>
-            <input asp-for="Address" class="form-control" />
-            <span asp-validation-for="Address" class="text-danger"></span>
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Management Area</div>
+            <div class="admin-stat-value">Admin</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Workshop Directory</h2>
+                <p class="admin-panel-text">Browse, edit and manage all registered workshops.</p>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="PhoneNumber" class="form-label"></label>
-            <input asp-for="PhoneNumber" class="form-control" />
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Region</th>
+                        <th>City</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Active</th>
+                        <th style="width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var workshop in Model)
+                    {
+                        <tr>
+                            <td>@workshop.WorkshopId</td>
+                            <td>@workshop.Name</td>
+                            <td>@workshop.RegionName</td>
+                            <td>@workshop.City</td>
+                            <td>@workshop.Address</td>
+                            <td>@(string.IsNullOrWhiteSpace(workshop.PhoneNumber) ? "-" : workshop.PhoneNumber)</td>
+                            <td>@(workshop.Latitude?.ToString() ?? "-")</td>
+                            <td>@(workshop.Longitude?.ToString() ?? "-")</td>
+                            <td>
+                                @if (workshop.IsActive)
+                                {
+                                    <span class="badge-soft-success">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-soft-danger">No</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="admin-actions">
+                                    <a asp-action="Edit" asp-route-id="@workshop.WorkshopId" class="btn btn-warning btn-admin-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@workshop.WorkshopId" class="btn btn-danger btn-admin-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="Latitude" class="form-label"></label>
-            <input asp-for="Latitude" class="form-control" />
-            <span asp-validation-for="Latitude" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Longitude" class="form-label"></label>
-            <input asp-for="Longitude" class="form-control" />
-            <span asp-validation-for="Longitude" class="text-danger"></span>
-        </div>
-
-        <div class="form-check mb-3">
-            <input asp-for="IsActive" class="form-check-input" />
-            <label asp-for="IsActive" class="form-check-label"></label>
-        </div>
-
-        <button type="submit" class="btn btn-success">Create</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
-    </form>
+    </div>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

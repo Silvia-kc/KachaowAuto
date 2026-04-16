@@ -4,32 +4,70 @@
     ViewData["Title"] = "Part Categories";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Part Categories</h2>
-        <a asp-action="Create" class="btn btn-primary">Add New Category</a>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Part Categories</h1>
+            <p class="admin-subtitle">
+                Manage all part categories and keep the parts catalog well structured and easy to maintain.
+            </p>
+        </div>
+
+        <div class="admin-toolbar">
+            <a asp-action="Create" class="btn btn-primary btn-admin">Add New Category</a>
+        </div>
     </div>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Parts Count</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in Model)
-            {
-                <tr>
-                    <td>@category.Name</td>
-                    <td>@category.PartsCount</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@category.PartCategoryId" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@category.PartCategoryId" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Categories</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Catalog Section</div>
+            <div class="admin-stat-value">Part Categories</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Management Area</div>
+            <div class="admin-stat-value">Admin</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Part Category Directory</h2>
+                <p class="admin-panel-text">Browse, edit and manage all registered part categories.</p>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parts Count</th>
+                        <th style="width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.Name</td>
+                            <td>@category.PartsCount</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <a asp-action="Edit" asp-route-id="@category.PartCategoryId" class="btn btn-warning btn-admin-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@category.PartCategoryId" class="btn btn-danger btn-admin-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

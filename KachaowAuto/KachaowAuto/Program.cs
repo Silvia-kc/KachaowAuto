@@ -19,7 +19,7 @@ builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<KachaowAutoDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionArsenal")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionHome")));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
@@ -44,6 +44,7 @@ builder.Services.AddScoped<IPartRequestService, PartRequestService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
 builder.Services.AddScoped<IServiceCategoryService, ServiceCategoryService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IWorkshopService, KachaowAuto.Core.Implementations.WorkshopService>();
 
 
 var app = builder.Build();

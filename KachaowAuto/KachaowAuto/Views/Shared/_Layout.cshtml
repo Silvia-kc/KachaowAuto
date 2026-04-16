@@ -4,110 +4,129 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KachaowAuto</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KachaowAuto.styles.css" asp-append-version="true" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 
-
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KachaowAuto</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+    <div class="site-wrapper">
+        <header>
+            <nav class="navbar navbar-expand-lg luxury-navbar">
+                <div class="container">
+                    <a class="navbar-brand luxury-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/logo.png" alt="KachaowAuto Logo" class="site-logo" />
+                        <span class="brand-text">KachaowAuto</span>
+                    </a>
 
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">
-                                    Admin
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Users</a></li>
+                    <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                                    <li><hr class="dropdown-divider" /></li>
+                    <div class="collapse navbar-collapse" id="mainNavbar">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
 
-                                    <li><a class="dropdown-item" asp-controller="Brand" asp-action="Index">Brands</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Model" asp-action="Index">Models</a></li>
-                                    <li><a class="dropdown-item" asp-controller="BodyType" asp-action="Index">Body Types</a></li>
-                                    <li><a class="dropdown-item" asp-controller="EngineType" asp-action="Index">Engine Types</a></li>
-
-                                    <li><hr class="dropdown-divider" /></li>
-
-                                    <li><a class="dropdown-item" asp-controller="PartCategory" asp-action="Index">Part Categories</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Part" asp-action="Index">Parts</a></li>
-                                    <li><a class="dropdown-item" asp-controller="PartImage" asp-action="Index">Part Images</a></li>
-
-                                    <li><hr class="dropdown-divider" /></li>
-
-                                    <li><a class="dropdown-item" asp-controller="ServiceCategory" asp-action="Index">Service Categories</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Service" asp-action="Index">Services</a></li>
-
-                                    <li><hr class="dropdown-divider" /></li>
-
-                                    <li><a class="dropdown-item" asp-controller="Region" asp-action="Index">Regions</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Workshop" asp-action="AdminIndex">Workshops</a></li>
-                                </ul>
-                            </li>
-                        }
-                        else if (User.IsInRole("Mechanic"))
-                        {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Index">Appointments</a>
+                                <a class="nav-link luxury-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Part" asp-action="Index">Parts</a>
+                                <a class="nav-link luxury-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="PartRequest" asp-action="MyRequests">My Requests</a>
-                            </li>
-                        }
-                        else if (User.IsInRole("Client"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Appointment" asp-action="Create">Book Appointment</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Car" asp-action="Create">My Car</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Workshop" asp-action="Index">Workshops</a>
-                            </li>
-                        }
-                    </ul>
-                    <partial name="_LoginPartial" />
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle luxury-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Admin Panel
+                                    </a>
+                                    <ul class="dropdown-menu luxury-dropdown">
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Users</a></li>
+
+                                        <li><hr class="dropdown-divider" /></li>
+
+                                        <li><a class="dropdown-item" asp-controller="Brand" asp-action="Index">Brands</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Model" asp-action="Index">Models</a></li>
+                                        <li><a class="dropdown-item" asp-controller="BodyType" asp-action="Index">Body Types</a></li>
+                                        <li><a class="dropdown-item" asp-controller="EngineType" asp-action="Index">Engine Types</a></li>
+
+                                        <li><hr class="dropdown-divider" /></li>
+
+                                        <li><a class="dropdown-item" asp-controller="PartCategory" asp-action="Index">Part Categories</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Part" asp-action="Index">Parts</a></li>
+                                        <li><a class="dropdown-item" asp-controller="PartImage" asp-action="Index">Part Images</a></li>
+                                        <li><a class="dropdown-item" asp-controller="PartRequest" asp-action="Index">Part Requests</a></li>
+
+                                        <li><hr class="dropdown-divider" /></li>
+
+                                        <li><a class="dropdown-item" asp-controller="ServiceCategory" asp-action="Index">Service Categories</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Service" asp-action="Index">Services</a></li>
+
+                                        <li><hr class="dropdown-divider" /></li>
+
+                                        <li><a class="dropdown-item" asp-controller="Region" asp-action="Index">Regions</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Workshop" asp-action="AdminIndex">Workshops</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else if (User.IsInRole("Mechanic"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Appointment" asp-action="Index">Appointments</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Part" asp-action="Index">Parts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="PartRequest" asp-action="MyRequests">My Requests</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Client"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Appointment" asp-action="Create">Book Appointment</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Car" asp-action="Create">My Car</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Workshop" asp-action="Index">Workshops</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="login-area">
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </main>
+
+        <footer class="luxury-footer">
+            <div class="container footer-content">
+                <div>
+                    &copy; 2026 - <span class="footer-brand">KachaowAuto</span>
+                </div>
+                <div>
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </footer>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - KachaowAuto - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

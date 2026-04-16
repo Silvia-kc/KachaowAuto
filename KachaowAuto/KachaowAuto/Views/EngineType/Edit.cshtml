@@ -1,19 +1,46 @@
 ﻿@model KachaowAuto.ViewModels.EngineType.EngineTypeEditViewModel
 
-<h2>Edit Engine Type</h2>
+@{
+    ViewData["Title"] = "Edit Engine Type";
+}
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="EngineTypeId" />
-
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input class="form-control" asp-for="Name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Edit Engine Type</h1>
+            <p class="admin-subtitle">
+                Update the selected engine type and keep system data accurate.
+            </p>
+        </div>
     </div>
 
-    <button class="btn btn-primary">Save</button>
-</form>
+    <div class="admin-form-wrap">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <h2 class="admin-form-title">Edit Engine Type Details</h2>
+                <p class="admin-form-subtitle">Make changes to the selected engine type.</p>
+            </div>
+
+            <div class="admin-form-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="EngineTypeId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Engine Type Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter engine type name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn btn-primary btn-admin">Save Changes</button>
+                        <a asp-action="Index" class="btn btn-secondary btn-admin">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -2,7 +2,115 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <div class="hero-badge">Premium Automotive Service Platform</div>
+
+        <h1 class="hero-title">
+            KachaowAuto
+        </h1>
+
+        <p class="hero-subtitle">
+            Professional management of workshops, services, vehicles and part requests
+            in a modern premium automotive system.
+        </p>
+
+        <div class="hero-actions">
+            <a asp-controller="Workshop" asp-action="Index" class="btn btn-primary btn-lg hero-btn">
+                Explore Workshops
+            </a>
+            <a asp-controller="Appointment" asp-action="Create" class="btn btn-secondary btn-lg hero-btn">
+                Book Service
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="section-title-wrap text-center">
+        <h2 class="section-title">Why KachaowAuto</h2>
+        <p class="section-subtitle">
+            A modern platform designed for speed, control and professional workflow.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-icon">01</div>
+                <h3>Fast Booking</h3>
+                <p>Quick and easy scheduling of service appointments and repairs.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-icon">02</div>
+                <h3>Workshop Network</h3>
+                <p>Browse active workshops, locations and available services.</p>
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-icon">03</div>
+                <h3>Parts Requests</h3>
+                <p>Manage part requests with clear tracking and organization.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-icon">04</div>
+                <h3>Professional Control</h3>
+                <p>Full control panel for admins, mechanics and clients.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-number">Premium</div>
+                <div class="stat-label">Automotive Experience</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-number">Smart</div>
+                <div class="stat-label">Service Management</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-number">Modern</div>
+                <div class="stat-label">Client &amp; Mechanic Workflow</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="cta-panel">
+        <div class="cta-content">
+            <h2>Drive your service platform to the next level</h2>
+            <p>
+                Manage vehicles, services, requests and users
+                in one modern automotive ecosystem.
+            </p>
+        </div>
+
+        <div class="cta-actions">
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg hero-btn">
+                Get Started
+            </a>
+        </div>
+    </div>
+</section>

@@ -5,54 +5,74 @@
     ViewData["Title"] = "Create Service";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Create Service</h1>
-
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-        <div class="mb-3">
-            <label asp-for="ServiceName" class="form-label"></label>
-            <input asp-for="ServiceName" class="form-control" />
-            <span asp-validation-for="ServiceName" class="text-danger"></span>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Create Service</h1>
+            <p class="admin-subtitle">
+                Add a new service with pricing range, description and category.
+            </p>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label"></label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+    <div class="admin-form-wrap admin-form-wide">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <h2 class="admin-form-title">Service Information</h2>
+                <p class="admin-form-subtitle">Enter the main details for the new service.</p>
+            </div>
+
+            <div class="admin-form-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="ServiceName" class="form-label">Service Name</label>
+                        <input asp-for="ServiceName" class="form-control" placeholder="Enter service name" />
+                        <span asp-validation-for="ServiceName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter service description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PriceFrom" class="form-label">Price From</label>
+                            <input asp-for="PriceFrom" class="form-control" placeholder="Enter minimum price" />
+                            <span asp-validation-for="PriceFrom" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PriceTo" class="form-label">Price To</label>
+                            <input asp-for="PriceTo" class="form-control" placeholder="Enter maximum price" />
+                            <span asp-validation-for="PriceTo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ServiceCategoryId" class="form-label">Category</label>
+                        <select asp-for="ServiceCategoryId"
+                                class="form-select"
+                                asp-items="@(new SelectList(Model.Categories, "ServiceCategoryId", "CategoryName"))">
+                            <option value="">-- Select Category --</option>
+                        </select>
+                        <span asp-validation-for="ServiceCategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn btn-primary btn-admin">Create</button>
+                        <a asp-action="Index" class="btn btn-secondary btn-admin">Back</a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="PriceFrom" class="form-label"></label>
-            <input asp-for="PriceFrom" class="form-control" />
-            <span asp-validation-for="PriceFrom" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="PriceTo" class="form-label"></label>
-            <input asp-for="PriceTo" class="form-control" />
-            <span asp-validation-for="PriceTo" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="ServiceCategoryId" class="form-label"></label>
-            <select asp-for="ServiceCategoryId"
-                    class="form-select"
-                    asp-items="@(new SelectList(Model.Categories, "ServiceCategoryId", "CategoryName"))">
-                <option value="">-- Select Category --</option>
-            </select>
-            <span asp-validation-for="ServiceCategoryId" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-success">Create</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -4,33 +4,70 @@
     ViewData["Title"] = "Service Categories";
 }
 
-<div class="container mt-4">
-    <h1>Service Categories</h1>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Service Categories</h1>
+            <p class="admin-subtitle">
+                Manage all service categories and keep the service catalog well organized.
+            </p>
+        </div>
 
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create Service Category</a>
-    </p>
+        <div class="admin-toolbar">
+            <a asp-action="Create" class="btn btn-primary btn-admin">Create Service Category</a>
+        </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Category Name</th>
-                <th>Services Count</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in Model)
-            {
-                <tr>
-                    <td>@category.CategoryName</td>
-                    <td>@category.ServicesCount</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@category.ServiceCategoryId" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@category.ServiceCategoryId" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Categories</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Catalog Section</div>
+            <div class="admin-stat-value">Service Categories</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Management Area</div>
+            <div class="admin-stat-value">Admin</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Service Category Directory</h2>
+                <p class="admin-panel-text">Browse, edit and manage all registered service categories.</p>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Services Count</th>
+                        <th style="width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+                            <td>@category.CategoryName</td>
+                            <td>@category.ServicesCount</td>
+                            <td>
+                                <div class="admin-actions">
+                                    <a asp-action="Edit" asp-route-id="@category.ServiceCategoryId" class="btn btn-warning btn-admin-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@category.ServiceCategoryId" class="btn btn-danger btn-admin-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

@@ -4,84 +4,120 @@
     ViewData["Title"] = "Part Requests";
 }
 
-<h2 class="mb-4">All Part Requests</h2>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Part Requests</h1>
+            <p class="admin-subtitle">
+                Review incoming requests, add admin notes and update their processing status.
+            </p>
+        </div>
+    </div>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Part</th>
-            <th>Mechanic</th>
-            <th>Quantity</th>
-            <th>Status</th>
-            <th>Requested</th>
-            <th>Note</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var r in Model)
-        {
-            <tr>
-                <td>@r.PartName</td>
-                <td>@r.MechanicName</td>
-                <td>@r.Quantity</td>
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Requests</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
+        </div>
 
-                <td>
-                    @if (r.Status == "Pending")
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Module</div>
+            <div class="admin-stat-value">Part Requests</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Management Area</div>
+            <div class="admin-stat-value">Admin</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Requests Directory</h2>
+                <p class="admin-panel-text">Manage request workflow and keep mechanics informed.</p>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Part</th>
+                        <th>Mechanic</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Requested</th>
+                        <th>Note</th>
+                        <th style="width: 330px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
                     {
-                        <span class="badge bg-warning text-dark">Pending</span>
+                        <tr>
+                            <td>@r.PartName</td>
+                            <td>@r.MechanicName</td>
+                            <td>@r.Quantity</td>
+                            <td>
+                                @if (r.Status == "Pending")
+                                {
+                                    <span class="badge-status badge-status-pending">Pending</span>
+                                }
+                                else if (r.Status == "Approved")
+                                {
+                                    <span class="badge-status badge-status-approved">Approved</span>
+                                }
+                                else if (r.Status == "Rejected")
+                                {
+                                    <span class="badge-status badge-status-rejected">Rejected</span>
+                                }
+                                else if (r.Status == "Sent")
+                                {
+                                    <span class="badge-status badge-status-sent">Sent</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status">@r.Status</span>
+                                }
+                            </td>
+                            <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@(string.IsNullOrWhiteSpace(r.Note) ? "-" : r.Note)</td>
+                            <td>
+                                <form method="post" class="request-admin-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@r.PartRequestId" />
+
+                                    <textarea name="adminNote"
+                                              class="form-control form-control-sm request-admin-note"
+                                              rows="2"
+                                              placeholder="Admin note...">@r.AdminNote</textarea>
+
+                                    <div class="request-admin-actions">
+                                        <button type="submit"
+                                                formaction="@Url.Action("Approve", "PartRequest")"
+                                                class="btn btn-success btn-admin-sm flex-fill">
+                                            Approve
+                                        </button>
+
+                                        <button type="submit"
+                                                formaction="@Url.Action("Reject", "PartRequest")"
+                                                class="btn btn-danger btn-admin-sm flex-fill">
+                                            Reject
+                                        </button>
+
+                                        <button type="submit"
+                                                formaction="@Url.Action("MarkAsSent", "PartRequest")"
+                                                class="btn btn-primary btn-admin-sm flex-fill">
+                                            Sent
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
                     }
-                    else if (r.Status == "Approved")
-                    {
-                        <span class="badge bg-info">Approved</span>
-                    }
-                    else if (r.Status == "Rejected")
-                    {
-                        <span class="badge bg-danger">Rejected</span>
-                    }
-                    else if (r.Status == "Sent")
-                    {
-                        <span class="badge bg-success">Sent</span>
-                    }
-                </td>
-
-                <td>@r.RequestedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@(r.Note ?? "-")</td>
-
-                <td style="min-width: 260px;">
-                    <form method="post" class="d-flex flex-column gap-1">
-
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@r.PartRequestId" />
-
-                        <textarea name="adminNote"
-                              class="form-control form-control-sm"
-                              rows="2"
-                              placeholder="Admin note...">@r.AdminNote</textarea>
-
-                        <div class="d-flex gap-1">
-                            <button type="submit"
-                                    formaction="@Url.Action("Approve", "PartRequest")"
-                                    class="btn btn-sm btn-success w-100">
-                                Approve
-                            </button>
-
-                            <button type="submit"
-                                    formaction="@Url.Action("Reject", "PartRequest")"
-                                    class="btn btn-sm btn-danger w-100">
-                                Reject
-                            </button>
-
-                            <button type="submit"
-                                    formaction="@Url.Action("MarkAsSent", "PartRequest")"
-                                    class="btn btn-sm btn-primary w-100">
-                                Sent
-                            </button>
-                        </div>
-
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

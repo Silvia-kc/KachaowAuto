@@ -2,18 +2,19 @@
 @inject SignInManager<KachaowAuto.Data.Models.ApplicationUser> SignInManager
 @inject UserManager<KachaowAuto.Data.Models.ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<div class="auth-actions">
     @if (User.Identity?.IsAuthenticated ?? false)
     {
-        <span class="navbar-text me-3">
-            Hello, @User.Identity.Name
-        </span>
-        <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+        <div class="user-pill me-3">
+            <span class="user-status-dot"></span>
+            <span>Hello, @User.Identity!.Name</span>
+        </div>
+
+        <a class="btn btn-danger btn-auth" asp-controller="Account" asp-action="Logout">Logout</a>
     }
     else
     {
-        <a class="btn btn-outline-primary me-2" asp-controller="Account" asp-action="Login">Login</a>
-        <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>
+        <a class="btn btn-outline-primary btn-auth me-2" asp-controller="Account" asp-action="Login">Login</a>
+        <a class="btn btn-primary btn-auth" asp-controller="Account" asp-action="Register">Register</a>
     }
-
-</ul>
+</div>

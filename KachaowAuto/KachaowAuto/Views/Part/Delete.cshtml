@@ -4,37 +4,64 @@
     ViewData["Title"] = "Delete Part";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
-            <h2 class="text-danger mb-4">Delete Part</h2>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Delete Part</h1>
+            <p class="admin-subtitle">
+                Review the selected part, delete individual images or remove the entire part.
+            </p>
+        </div>
+    </div>
 
-            <div class="alert alert-warning">
+    <div class="admin-form-card">
+        <div class="admin-form-head">
+            <h2 class="admin-form-title">Delete Confirmation</h2>
+            <p class="admin-form-subtitle">Manage images first or permanently delete the selected part.</p>
+        </div>
+
+        <div class="admin-form-body">
+            <div class="admin-warning-box">
                 You can delete images individually or delete the entire part.
             </div>
 
-            <p><strong>Name:</strong> @Model.PartName</p>
-            <p><strong>Manufacturer:</strong> @Model.Manufacturer</p>
-            <p><strong>Category:</strong> @Model.CategoryName</p>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Part Name</span>
+                        <div class="admin-info-value">@Model.PartName</div>
+                    </div>
+                </div>
 
-            <hr />
+                <div class="col-md-4">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Manufacturer</span>
+                        <div class="admin-info-value">@Model.Manufacturer</div>
+                    </div>
+                </div>
 
-            <h5>Images</h5>
+                <div class="col-md-4">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Category</span>
+                        <div class="admin-info-value">@Model.CategoryName</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="details-gallery-title">Images</h3>
 
             @if (Model.Images.Any())
             {
-                <div class="row">
+                <div class="details-image-grid">
                     @foreach (var image in Model.Images)
                     {
-                        <div class="col-md-3 text-center mb-3">
-                            <img src="@image.ImageUrl"
-                                 class="img-fluid rounded mb-2"
-                                 style="height:150px; object-fit:cover;" />
+                        <div class="details-image-card delete-image-card">
+                            <img src="@image.ImageUrl" alt="@Model.PartName" class="details-image" />
 
-                            <form asp-action="DeleteImage" method="post">
+                            <form asp-action="DeleteImage" method="post" class="mt-3">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@image.PartImageId" />
-                                <button class="btn btn-sm btn-outline-danger">Delete Image</button>
+                                <button class="btn btn-outline-danger btn-admin-sm w-100">Delete Image</button>
                             </form>
                         </div>
                     }
@@ -42,16 +69,17 @@
             }
             else
             {
-                <p>No images.</p>
+                <p class="text-muted">No images.</p>
             }
 
-            <hr />
-
-            <form asp-action="DeleteConfirmed" method="post">
+            <form asp-action="DeleteConfirmed" method="post" class="mt-4">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@Model.PartId" />
-                <button class="btn btn-danger">Delete Part</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+
+                <div class="admin-form-actions">
+                    <button class="btn btn-danger btn-admin">Delete Part</button>
+                    <a asp-action="Index" class="btn btn-secondary btn-admin">Cancel</a>
+                </div>
             </form>
         </div>
     </div>

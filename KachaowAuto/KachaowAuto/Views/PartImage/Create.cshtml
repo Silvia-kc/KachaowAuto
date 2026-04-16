@@ -4,34 +4,50 @@
     ViewData["Title"] = "Add Part Image";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
-            <h2 class="mb-4">Add Image</h2>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Add Image</h1>
+            <p class="admin-subtitle">
+                Upload a new image and assign it to a specific part.
+            </p>
+        </div>
+    </div>
 
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-                @Html.AntiForgeryToken()
+    <div class="admin-form-wrap">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <h2 class="admin-form-title">Image Upload</h2>
+                <p class="admin-form-subtitle">Select a part and upload a new image.</p>
+            </div>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <div class="admin-form-body">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
 
-                <div class="mb-3">
-                    <label asp-for="PartId" class="form-label"></label>
-                    <select asp-for="PartId" class="form-select"
-                            asp-items="@(new SelectList(Model.Parts, "PartId", "PartName"))">
-                        <option value="">-- select part --</option>
-                    </select>
-                    <span asp-validation-for="PartId" class="text-danger"></span>
-                </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <div class="mb-3">
-                    <label asp-for="ImageFile" class="form-label"></label>
-                    <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
-                </div>
+                    <div class="mb-3">
+                        <label asp-for="PartId" class="form-label">Part</label>
+                        <select asp-for="PartId" class="form-select"
+                                asp-items="@(new SelectList(Model.Parts, "PartId", "PartName"))">
+                            <option value="">-- Select part --</option>
+                        </select>
+                        <span asp-validation-for="PartId" class="text-danger"></span>
+                    </div>
 
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <a asp-controller="Part" asp-action="Index" class="btn btn-secondary">Back</a>
-            </form>
+                    <div class="mb-4">
+                        <label asp-for="ImageFile" class="form-label">Image</label>
+                        <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <a asp-controller="Part" asp-action="Index" class="btn btn-secondary btn-admin">Back</a>
+                        <button type="submit" class="btn btn-primary btn-admin">Upload</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

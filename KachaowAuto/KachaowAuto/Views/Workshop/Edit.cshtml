@@ -1,0 +1,97 @@
+﻿@model KachaowAuto.ViewModels.Workshop.WorkshopEditViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Edit Workshop";
+}
+
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Edit Workshop</h1>
+            <p class="admin-subtitle">
+                Update workshop details, location, contact data and active status.
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-form-wrap admin-form-wide">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <h2 class="admin-form-title">Edit Workshop Details</h2>
+                <p class="admin-form-subtitle">Make changes to the selected workshop.</p>
+            </div>
+
+            <div class="admin-form-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="WorkshopId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Workshop Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter workshop name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="RegionId" class="form-label">Region</label>
+                        <select asp-for="RegionId"
+                                class="form-select"
+                                asp-items="@(new SelectList(Model.Regions, "RegionId", "RegionName"))">
+                            <option value="">-- Select Region --</option>
+                        </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="City" class="form-label">City</label>
+                            <input asp-for="City" class="form-control" placeholder="Enter city" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <input asp-for="Address" class="form-control" placeholder="Enter address" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Latitude" class="form-label">Latitude</label>
+                            <input asp-for="Latitude" class="form-control" placeholder="Enter latitude" />
+                            <span asp-validation-for="Latitude" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Longitude" class="form-label">Longitude</label>
+                            <input asp-for="Longitude" class="form-control" placeholder="Enter longitude" />
+                            <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="IsActive" class="form-check-input" />
+                        <label asp-for="IsActive" class="form-check-label">Active</label>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn btn-primary btn-admin">Save</button>
+                        <a asp-action="AdminIndex" class="btn btn-secondary btn-admin">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

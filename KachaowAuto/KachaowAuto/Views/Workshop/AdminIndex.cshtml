@@ -1,45 +1,96 @@
-﻿@model IEnumerable<KachaowAuto.Data.Models.Workshop>
+﻿@model IEnumerable<KachaowAuto.ViewModels.Workshop.WorkshopListViewModel>
 
 @{
     ViewData["Title"] = "Workshops";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Workshops</h1>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Workshops</h1>
+            <p class="admin-subtitle">
+                Manage all workshops, locations, contact details and active status across the platform.
+            </p>
+        </div>
 
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create Workshop</a>
-    </p>
+        <div class="admin-toolbar">
+            <a asp-action="Create" class="btn btn-primary btn-admin">Create Workshop</a>
+        </div>
+    </div>
 
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Region</th>
-                <th>City</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Active</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var workshop in Model)
-            {
-                <tr>
-                    <td>@workshop.WorkshopId</td>
-                    <td>@workshop.Name</td>
-                    <td>@workshop.Region?.RegionName</td>
-                    <td>@workshop.City</td>
-                    <td>@workshop.Address</td>
-                    <td>@workshop.PhoneNumber</td>
-                    <td>@workshop.Latitude</td>
-                    <td>@workshop.Longitude</td>
-                    <td>@workshop.IsActive</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Total Workshops</div>
+            <div class="admin-stat-value accent">@Model.Count()</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Module</div>
+            <div class="admin-stat-value">Workshops</div>
+        </div>
+
+        <div class="admin-stat-card">
+            <div class="admin-stat-label">Management Area</div>
+            <div class="admin-stat-value">Admin</div>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="admin-panel-head">
+            <div>
+                <h2 class="admin-panel-title">Workshop Directory</h2>
+                <p class="admin-panel-text">Browse, edit and manage all registered workshops.</p>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Region</th>
+                        <th>City</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Active</th>
+                        <th style="width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var workshop in Model)
+                    {
+                        <tr>
+                            <td>@workshop.WorkshopId</td>
+                            <td>@workshop.Name</td>
+                            <td>@workshop.RegionName</td>
+                            <td>@workshop.City</td>
+                            <td>@workshop.Address</td>
+                            <td>@(string.IsNullOrWhiteSpace(workshop.PhoneNumber) ? "-" : workshop.PhoneNumber)</td>
+                            <td>@(workshop.Latitude?.ToString() ?? "-")</td>
+                            <td>@(workshop.Longitude?.ToString() ?? "-")</td>
+                            <td>
+                                @if (workshop.IsActive)
+                                {
+                                    <span class="badge-soft-success">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-soft-danger">No</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="admin-actions">
+                                    <a asp-action="Edit" asp-route-id="@workshop.WorkshopId" class="btn btn-warning btn-admin-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@workshop.WorkshopId" class="btn btn-danger btn-admin-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

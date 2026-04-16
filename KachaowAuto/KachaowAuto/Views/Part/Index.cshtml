@@ -4,159 +4,186 @@
     ViewData["Title"] = "Parts";
 }
 
-<div class="container mt-4">
-    @if (User.IsInRole("Mechanic"))
-    {
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="mb-1">Parts Catalog</h2>
-                <p class="text-muted mb-0">Browse available parts and request what you need.</p>
+@if (User.IsInRole("Mechanic"))
+{
+    <div class="admin-page">
+        <div class="admin-header">
+            <div class="admin-title-wrap">
+                <h1>Parts Catalog</h1>
+                <p class="admin-subtitle">
+                    Browse available parts, review specifications and submit requests when needed.
+                </p>
             </div>
 
-            <a asp-controller="PartRequest"
-               asp-action="MyRequests"
-               class="btn btn-outline-primary">
-                My Requests
-            </a>
+            <div class="admin-toolbar">
+                <a asp-controller="PartRequest" asp-action="MyRequests" class="btn btn-outline-primary btn-admin">
+                    My Requests
+                </a>
+            </div>
         </div>
 
-        <div class="row g-4">
+        <div class="parts-grid">
             @foreach (var part in Model)
             {
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="card h-100 shadow-sm border-0 rounded-4">
-                        <div class="p-3 text-center bg-light rounded-top-4" style="height: 230px;">
-                            @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
+                <div class="part-card">
+                    <div class="part-card-image-wrap">
+                        @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
+                        {
+                            <img src="@part.FirstImageUrl"
+                                 alt="@part.PartName"
+                                 class="part-card-image" />
+                        }
+                        else
+                        {
+                            <div class="part-card-no-image">No image</div>
+                        }
+                    </div>
+
+                    <div class="part-card-body">
+                        <h3 class="part-card-title">@part.PartName</h3>
+
+                        <div class="part-card-meta">
+                            <div><span>Manufacturer:</span> @part.Manufacturer</div>
+                            <div><span>Part Number:</span> @part.PartNumber</div>
+                            <div><span>Category:</span> @(part.CategoryName ?? "-")</div>
+                        </div>
+
+                        <div class="part-card-status">
+                            @if (part.IsActive)
                             {
-                                <img src="@part.FirstImageUrl"
-                                     alt="@part.PartName"
-                                     class="img-fluid h-100"
-                                     style="object-fit: contain;" />
+                                <span class="badge-soft-success">Available</span>
                             }
                             else
                             {
-                                <div class="d-flex align-items-center justify-content-center h-100 text-muted">
-                                    No image
-                                </div>
+                                <span class="badge-soft-danger">Inactive</span>
                             }
                         </div>
 
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-2">@part.PartName</h5>
+                        <div class="part-card-footer">
+                            <div class="part-card-price">@part.UnitPrice.ToString("F2") €</div>
 
-                            <p class="text-muted mb-2">
-                                <strong>Manufacturer:</strong> @part.Manufacturer
-                            </p>
+                            <div class="part-card-actions">
+                                <a asp-action="Details"
+                                   asp-route-id="@part.PartId"
+                                   class="btn btn-primary btn-admin-sm">
+                                    Details
+                                </a>
 
-                            <p class="text-muted mb-2">
-                                <strong>Part Number:</strong> @part.PartNumber
-                            </p>
-
-                            <p class="text-muted mb-2">
-                                <strong>Category:</strong> @(part.CategoryName ?? "-")
-                            </p>
-
-                            <div class="mb-3">
-                                @if (part.IsActive)
-                                {
-                                    <span class="badge bg-success">Available</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">Inactive</span>
-                                }
-                            </div>
-
-                            <div class="mt-auto">
-                                <div class="fs-5 fw-bold mb-3">@part.UnitPrice.ToString("F2") €</div>
-
-                                <div class="d-flex gap-2">
-                                    <a asp-action="Details"
-                                       asp-route-id="@part.PartId"
-                                       class="btn btn-info text-white w-50">
-                                        Details
-                                    </a>
-
-                                    <a asp-controller="PartRequest"
-                                       asp-action="Create"
-                                       asp-route-partId="@part.PartId"
-                                       class="btn btn-outline-primary w-50">
-                                        Request
-                                    </a>
-                                </div>
+                                <a asp-controller="PartRequest"
+                                   asp-action="Create"
+                                   asp-route-partId="@part.PartId"
+                                   class="btn btn-secondary btn-admin-sm">
+                                    Request
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             }
         </div>
-    }
-    else
-    {
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Parts</h2>
+    </div>
+}
+else
+{
+    <div class="admin-page">
+        <div class="admin-header">
+            <div class="admin-title-wrap">
+                <h1>Parts</h1>
+                <p class="admin-subtitle">
+                    Manage parts, pricing, categories, images and availability across the system.
+                </p>
+            </div>
 
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="Create" class="btn btn-primary">Add New Part</a>
-            }
+            <div class="admin-toolbar">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Create" class="btn btn-primary btn-admin">Add New Part</a>
+                }
+            </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Image</th>
-                        <th>Part Name</th>
-                        <th>Manufacturer</th>
-                        <th>Part Number</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Active</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var part in Model)
-                    {
+        <div class="admin-stats">
+            <div class="admin-stat-card">
+                <div class="admin-stat-label">Total Parts</div>
+                <div class="admin-stat-value accent">@Model.Count()</div>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-label">Catalog Section</div>
+                <div class="admin-stat-value">Parts</div>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-label">Management Area</div>
+                <div class="admin-stat-value">Admin</div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="admin-panel-head">
+                <div>
+                    <h2 class="admin-panel-title">Parts Directory</h2>
+                    <p class="admin-panel-text">Browse, edit and manage all registered parts.</p>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="table admin-table">
+                    <thead>
                         <tr>
-                            <td>
-                                @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
-                                {
-                                    <img src="@part.FirstImageUrl"
-                                         width="80"
-                                         height="80"
-                                         style="object-fit: cover; border-radius: 8px;" />
-                                }
-                                else
-                                {
-                                    <span>No image</span>
-                                }
-                            </td>
-                            <td>@part.PartName</td>
-                            <td>@part.Manufacturer</td>
-                            <td>@part.PartNumber</td>
-                            <td>@part.CategoryName</td>
-                            <td>@part.UnitPrice.ToString("F2") €</td>
-                            <td>
-                                @if (part.IsActive)
-                                {
-                                    <span class="badge bg-success">Yes</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">No</span>
-                                }
-                            </td>
-                            <td class="d-flex gap-1">
-                                <a asp-action="Details" asp-route-id="@part.PartId" class="btn btn-sm btn-info text-white">Details</a>
-                                <a asp-action="Edit" asp-route-id="@part.PartId" class="btn btn-sm btn-warning">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@part.PartId" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
+                            <th>Image</th>
+                            <th>Part Name</th>
+                            <th>Manufacturer</th>
+                            <th>Part Number</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Active</th>
+                            <th style="width: 260px;">Actions</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var part in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(part.FirstImageUrl))
+                                    {
+                                        <img src="@part.FirstImageUrl"
+                                             alt="@part.PartName"
+                                             class="table-img" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No image</span>
+                                    }
+                                </td>
+                                <td>@part.PartName</td>
+                                <td>@part.Manufacturer</td>
+                                <td>@part.PartNumber</td>
+                                <td>@part.CategoryName</td>
+                                <td>@part.UnitPrice.ToString("F2") €</td>
+                                <td>
+                                    @if (part.IsActive)
+                                    {
+                                        <span class="badge-soft-success">Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-soft-danger">No</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="admin-actions">
+                                        <a asp-action="Details" asp-route-id="@part.PartId" class="btn btn-primary btn-admin-sm">Details</a>
+                                        <a asp-action="Edit" asp-route-id="@part.PartId" class="btn btn-warning btn-admin-sm">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@part.PartId" class="btn btn-danger btn-admin-sm">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    }
-</div>
+    </div>
+}

@@ -4,26 +4,44 @@
     ViewData["Title"] = "Create Service Category";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Create Service Category</h1>
-
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-        <div class="mb-3">
-            <label asp-for="CategoryName" class="form-label"></label>
-            <input asp-for="CategoryName" class="form-control" />
-            <span asp-validation-for="CategoryName" class="text-danger"></span>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Create Service Category</h1>
+            <p class="admin-subtitle">
+                Add a new category to organize services in the system.
+            </p>
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-success">Create</button>
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
-    </form>
+    <div class="admin-form-wrap">
+        <div class="admin-form-card">
+            <div class="admin-form-head">
+                <h2 class="admin-form-title">Category Information</h2>
+                <p class="admin-form-subtitle">Enter the main details for the new service category.</p>
+            </div>
+
+            <div class="admin-form-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="CategoryName" class="form-label">Category Name</label>
+                        <input asp-for="CategoryName" class="form-control" placeholder="Enter category name" />
+                        <span asp-validation-for="CategoryName" class="text-danger"></span>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="submit" class="btn btn-primary btn-admin">Create</button>
+                        <a asp-action="Index" class="btn btn-secondary btn-admin">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -2,56 +2,39 @@
     ViewData["Title"] = "Client Dashboard";
 }
 
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">Client Dashboard</h1>
-        <p class="text-muted">Manage your cars, appointments and workshops in one place.</p>
-    </div>
+<div class="client-portal-clean">
+    <section class="client-clean-header">
+        <div class="client-clean-badge">Client Portal</div>
+        <h1 class="client-clean-title">Welcome back</h1>
+        <p class="client-clean-subtitle">
+            Manage your cars, appointments and workshops in one place.
+        </p>
+    </section>
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">📅</div>
-                    <h4 class="card-title fw-semibold">Book Appointment</h4>
-                    <p class="card-text text-muted">
-                        Schedule a new service appointment for your vehicle quickly and easily.
-                    </p>
-                    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary rounded-pill px-4">
-                        Open
-                    </a>
-                </div>
-            </div>
-        </div>
+    <section class="client-clean-grid">
+        <a asp-controller="Appointment" asp-action="Create" class="client-clean-card client-clean-card-main">
+            <div class="client-clean-card-overlay"></div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">🚗</div>
-                    <h4 class="card-title fw-semibold">My Cars</h4>
-                    <p class="card-text text-muted">
-                        View your vehicles and check their latest service status.
-                    </p>
-                    <a asp-controller="Car" asp-action="MyCars" class="btn btn-dark rounded-pill px-4">
-                        Open
-                    </a>
-                </div>
+            <div class="client-clean-card-content">
+                <div class="client-clean-kicker">Main Action</div>
+                <h2>Book Appointment</h2>
+                <p>Schedule your next visit quickly and keep your service process simple.</p>
+                <span class="client-clean-link">Open booking</span>
             </div>
-        </div>
+        </a>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">🏢</div>
-                    <h4 class="card-title fw-semibold">Workshops</h4>
-                    <p class="card-text text-muted">
-                        Explore available workshops and choose the most suitable location.
-                    </p>
-                    <a asp-controller="Workshop" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
-                        Open
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+        <a asp-controller="Car" asp-action="MyCars" class="client-clean-card client-clean-card-side">
+            <div class="client-clean-side-top">Garage</div>
+            <h3>My Cars</h3>
+            <p>View your vehicles and keep your personal garage organized.</p>
+            <span class="client-clean-link">Open garage</span>
+        </a>
+
+        <a asp-controller="Workshop" asp-action="Index" class="client-clean-card client-clean-card-side">
+            <div class="client-clean-side-top">Locations</div>
+            <h3>Workshops</h3>
+            <p>Explore workshops and find the best location for service.</p>
+            <span class="client-clean-link">Open workshops</span>
+        </a>
+    </section>
 </div>

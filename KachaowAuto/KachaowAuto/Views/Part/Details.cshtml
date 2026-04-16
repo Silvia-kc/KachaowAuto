@@ -4,57 +4,97 @@
     ViewData["Title"] = "Part Details";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
-            <h2 class="mb-4">Part Details</h2>
+<div class="admin-page">
+    <div class="admin-header">
+        <div class="admin-title-wrap">
+            <h1>Part Details</h1>
+            <p class="admin-subtitle">
+                Review complete part information, category, pricing and images.
+            </p>
+        </div>
 
-            <dl class="row">
-                <dt class="col-sm-4">Part Name</dt>
-                <dd class="col-sm-8">@Model.PartName</dd>
+        <div class="admin-toolbar">
+            <a asp-action="Index" class="btn btn-secondary btn-admin">Back</a>
+        </div>
+    </div>
 
-                <dt class="col-sm-4">Manufacturer</dt>
-                <dd class="col-sm-8">@Model.Manufacturer</dd>
+    <div class="admin-form-card">
+        <div class="admin-form-head">
+            <h2 class="admin-form-title">@Model.PartName</h2>
+            <p class="admin-form-subtitle">Detailed information for the selected part.</p>
+        </div>
 
-                <dt class="col-sm-4">Part Number</dt>
-                <dd class="col-sm-8">@Model.PartNumber</dd>
-
-                <dt class="col-sm-4">Description</dt>
-                <dd class="col-sm-8">@Model.Description</dd>
-
-                <dt class="col-sm-4">Category</dt>
-                <dd class="col-sm-8">@Model.CategoryName</dd>
-
-                <dt class="col-sm-4">Price</dt>
-                <dd class="col-sm-8">@Model.UnitPrice.ToString("F2") €</dd>
-
-                <dt class="col-sm-4">Active</dt>
-                <dd class="col-sm-8">@(Model.IsActive ? "Yes" : "No")</dd>
-            </dl>
-
-            <hr />
-
-            <h4>Images</h4>
-
-            @if (Model.Images.Any())
-            {
-                <div class="row">
-                    @foreach (var image in Model.Images)
-                    {
-                        <div class="col-md-3 mb-3">
-                            <img src="@image.ImageUrl"
-                                 class="img-fluid rounded"
-                                 style="object-fit: cover;" />
-                        </div>
-                    }
+        <div class="admin-form-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Part Name</span>
+                        <div class="admin-info-value">@Model.PartName</div>
+                    </div>
                 </div>
-            }
-            else
-            {
-                <p class="text-muted">No images available.</p>
-            }
 
-            <a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Manufacturer</span>
+                        <div class="admin-info-value">@Model.Manufacturer</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Part Number</span>
+                        <div class="admin-info-value">@Model.PartNumber</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Category</span>
+                        <div class="admin-info-value">@Model.CategoryName</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Price</span>
+                        <div class="admin-info-value">@Model.UnitPrice.ToString("F2") €</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Status</span>
+                        <div class="admin-info-value">@(Model.IsActive ? "Active" : "Inactive")</div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="admin-info-box">
+                        <span class="admin-info-label">Description</span>
+                        <div class="admin-info-value part-description-value">@Model.Description</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="details-gallery-title">Images</h3>
+
+                @if (Model.Images.Any())
+                {
+                    <div class="details-image-grid">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="details-image-card">
+                                <img src="@image.ImageUrl" alt="@Model.PartName" class="details-image" />
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No images available.</p>
+                }
+            </div>
         </div>
     </div>
 </div>
