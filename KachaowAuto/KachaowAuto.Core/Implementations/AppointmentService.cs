@@ -20,7 +20,7 @@ namespace KachaowAuto.Core.Implementations
             context = _context;
         }
 
-        public async Task<List<AppointmentListServiceModel>> GetAllForIndexAsync(int? statusId)
+        public async Task<List<AppointmentListServiceModel>> GetAllForIndexAsync(AppointmentIndexFilterServiceModel filter)
         {
             var query = context.Appointments
                 .Include(a => a.Car)
@@ -30,9 +30,34 @@ namespace KachaowAuto.Core.Implementations
                 .Include(a => a.Status)
                 .AsQueryable();
 
-            if (statusId.HasValue)
+            if (filter.StatusId.HasValue)
             {
-                query = query.Where(a => a.AppointmentStatusId == statusId.Value);
+                query = query.Where(a => a.AppointmentStatusId == filter.StatusId.Value);
+            }
+
+            if (filter.ServiceId.HasValue)
+            {
+                query = query.Where(a => a.ServiceId == filter.ServiceId.Value);
+            }
+
+            if (filter.FromDate.HasValue)
+            {
+                query = query.Where(a => a.ScheduledDate >= filter.FromDate.Value);
+            }
+
+            if (filter.ToDate.HasValue)
+            {
+                var endDate = filter.ToDate.Value.Date.AddDays(1);
+                query = query.Where(a => a.ScheduledDate < endDate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
+            {
+                var search = filter.SearchTerm.ToLower();
+
+                query = query.Where(a =>
+                    a.Car.VIN.ToLower().Contains(search) ||
+                    a.Car.Model.ModelName.ToLower().Contains(search));
             }
 
             return await query
@@ -56,7 +81,16 @@ namespace KachaowAuto.Core.Implementations
 
         public async Task<List<AppointmentStatus>> GetStatusesAsync()
         {
-            return await context.AppointmentStatuses.ToListAsync();
+            return await context.AppointmentStatuses
+                .OrderBy(s => s.AppointmentStatusId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Service>> GetServicesAsync()
+        {
+            return await context.Services
+                .OrderBy(s => s.ServiceName)
+                .ToListAsync();
         }
 
         public async Task<AppointmentDetailsServiceModel?> GetDetailsAsync(int id)

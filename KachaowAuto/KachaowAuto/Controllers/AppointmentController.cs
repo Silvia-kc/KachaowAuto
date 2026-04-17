@@ -28,14 +28,22 @@ namespace KachaowAuto.Controllers
         }
 
         [Authorize(Roles = "Admin,Mechanic")]
-        public async Task<IActionResult> Index(int? statusId)
+        public async Task<IActionResult> Index(AppointmentIndexFilterViewModel filter)
         {
-            ViewBag.Statuses = await appointmentService.GetStatusesAsync();
-            ViewBag.SelectedStatusId = statusId;
+            var filterServiceModel = new AppointmentIndexFilterServiceModel
+            {
+                StatusId = filter.StatusId,
+                ServiceId = filter.ServiceId,
+                FromDate = filter.FromDate,
+                ToDate = filter.ToDate,
+                SearchTerm = filter.SearchTerm
+            };
 
-            var serviceModels = await appointmentService.GetAllForIndexAsync(statusId);
+            var serviceModels = await appointmentService.GetAllForIndexAsync(filterServiceModel);
+            var statuses = await appointmentService.GetStatusesAsync();
+            var services = await appointmentService.GetServicesAsync();
 
-            var viewModels = serviceModels.Select(a => new AppointmentIndexViewModel
+            var appointmentViewModels = serviceModels.Select(a => new AppointmentIndexViewModel
             {
                 AppointmentId = a.AppointmentId,
                 CarModelName = a.CarModelName,
@@ -50,7 +58,15 @@ namespace KachaowAuto.Controllers
                 ProblemDescription = a.ProblemDescription
             }).ToList();
 
-            return View(viewModels);
+            var pageViewModel = new AppointmentIndexPageViewModel
+            {
+                Filter = filter,
+                Appointments = appointmentViewModels,
+                Statuses = statuses,
+                Services = services
+            };
+
+            return View(pageViewModel);
         }
 
         public async Task<IActionResult> Details(int id)

@@ -15,5 +15,7 @@ namespace KachaowAuto.Data.Models
 
         public int ServiceId { get; set; }
         public Service Service { get; set; } = null!;
+
+      
     }
 }

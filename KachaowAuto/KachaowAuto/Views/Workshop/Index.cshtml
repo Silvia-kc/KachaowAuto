@@ -9,18 +9,18 @@
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<div class="container py-5">
-    <div class="text-center mb-4">
-        <h1 class="fw-bold">Find a Workshop</h1>
-        <p class="text-muted">Choose your city and explore available workshops on the map.</p>
+<div class="container py-5 workshop-page">
+    <div class="workshop-header text-center mb-4">
+        <h1 class="workshop-title">Find a Workshop</h1>
+        <p class="workshop-subtitle">Choose your city and explore available workshops on the map.</p>
     </div>
 
-    <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+    <div class="workshop-filter-card mb-4">
         <form method="get" asp-action="Index">
             <div class="row g-3 align-items-end">
                 <div class="col-md-9">
-                    <label class="form-label fw-semibold">Select city</label>
-                    <select name="city" class="form-select form-select-lg rounded-3">
+                    <label class="form-label workshop-label">Select city</label>
+                    <select name="city" class="form-select form-select-lg rounded-4 custom-select-dark">
                         <option value="">All cities</option>
                         @foreach (var city in cities)
                         {
@@ -36,7 +36,9 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-dark btn-lg w-100 rounded-3">Search</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-4 workshop-search-btn">
+                        Search
+                    </button>
                 </div>
             </div>
         </form>
@@ -44,36 +46,54 @@
 
     <div class="row g-4">
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="workshop-map-card">
                 <div id="map"></div>
             </div>
         </div>
 
         <div class="col-lg-4">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body">
-                    <h3 class="fw-bold mb-3">Available Workshops</h3>
+            <div class="workshop-list-card">
+                <div class="workshop-list-head">
+                    <h3>Available Workshops</h3>
+                    <p>
+                        @if (Model.Workshops.Any())
+                        {
+                            <span>@Model.Workshops.Count() result(s)</span>
+                        }
+                        else
+                        {
+                            <span>No workshops found</span>
+                        }
+                    </p>
+                </div>
 
+                <div class="workshop-list-body">
                     @if (Model.Workshops.Any())
                     {
                         @foreach (var workshop in Model.Workshops)
                         {
-                            <div class="workshop-card border rounded-4 p-3 mb-3"
+                            <div class="workshop-card"
                                  data-lat="@(workshop.Latitude?.ToString(CultureInfo.InvariantCulture))"
                                  data-lng="@(workshop.Longitude?.ToString(CultureInfo.InvariantCulture))">
-                                <h5 class="fw-bold mb-1">@workshop.Name</h5>
-                                <p class="text-muted mb-1">@workshop.City</p>
-                                <p class="mb-1">@workshop.Address</p>
+                                <div class="workshop-card-top">
+                                    <div>
+                                        <h5 class="workshop-card-title">@workshop.Name</h5>
+                                        <p class="workshop-card-city">@workshop.City</p>
+                                    </div>
+                                    <span class="workshop-card-dot"></span>
+                                </div>
+
+                                <p class="workshop-card-address">@workshop.Address</p>
 
                                 @if (!string.IsNullOrWhiteSpace(workshop.PhoneNumber))
                                 {
-                                    <p class="mb-3">📞 @workshop.PhoneNumber</p>
+                                    <p class="workshop-card-phone">@workshop.PhoneNumber</p>
                                 }
 
                                 <a asp-controller="Appointment"
                                    asp-action="Create"
                                    asp-route-workshopId="@workshop.WorkshopId"
-                                   class="btn btn-outline-primary rounded-pill px-4">
+                                   class="btn btn-outline-primary rounded-pill px-4 workshop-choose-btn">
                                     Choose
                                 </a>
                             </div>
@@ -81,7 +101,7 @@
                     }
                     else
                     {
-                        <div class="alert alert-light border rounded-4 mb-0">
+                        <div class="workshop-empty-state">
                             No workshops found for this city.
                         </div>
                     }
@@ -90,27 +110,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    #map {
-        width: 100%;
-        height: 550px;
-        min-height: 550px;
-        background: #dde3ea;
-    }
-
-    .workshop-card {
-        cursor: pointer;
-        transition: .2s ease;
-        background: #fff;
-    }
-
-        .workshop-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(0,0,0,.08);
-            border-color: #0d6efd !important;
-        }
-</style>
 
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -131,62 +130,62 @@
 
         @foreach (var workshop in Model.Workshops)
         {
-            if (workshop.Latitude.HasValue && workshop.Longitude.HasValue)
-            {
-                <text>
+                if (workshop.Latitude.HasValue && workshop.Longitude.HasValue)
+                {
+                        <text>
                             markers.push(
-                            L.circleMarker(
-                            [@workshop.Latitude.Value.ToString(CultureInfo.InvariantCulture),
-                    @workshop.Longitude.Value.ToString(CultureInfo.InvariantCulture)],
-                            {
-                                radius: 8,
-                            fillColor: "#0d6efd",
-                            color: "#ffffff",
-                            weight: 2,
-                            opacity: 1,
-                            fillOpacity: 0.95
-                                            }
-                            ).addTo(map).bindPopup(`
-                            <strong>@Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Name))</strong><br>
-                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.City))<br>
-                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Address))<br>
-                    @(string.IsNullOrWhiteSpace(workshop.PhoneNumber) ? "" : "📞 " + workshop.PhoneNumber)
-                                        `)
-                                        );
-                </text>
-            }
+                                L.circleMarker(
+                                    [@workshop.Latitude.Value.ToString(CultureInfo.InvariantCulture),
+                                     @workshop.Longitude.Value.ToString(CultureInfo.InvariantCulture)],
+                                    {
+                                        radius: 8,
+                                        fillColor: "#0d6efd",
+                                        color: "#ffffff",
+                                        weight: 2,
+                                        opacity: 1,
+                                        fillOpacity: 0.95
+                                    }
+                                ).addTo(map).bindPopup(`
+                                    <strong>@Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Name))</strong><br>
+                                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.City))<br>
+                                    @Html.Raw(JavaScriptEncoder.Default.Encode(workshop.Address))<br>
+                                    @(string.IsNullOrWhiteSpace(workshop.PhoneNumber) ? "" : "📞 " + workshop.PhoneNumber)
+                                `)
+                            );
+                        </text>
+                }
         }
 
-                            setTimeout(function () {
-                                map.invalidateSize();
+            setTimeout(function () {
+                map.invalidateSize();
 
-                        if (markers.length > 0) {
-                            const group = L.featureGroup(markers);
-                            map.fitBounds(group.getBounds().pad(0.2));
-                        } else {
-                                map.setView(bulgariaCenter, 7);
-                        }
-                    }, 500);
+                if (markers.length > 0) {
+                    const group = L.featureGroup(markers);
+                    map.fitBounds(group.getBounds().pad(0.2));
+                } else {
+                    map.setView(bulgariaCenter, 7);
+                }
+            }, 500);
 
-                    document.querySelectorAll('.workshop-card').forEach(card => {
-                                card.addEventListener('click', function (e) {
-                                    if (e.target.tagName.toLowerCase() === 'a') return;
+            document.querySelectorAll('.workshop-card').forEach(card => {
+                card.addEventListener('click', function (e) {
+                    if (e.target.tagName.toLowerCase() === 'a') return;
 
-                                    const lat = parseFloat(this.dataset.lat);
-                                    const lng = parseFloat(this.dataset.lng);
+                    const lat = parseFloat(this.dataset.lat);
+                    const lng = parseFloat(this.dataset.lng);
 
-                                    if (!isNaN(lat) && !isNaN(lng)) {
-                                        map.setView([lat, lng], 14);
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        map.setView([lat, lng], 14);
 
-                                        markers.forEach(m => {
-                                            const pos = m.getLatLng();
-                                            if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lng) < 0.0001) {
-                                                m.openPopup();
-                                            }
-                                        });
-                                    }
-                                });
-                    });
-                })();
+                        markers.forEach(m => {
+                            const pos = m.getLatLng();
+                            if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lng) < 0.0001) {
+                                m.openPopup();
+                            }
+                        });
+                    }
+                });
+            });
+        })();
     </script>
 }

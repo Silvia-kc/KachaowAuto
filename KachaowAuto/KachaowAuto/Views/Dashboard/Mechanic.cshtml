@@ -2,61 +2,55 @@
     ViewData["Title"] = "Mechanic Dashboard";
 }
 
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">Mechanic Dashboard</h1>
-        <p class="text-muted">Manage appointments, services and parts efficiently.</p>
-    </div>
+<div class="mechanic-clean-page">
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">📋</div>
-                    <h4 class="card-title fw-semibold">Appointments</h4>
-                    <p class="card-text text-muted">
-                        View and manage all customer appointments and service requests.
-                    </p>
-                    <a asp-controller="Appointment" asp-action="Index" class="btn btn-primary rounded-pill px-4">
-                        Open
-                    </a>
-                </div>
-            </div>
-        </div>
+    <section class="mechanic-clean-hero">
+        <div class="mechanic-clean-badge">Mechanic Portal</div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <div class="card-body text-center p-4">
-                    <div class="mb-3 fs-1">🔧</div>
-                    <h4 class="card-title fw-semibold">Parts</h4>
-                    <p class="card-text text-muted">
-                        Manage available parts and track inventory for repairs.
-                    </p>
-                    <a asp-controller="Part" asp-action="Index" class="btn btn-dark rounded-pill px-4">
-                        Open
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 rounded-4 text-center p-4 h-100">
-                <div class="mb-3">
-                    <i class="bi bi-box-seam" style="font-size: 40px; color: #6f42c1;"></i>
-                </div>
+        <h1 class="mechanic-clean-title">Mechanic Dashboard</h1>
 
-                <h4 class="mb-2">My Requests</h4>
+        <p class="mechanic-clean-subtitle">
+            Manage appointments, parts and requests in one place.
+        </p>
+    </section>
 
-                <p class="text-muted">
-                    Track your requested parts, see their status and admin feedback.
-                </p>
+    <section class="mechanic-clean-actions">
+        <div class="row g-4">
 
-                <a asp-controller="PartRequest"
-                   asp-action="MyRequests"
-                   class="btn btn-outline-primary mt-2">
-                    Open
+            <div class="col-md-6 col-xl-4">
+                <a asp-controller="Appointment" asp-action="Index" class="mechanic-clean-card primary">
+                    <div class="mechanic-clean-line"></div>
+
+                    <h3>Appointments</h3>
+                    <p>Manage customer bookings and workflow.</p>
+
+                    <span class="mechanic-clean-link">Open</span>
                 </a>
             </div>
-        </div>
 
-    </div>
+            <div class="col-md-6 col-xl-4">
+                <a asp-controller="Part" asp-action="Index" class="mechanic-clean-card">
+                    <div class="mechanic-clean-line"></div>
+
+                    <h3>Parts</h3>
+                    <p>Browse and manage repair parts.</p>
+
+                    <span class="mechanic-clean-link">Open</span>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <a asp-controller="PartRequest" asp-action="MyRequests" class="mechanic-clean-card">
+                    <div class="mechanic-clean-line"></div>
+
+                    <h3>My Requests</h3>
+                    <p>Track requested parts and statuses.</p>
+
+                    <span class="mechanic-clean-link">Open</span>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
 </div>

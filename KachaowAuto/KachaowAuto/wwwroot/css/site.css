@@ -1459,3 +1459,719 @@ h2 {
     .custom-date-dark::-webkit-calendar-picker-indicator {
         filter: invert(1);
     }
+.client-cars-page {
+    padding: 1.5rem 0 0 0;
+}
+
+.client-cars-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.8rem;
+}
+
+.client-cars-badge {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--accent-blue);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.client-cars-title {
+    font-size: 3rem;
+    line-height: 1.02;
+    margin-bottom: 0.8rem;
+    color: #fff;
+    font-weight: 800;
+}
+
+.client-cars-subtitle {
+    color: #cfd8e3;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin: 0;
+    max-width: 720px;
+}
+
+.client-cars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+}
+
+.client-car-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 26px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .client-car-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0,194,255,0.22);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+.client-car-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.3rem;
+}
+
+.client-car-brand {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 0.45rem;
+}
+
+.client-car-model {
+    color: #fff;
+    font-size: 1.9rem;
+    line-height: 1.05;
+    margin: 0;
+    font-weight: 800;
+}
+
+.client-car-year {
+    padding: 0.55rem 0.8rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.client-car-details {
+    display: grid;
+    gap: 1rem;
+}
+
+.client-car-detail {
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.client-car-label {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
+}
+
+.client-car-value {
+    display: block;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.client-cars-empty {
+    padding: 2rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+    .client-cars-empty h3 {
+        color: #fff;
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .client-cars-empty p {
+        color: var(--text-muted);
+        margin-bottom: 1.2rem;
+        line-height: 1.7;
+    }
+
+@media (max-width: 991.98px) {
+    .client-cars-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .client-cars-title {
+        font-size: 2.3rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .client-cars-title {
+        font-size: 1.95rem;
+    }
+
+    .client-car-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+.workshop-page {
+    color: var(--text-main);
+}
+
+.workshop-header {
+    margin-bottom: 1.5rem;
+}
+
+.workshop-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.7rem;
+}
+
+.workshop-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.workshop-filter-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 26px;
+    box-shadow: var(--shadow-soft);
+    padding: 1.35rem;
+}
+
+.workshop-label {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 0.55rem;
+}
+
+.workshop-search-btn {
+    min-height: 58px;
+    font-weight: 700;
+}
+
+.workshop-map-card,
+.workshop-list-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 26px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+#map {
+    width: 100%;
+    height: 550px;
+    min-height: 550px;
+    background: #dde3ea;
+    border-radius: 26px;
+}
+
+.workshop-list-head {
+    padding: 1.3rem 1.3rem 0.5rem 1.3rem;
+}
+
+    .workshop-list-head h3 {
+        color: #fff;
+        font-size: 1.9rem;
+        font-weight: 800;
+        margin-bottom: 0.35rem;
+    }
+
+    .workshop-list-head p {
+        color: var(--text-muted);
+        margin: 0;
+        line-height: 1.65;
+    }
+
+.workshop-list-body {
+    padding: 0.7rem 1.1rem 1.1rem 1.1rem;
+    max-height: 550px;
+    overflow-y: auto;
+}
+
+.workshop-card {
+    cursor: pointer;
+    transition: .22s ease;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+    .workshop-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(0,0,0,.18);
+        border-color: rgba(0, 194, 255, 0.28);
+    }
+
+.workshop-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.workshop-card-title {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+}
+
+.workshop-card-city {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.workshop-card-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    box-shadow: 0 0 14px rgba(0, 194, 255, 0.75);
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.workshop-card-address,
+.workshop-card-phone {
+    color: #dfe7f0;
+    margin-bottom: 0.6rem;
+    line-height: 1.6;
+}
+
+.workshop-card-phone {
+    color: var(--text-muted);
+}
+
+.workshop-choose-btn {
+    margin-top: 0.25rem;
+    font-weight: 700;
+}
+
+.workshop-empty-state {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 22px;
+    padding: 1.2rem;
+    color: var(--text-muted);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: #16202c;
+    color: #fff;
+}
+
+.leaflet-popup-content {
+    color: #fff;
+    line-height: 1.55;
+}
+
+@media (max-width: 991.98px) {
+    .workshop-title {
+        font-size: 2.3rem;
+    }
+
+    #map {
+        height: 460px;
+        min-height: 460px;
+    }
+
+    .workshop-list-body {
+        max-height: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .workshop-title {
+        font-size: 1.95rem;
+    }
+
+    .workshop-filter-card {
+        padding: 1rem;
+        border-radius: 22px;
+    }
+
+    #map {
+        height: 400px;
+        min-height: 400px;
+    }
+}
+.mechanic-clean-page {
+    padding: 1.5rem 0 0 0;
+}
+
+.mechanic-clean-hero {
+    margin-bottom: 2rem;
+    padding: 2.3rem 2rem;
+    border-radius: 26px;
+    background: linear-gradient(135deg, rgba(0,194,255,0.10), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+.mechanic-clean-badge {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.mechanic-clean-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.8rem;
+}
+
+.mechanic-clean-subtitle {
+    color: #d7dee8;
+    max-width: 650px;
+    line-height: 1.7;
+}
+
+.mechanic-clean-actions {
+    margin-bottom: 2rem;
+}
+
+.mechanic-clean-card {
+    display: block;
+    padding: 1.6rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.25s ease;
+}
+
+    .mechanic-clean-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(0,194,255,0.22);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.32);
+    }
+
+    .mechanic-clean-card.primary {
+        background: linear-gradient(135deg, rgba(0,194,255,0.12), rgba(255,255,255,0.02));
+    }
+
+    .mechanic-clean-card h3 {
+        color: #fff;
+        font-size: 1.35rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .mechanic-clean-card p {
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+.mechanic-clean-link {
+    color: var(--accent-blue);
+    font-weight: 700;
+}
+
+.mechanic-clean-line {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #00c2ff, #d6a84f);
+    margin-bottom: 1rem;
+}
+.mechanic-appointments-page {
+    padding: 1.5rem 0 0 0;
+}
+
+.mechanic-appointments-header {
+    margin-bottom: 1.5rem;
+}
+
+.mechanic-appointments-badge {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--accent-blue);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.mechanic-appointments-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.8rem;
+    line-height: 1.02;
+}
+
+.mechanic-appointments-subtitle {
+    color: #cfd8e3;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    margin: 0;
+    max-width: 760px;
+}
+
+.mechanic-appointments-panel {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 26px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.mechanic-appointments-table-wrap {
+    overflow-x: auto;
+}
+
+.mechanic-appointments-table {
+    width: 100%;
+    margin-bottom: 0;
+    background: transparent;
+    border: none;
+}
+
+    .mechanic-appointments-table thead {
+        background: rgba(255,255,255,0.04);
+    }
+
+        .mechanic-appointments-table thead th {
+            color: #fff;
+            font-weight: 700;
+            padding: 1.05rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            border-top: none;
+            white-space: nowrap;
+        }
+
+    .mechanic-appointments-table tbody td {
+        color: var(--text-main);
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: rgba(255,255,255,0.06);
+        background: transparent;
+    }
+
+    .mechanic-appointments-table tbody tr:hover {
+        background: rgba(0, 194, 255, 0.04);
+    }
+
+.mechanic-problem-cell {
+    min-width: 140px;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+.mechanic-action-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.mechanic-details-btn {
+    width: fit-content;
+    min-width: 150px;
+}
+
+.mechanic-status-form {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mechanic-status-select {
+    min-width: 150px;
+}
+
+.mechanic-change-btn {
+    min-width: 90px;
+}
+
+@media (max-width: 991.98px) {
+    .mechanic-appointments-title {
+        font-size: 2.3rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .mechanic-appointments-title {
+        font-size: 1.95rem;
+    }
+
+    .mechanic-status-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mechanic-status-select,
+    .mechanic-change-btn,
+    .mechanic-details-btn {
+        width: 100%;
+    }
+}
+.mechanic-filter-panel {
+    padding: 28px 28px 24px 28px;
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(20, 28, 40, 0.92), rgba(14, 22, 35, 0.82));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+}
+
+.mechanic-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.mechanic-filter-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.25fr 0.9fr 0.9fr 1fr;
+    gap: 18px;
+    align-items: end;
+}
+
+.mechanic-filter-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.mechanic-filter-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f3f6fb;
+    letter-spacing: 0.3px;
+    padding-left: 2px;
+}
+
+.mechanic-filter-input {
+    height: 58px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 0 18px;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+    .mechanic-filter-input:focus {
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(0, 191, 255, 0.65);
+        box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.15);
+        color: #ffffff;
+    }
+
+    .mechanic-filter-input::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    .mechanic-filter-input option {
+        color: #111;
+    }
+
+.mechanic-filter-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.mechanic-filter-btn-primary {
+    min-width: 110px;
+    height: 56px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #11b7f3, #009fe3);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0 26px;
+    box-shadow: 0 10px 24px rgba(0, 170, 255, 0.25);
+    transition: all 0.2s ease;
+}
+
+    .mechanic-filter-btn-primary:hover {
+        transform: translateY(-1px);
+        color: white;
+        box-shadow: 0 14px 28px rgba(0, 170, 255, 0.32);
+    }
+
+.mechanic-filter-btn-secondary {
+    min-width: 100px;
+    height: 56px;
+    border-radius: 18px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #dbe7f5;
+    font-weight: 600;
+    padding: 0 24px;
+    transition: all 0.2s ease;
+}
+
+    .mechanic-filter-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
+.mechanic-appointments-table th {
+    white-space: nowrap;
+}
+
+@media (max-width: 1400px) {
+    .mechanic-filter-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .mechanic-filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mechanic-filter-panel {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 576px) {
+    .mechanic-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mechanic-filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mechanic-filter-btn-primary,
+    .mechanic-filter-btn-secondary {
+        width: 100%;
+    }
+}

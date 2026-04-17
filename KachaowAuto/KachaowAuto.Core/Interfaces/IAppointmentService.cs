@@ -11,8 +11,9 @@ namespace KachaowAuto.Core.Interfaces
 {
     public interface IAppointmentService
     {
-        Task<List<AppointmentListServiceModel>> GetAllForIndexAsync(int? statusId);
+        Task<List<AppointmentListServiceModel>> GetAllForIndexAsync(AppointmentIndexFilterServiceModel filter);
         Task<List<AppointmentStatus>> GetStatusesAsync();
+        Task<List<Service>> GetServicesAsync();
 
         Task<AppointmentDetailsServiceModel?> GetDetailsAsync(int id);
 

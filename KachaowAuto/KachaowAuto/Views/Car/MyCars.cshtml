@@ -4,70 +4,73 @@
     ViewData["Title"] = "My Cars";
 }
 
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="client-cars-page">
+    <section class="client-cars-header">
         <div>
-            <h1 class="fw-bold mb-1">My Cars</h1>
-            <p class="text-muted mb-0">View your vehicles and their latest service status.</p>
+            <div class="client-cars-badge">My Garage</div>
+            <h1 class="client-cars-title">My Cars</h1>
+            <p class="client-cars-subtitle">
+                View your vehicles and check their latest service status.
+            </p>
         </div>
-        <a asp-controller="Car" asp-action="Create" class="btn btn-primary rounded-pill px-4">
-            Add Car
-        </a>
-    </div>
+
+    </section>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info rounded-4 shadow-sm border-0">
-            You have no cars added yet.
+        <div class="client-cars-empty">
+            <h3>No cars added yet</h3>
+            <p>Your garage is currently empty. Add your first car to get started.</p>
+            <a asp-controller="Car" asp-action="Create" class="btn btn-primary btn-admin">
+                Add First Car
+            </a>
         </div>
     }
     else
     {
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th class="ps-4">Brand</th>
-                                <th>Model</th>
-                                <th>Year</th>
-                                <th>VIN</th>
-                                <th class="pe-4">Latest Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var car in Model)
-                            {
-                                <tr>
-                                    <td class="ps-4 fw-semibold">@car.BrandName</td>
-                                    <td>@car.ModelName</td>
-                                    <td>@car.Year</td>
-                                    <td>@car.VIN</td>
-                                    <td class="pe-4">
-                                        @if (car.LatestStatus == "Completed")
-                                        {
-                                            <span class="badge bg-success px-3 py-2">Completed</span>
-                                        }
-                                        else if (car.LatestStatus == "Upcoming")
-                                        {
-                                            <span class="badge bg-warning text-dark px-3 py-2">Upcoming</span>
-                                        }
-                                        else if (car.LatestStatus == "In Progress")
-                                        {
-                                            <span class="badge bg-primary px-3 py-2">In Progress</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary px-3 py-2">No appointments</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        <div class="client-cars-grid">
+            @foreach (var car in Model)
+            {
+                <div class="client-car-card">
+                    <div class="client-car-top">
+                        <div>
+                            <div class="client-car-brand">@car.BrandName</div>
+                            <h3 class="client-car-model">@car.ModelName</h3>
+                        </div>
+
+                        <div class="client-car-year">@car.Year</div>
+                    </div>
+
+                    <div class="client-car-details">
+                        <div class="client-car-detail">
+                            <span class="client-car-label">License Plate</span>
+                            <span class="client-car-value">@car.VIN</span>
+                        </div>
+
+                        <div class="client-car-detail">
+                            <span class="client-car-label">Latest Status</span>
+                            <span class="client-car-value">
+                                @if (car.LatestStatus == "Completed")
+                                {
+                                    <span class="badge-status badge-status-sent">Completed</span>
+                                }
+                                else if (car.LatestStatus == "Upcoming")
+                                {
+                                    <span class="badge-status badge-status-pending">Upcoming</span>
+                                }
+                                else if (car.LatestStatus == "In Progress")
+                                {
+                                    <span class="badge-status badge-status-approved">In Progress</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status">No appointments</span>
+                                }
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     }
 </div>

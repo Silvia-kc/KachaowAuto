@@ -17,9 +17,8 @@ builder.Services.Configure<CloudinarySettings>(
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
-// Add services to the container.
 builder.Services.AddDbContext<KachaowAutoDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionHome")));
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionArsenal")));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole<int>>(options =>

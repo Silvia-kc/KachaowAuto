@@ -20,6 +20,11 @@ namespace KachaowAuto.Controllers
             _roleManager = roleManager;
         }
 
+        public IActionResult Dashboard()
+        {
+            return View("~/Views/Dashboard/Admin.cshtml");
+        }
+
         public async Task<IActionResult> Users()
         {
             var allRoles = _roleManager.Roles.Select(r => r.Name!).ToList();
@@ -57,9 +62,8 @@ namespace KachaowAuto.Controllers
 
             var currentUserId = int.Parse(_userManager.GetUserId(User)!);
             if (user.Id == currentUserId && role != "Admin")
-            { 
-
-            return BadRequest("You cannot remove your own Admin role.");
+            {
+                return BadRequest("You cannot remove your own Admin role.");
             }
 
             var currentRoles = await _userManager.GetRolesAsync(user);

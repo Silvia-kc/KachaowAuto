@@ -28,16 +28,19 @@
                     <div class="collapse navbar-collapse" id="mainNavbar">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
 
-                            <li class="nav-item">
-                                <a class="nav-link luxury-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link luxury-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
+                            @if (!(User.Identity?.IsAuthenticated ?? false))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                            }
 
                             @if (User.IsInRole("Admin"))
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                                </li>
+
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle luxury-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Admin Panel
@@ -74,6 +77,9 @@
                             else if (User.IsInRole("Mechanic"))
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Mechanic" asp-action="Dashboard">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link luxury-link" asp-controller="Appointment" asp-action="Index">Appointments</a>
                                 </li>
                                 <li class="nav-item">
@@ -86,10 +92,13 @@
                             else if (User.IsInRole("Client"))
                             {
                                 <li class="nav-item">
+                                    <a class="nav-link luxury-link" asp-controller="Client" asp-action="Dashboard">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link luxury-link" asp-controller="Appointment" asp-action="Create">Book Appointment</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link luxury-link" asp-controller="Car" asp-action="Create">My Car</a>
+                                    <a class="nav-link luxury-link" asp-controller="Car" asp-action="MyCars">My Cars</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link luxury-link" asp-controller="Workshop" asp-action="Index">Workshops</a>
