@@ -29,7 +29,7 @@
 
                     <div class="mb-3">
                         <label asp-for="PartId" class="form-label">Part</label>
-                        <select asp-for="PartId" class="form-select"
+                        <select asp-for="PartId" class="form-select custom-select-dark"
                                 asp-items="@(new SelectList(Model.Parts, "PartId", "PartName"))">
                             <option value="">-- Select part --</option>
                         </select>

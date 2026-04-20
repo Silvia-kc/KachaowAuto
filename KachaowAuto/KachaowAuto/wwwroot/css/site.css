@@ -2175,3 +2175,37 @@ h2 {
         width: 100%;
     }
 }
+.readonly-dark-input {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    opacity: 1 !important;
+    cursor: default;
+    font-weight: 600;
+}
+
+    .readonly-dark-input:focus {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #ffffff !important;
+        box-shadow: none !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .readonly-dark-input::placeholder {
+        color: rgba(255, 255, 255, 0.65);
+    }
+.custom-select-dark {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #f5f7fa !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+}
+
+    .custom-select-dark option {
+        background-color: #1b2430 !important;
+        color: #f5f7fa !important;
+    }
+
+    .custom-select-dark optgroup {
+        background-color: #1b2430 !important;
+        color: #f5f7fa !important;
+    }
